@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Blajan/Blajan.csproj" />
+  <Project Path="NaiTextAdventure/NaiTextAdventure.csproj" />
+</Solution>
