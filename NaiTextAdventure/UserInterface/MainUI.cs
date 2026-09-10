@@ -14,6 +14,10 @@ internal sealed class MainUserInterface : ITextUserInterface
 
     private readonly Layout footerLayout;
 
+    private readonly char cursor = '\u2588';
+
+    private int cursorPos = 0;
+
     public Layout Layout { get { return rootLayout; }}
 
     public void AppendToLog(string text)
@@ -267,8 +271,10 @@ internal sealed class MainUserInterface : ITextUserInterface
             invPanel
         );
 
+        string promptToShow = promptInput + " ";
+        Markup promptMarkup = new Markup($"> {promptToShow[..cursorPos]}[invert]{promptToShow[cursorPos]}[/]{promptToShow[(cursorPos + 1)..]}");    
         footerLayout.Update(
-            new Panel(Align.Left(new Markup($"> {promptInput}")))
+            new Panel(Align.Left(promptMarkup))
             .BorderColor(Color.Grey)
         );
     }
@@ -279,11 +285,18 @@ internal sealed class MainUserInterface : ITextUserInterface
         {
             UserCommand = new string(promptInput);
             textPanel.Append($"\n> {promptInput}\n"); 
-            promptInput = "";           
+            promptInput = "";
+            cursorPos = 0;           
+        }
+        else if (input.Key == ConsoleKey.Backspace)
+        {
+            cursorPos -= cursorPos > 0? 1 : 0;
+            promptInput = promptInput[0..cursorPos] + promptInput[(cursorPos + 1)..];//promptInput[0..(promptInput.Length - 1)];
         }
         else if ("abcdefghijklmnopqrstuvxyzåäöABCDEFGHIJKLMNOPQRSTUVXYZÅÄÖ ".Contains(input.KeyChar))
         {
-            promptInput += input.KeyChar;
+            promptInput = promptInput[0..cursorPos] + input.KeyChar + (cursorPos < promptInput.Length? promptInput[cursorPos..]: "");
+            cursorPos++;
         }
         if (input.Key == ConsoleKey.F1)
         {
@@ -323,10 +336,19 @@ internal sealed class MainUserInterface : ITextUserInterface
                 textPanel.ScrollDown();
             }
         }
-        else if(input.Key == ConsoleKey.D1)
+        else if(input.Key == ConsoleKey.RightArrow)
         {
-            textPanel.Text += "\n\n Blajan smakar chokladkräm, men luktar underligt likt bajs. Mums mums!";
-        }    
-
+            if (cursorPos < promptInput.Length)
+            {
+                cursorPos++;
+            }
+        }
+        else if(input.Key == ConsoleKey.LeftArrow)
+        {
+            if (cursorPos > 0)
+            {
+                cursorPos--;
+            }
+        }
     }
 }

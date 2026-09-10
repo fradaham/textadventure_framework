@@ -22,7 +22,7 @@ public class Kallare : SwedishAbstractRoom
             HandleAction = (context, action) => {
                 if (action.Predicate.Verb == Verbs.Undersök)
                 {
-                    if (context.Player.Room.Items.Any(i => i is Morakniv))
+                    if (context.Player.Room.Items.Any(i => i is Morakniv) || context.Player.Inventory.Any(i => i is Morakniv))
                     {
                         return new ActionResult()
                         {
