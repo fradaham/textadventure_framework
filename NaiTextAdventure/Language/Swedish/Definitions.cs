@@ -36,7 +36,8 @@ namespace Nai.TextAdventure.Language.Swedish
                 },
                 Patterns =
                 [
-                    new Regex(@$"^(?<{SentenceParts.PlaceAdverbialInit}>i|på|under|till|mot) (?<{SentenceParts.PlaceAdverbial}>[a-zåäö ]+)"),
+                    new Regex(@$"^(?<{SentenceParts.PlaceAdverbial}>[a-zåäö ]+) (?<{SentenceParts.MannerAdverbialInit}>i|på|under|genom) (?<{SentenceParts.MannerAdverbial}>[a-zåäö ]+)"),
+                    new Regex(@$"^(?<{SentenceParts.PlaceAdverbialInit}>i|på|under|till|mot|genom) (?<{SentenceParts.PlaceAdverbial}>[a-zåäö ]+)"),
                     new Regex(@$"^(?<{SentenceParts.PlaceAdverbial}>[a-zåäö ]+)")
                 ]
 

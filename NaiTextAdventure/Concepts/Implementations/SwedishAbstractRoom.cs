@@ -10,7 +10,7 @@ public abstract class SwedishAbstractRoom: IRoom
     public Guid Id { get; } = Guid.NewGuid();
     public abstract List<IEntity> Items { get; }
 
-    public abstract List<Exit> Exits { get; }
+    public abstract List<IExit> Exits { get; }
 
     public abstract INoun Name { get;}
 
@@ -20,7 +20,9 @@ public abstract class SwedishAbstractRoom: IRoom
 
     public override string ToString()
     {
-        return Description + $"\n\nFöremål:\n\n {string.Join("\n", Items.Select(i => new string([i.Name.Name[0]]).ToUpper() + i.Name.Name[1..]))}\n";
+        string items = Items.Count() > 0? $"\n\nFöremål:\n\n {string.Join("\n", Items.Select(i => new string([i.Name.Name[0]]).ToUpper() + i.Name.Name[1..]))}\n" : "";
+        string exits = Exits.Where(e => e.IsActivated).Count() > 0? $"\n\nUtgångar:\n\n {string.Join("\n", Exits.Where(e => e.IsActivated).Select(i => new string([i.Name.Name[0]]).ToUpper() + i.Name.Name[1..]))}\n" : "";
+        return Description + items + exits;
     }
 
     public virtual ActionResult? InterAct(Context context, PlayerAction action)

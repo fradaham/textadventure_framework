@@ -290,8 +290,11 @@ internal sealed class MainUserInterface : ITextUserInterface
         }
         else if (input.Key == ConsoleKey.Backspace)
         {
-            cursorPos -= cursorPos > 0? 1 : 0;
-            promptInput = promptInput[0..cursorPos] + promptInput[(cursorPos + 1)..];//promptInput[0..(promptInput.Length - 1)];
+            if (cursorPos > 0)
+            {
+                cursorPos--;
+                promptInput = promptInput[0..cursorPos] + promptInput[(cursorPos + 1)..];//promptInput[0..(promptInput.Length - 1)];
+            }
         }
         else if ("abcdefghijklmnopqrstuvxyzåäöABCDEFGHIJKLMNOPQRSTUVXYZÅÄÖ ".Contains(input.KeyChar))
         {

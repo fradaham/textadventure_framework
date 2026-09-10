@@ -44,6 +44,7 @@ public class KallarDorr : SwedishAbstractItem
             else
             {
                 isOpen = true;
+                context.Player.Room.Exits.First(e => e.Name.Name.Equals("dörröppning", StringComparison.InvariantCultureIgnoreCase)).IsActivated = true;
                 return new ActionResult()
                 {
                     Message = "Du öppnade dörren."
@@ -55,6 +56,7 @@ public class KallarDorr : SwedishAbstractItem
             if (isOpen)
             {
                 isOpen = false;
+                context.Player.Room.Exits.First(e => e.Name.Name.Equals("dörröppning", StringComparison.InvariantCultureIgnoreCase)).IsActivated = false;
                 return new ActionResult()
                 {
                     Message = "Dörren går igen med en dov duns"
@@ -81,7 +83,15 @@ public class KallarDorr : SwedishAbstractItem
             {
                 if (action.MannerAdverbial.GetType() == typeof(KallarNyckel))
                 {
-                    if (context.Player.Inventory.Contains(action.MannerAdverbial))
+                    if (hasKey)
+                    {
+                        isLocked = false;
+                        return new ActionResult()
+                        {
+                            Message = "Det går trögt att vrida om nyckel, men när du väl lyckas med ett klagande gnissel och skrap så hörs ett ljudligt klick. Dörren är upplåst."
+                        };
+                    }
+                    else if (context.Player.Inventory.Contains(action.MannerAdverbial))
                     {
                         isLocked = false;
                         hasKey = true;

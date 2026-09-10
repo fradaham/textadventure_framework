@@ -24,6 +24,7 @@ public class Player(string name, byte health, byte maxHealth, byte fightingSkill
         List<IEntity> entities = new List<IEntity>();
         entities.AddRange(Room.Items);
         entities.AddRange(Inventory);
+        entities.AddRange(Room.Exits.Where(e => e.IsActivated));
         entities.Add(Room);
 
         return entities;

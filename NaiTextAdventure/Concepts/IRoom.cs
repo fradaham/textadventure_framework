@@ -6,6 +6,6 @@ public interface IRoom: IEntity
 {
     List<IEntity> Items { get; }
 
-    List<Exit> Exits { get; }
+    List<IExit> Exits { get; }
 
 }

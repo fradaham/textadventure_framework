@@ -11,11 +11,20 @@ public class Tradgard : SwedishAbstractRoom
     public override INoun Name => new SweNoun("Trädgård", Genus.Utrum);
 
     public override List<IEntity> Items => 
-    [
-        new KallarDorr(),
-    ];
+    [];
 
-    public override List<Exit> Exits { get; } = new();
+    public override List<IExit> Exits { get; } =
+    [
+        new SwedishExit()
+        {
+            Name = new SweNoun("Källare", Genus.Utrum),
+            Synonyms =
+            [],
+            Description = "Källaren är den enda som är kvar av ett hus som har funnits här i sluttningen tidigare. Den sida som vätter mot trädgården är ovan jord, och i källarväggen av betong finns en öppen dörr.",
+            TargetRoom = "Källare",
+            ExitMessage = "Du kliver in genom dörröppningen till källaren. Unken luft slår emot dig som en vägg.",
+        }
+    ];
 
     public override IEnumerable<INoun> Synonyms => [];
 

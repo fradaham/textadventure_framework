@@ -11,6 +11,7 @@ public sealed class SwedishExit: IExit
     public required string TargetRoom { get; init; }
     public string? ExitMessage { get; init; }
     public required string Description {get; init;}
+    public bool IsActivated {get; set;} = true;
     public Func<Context, PlayerAction, ActionResult?> HandleAction {get; init; } = (c, a) => throw new NotImplementedException();
 
     public ActionResult? InterAct(Context context, PlayerAction action)
@@ -35,6 +36,13 @@ public sealed class SwedishExit: IExit
                 MoveToRoomId = TargetRoom
             };
         
+        }
+        else if (action.Predicate.Verb == Verbs.Titta && action.PlaceAdverbial == this)
+        {
+            return new ActionResult()
+            {
+                Message = $"{Description}",
+            };
         }
         else
         {
