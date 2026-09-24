@@ -14,6 +14,7 @@ public class Kallare : SwedishAbstractRoom
     [
         new KallarDorr(),
         new Blaja(),
+        new Falukorv(),
         new SwedishItem()
         {
             Name = new SweNoun("skräp", Genus.Neutrum),

@@ -15,16 +15,16 @@ public class Morakniv : SwedishAbstractItem
 
     public override ActionResult? HandleAction(Context context, PlayerAction action)
     {
-        if (action.Predicate.Verb == Verbs.Släng && action.DirectObject == this)
+        if ((action.Predicate.Verb == Verbs.Släng || action.Predicate.Verb == Verbs.Sätt) && action.DirectObject == this && action.PlaceAdverbial is Falukorv)
         {
             return new ActionResult()
             {
-                Message = "Nu blir det teststrid!",
+                Message = "Falukorven blir helt vansinnig och slaskar till dig i fejan!",
                 Fight = new Opponent()
                 {
                     FightingSkill = 10,
                     Health = 15,
-                    Name = "Falukorv",
+                    Name = "Farfars falukorv",
                     SuccessEvent = new ActionResult()
                     {
                         Message = "Du krämade falukorven!"
