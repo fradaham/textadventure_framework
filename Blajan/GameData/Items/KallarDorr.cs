@@ -44,10 +44,11 @@ public class KallarDorr : SwedishAbstractItem
             else
             {
                 isOpen = true;
-                context.Player.Room.Exits.First(e => e.Name.Name.Equals("dörröppning", StringComparison.InvariantCultureIgnoreCase)).IsActivated = true;
+                IExit exit = context.Player.Room.Exits.First(e => e.Name.Name.Equals("dörröppning", StringComparison.InvariantCultureIgnoreCase));
+                exit.IsActivated = true;
                 return new ActionResult()
                 {
-                    Message = "Du öppnade dörren."
+                    Message = $"Du öppnade dörren. Det finns nu en utgång från källaren. {exit.Description}"
                 };
             }
         }

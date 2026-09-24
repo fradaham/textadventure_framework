@@ -8,6 +8,7 @@ public sealed class SwedishExit: IExit
     public Guid Id { get; } = Guid.NewGuid();
     public required INoun Name { get; init; }
     public IEnumerable<INoun>? Synonyms { get; init; }
+    public IEnumerable<string>? AllowedPrepositions {get; init;}
     public required string TargetRoom { get; init; }
     public string? ExitMessage { get; init; }
     public required string Description {get; init;}

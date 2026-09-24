@@ -54,7 +54,7 @@ public class Kallare : SwedishAbstractRoom
             [
                 new SweNoun("dörrhål", Genus.Utrum),
             ],
-            Description = "Det verkar vara natt, men ett blekt månsken gör att du kan ana skuggor av träd därute, och du hör en svag vind som susar genom trädkronor.",
+            Description = "Genom dörröppningen kan du se att det verkar vara natt, men ett blekt månsken gör att du kan ana skuggor av träd därute, och du hör en svag vind som susar genom trädkronor.",
             TargetRoom = "Trädgård",
             ExitMessage = "Du kliver ut genom dörröppningen och föser några långa grässtrån åt sidan som växer på utsidan av dörrkarmens tröskel. Frisk utomhusluft ersätter den unkna doft som du nödgats inandas i källaren.",
             IsActivated = false

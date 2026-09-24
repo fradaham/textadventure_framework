@@ -8,4 +8,6 @@ public interface IRoom: IEntity
 
     List<IExit> Exits { get; }
 
+    ActionResult? Enter(Context context);
+
 }

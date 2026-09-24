@@ -36,7 +36,7 @@ namespace Nai.TextAdventure.Language.Swedish
                 },
                 Patterns =
                 [
-                    new Regex(@$"^(?<{SentenceParts.PlaceAdverbial}>[a-zåäö ]+) (?<{SentenceParts.MannerAdverbialInit}>i|på|under|genom) (?<{SentenceParts.MannerAdverbial}>[a-zåäö ]+)"),
+                    new Regex(@$"^(?<{SentenceParts.PlaceAdverbial}>[a-zåäö ]+) (?<{SentenceParts.MannerAdverbialInit}>i|på|under|genom|längs) (?<{SentenceParts.MannerAdverbial}>[a-zåäö ]+)"),
                     new Regex(@$"^(?<{SentenceParts.PlaceAdverbialInit}>i|på|under|till|mot|genom) (?<{SentenceParts.PlaceAdverbial}>[a-zåäö ]+)"),
                     new Regex(@$"^(?<{SentenceParts.PlaceAdverbial}>[a-zåäö ]+)")
                 ]
@@ -197,6 +197,18 @@ namespace Nai.TextAdventure.Language.Swedish
                     new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+) (?<{SentenceParts.MannerAdverbialInit}>med) (?<{SentenceParts.MannerAdverbial}>[a-zåäö ]+)"),
                 ]
             },
+            new Command()
+            {
+                Predicate = new Predicate()
+                {
+                    Infinitiv = "slänga",
+                    Verb = Verbs.Släng,
+                },
+                Patterns =
+                [
+                    new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+) (?<{SentenceParts.PlaceAdverbialInit}>i|på|under) (?<{SentenceParts.PlaceAdverbial}>[a-zåäö ]+)")
+                ]
+            }
             
         ];
     }

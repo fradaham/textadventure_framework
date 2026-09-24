@@ -25,6 +25,14 @@ public abstract class SwedishAbstractRoom: IRoom
         return Description + items + exits;
     }
 
+    public virtual ActionResult? Enter(Context context)
+    {
+        return new ActionResult()
+        {
+            Message = this.ToString()
+        };
+    }
+
     public virtual ActionResult? InterAct(Context context, PlayerAction action)
     {
         try

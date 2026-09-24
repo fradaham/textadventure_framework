@@ -7,7 +7,7 @@ public class Program
 {
     public static void Main(string[] arg)
     {
-        TextAdventureRunner runner = new(new GameSetup());
+        UserInterfaceHub runner = new(new GameSetup());
         runner.Run();
     }
 }

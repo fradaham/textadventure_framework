@@ -5,7 +5,7 @@ using Nai.TextAdventure.UserInterface;
 
 namespace Nai.TextAdventure;
 
-public class TextAdventureRunner(IGameSetup setup)
+public class UserInterfaceHub(IGameSetup setup)
 {
     private World _world = setup.World;
 
@@ -15,41 +15,48 @@ public class TextAdventureRunner(IGameSetup setup)
 
     public void Run()
     {
-        GameState gameState = GameState.Title;
+        TuiResult tuiResult = new TuiResult(GameState.Title);
         TitleUI titleView = new TitleUI(setup.Title, setup.SubTitle, setup.Creator);
+        ITextUserInterface? mainView = null;
+        Player dummyPlayer = new Player("DUMMY", 25, 25, 15, 15, 3, setup.World.GetRoom(setup.StartingRoomName)!); //TODO: Think through messy context making this unnecessary
         
         while(true)
         {
-            if (gameState == GameState.Title)
+            if (tuiResult.TargetView == GameState.Title)
             {
-                gameState = titleView.Execute();
-                if (gameState == GameState.Main)
+                tuiResult = titleView.Execute(new Context(setup.World, dummyPlayer));
+                if (tuiResult.TargetView == GameState.Main)
                 {
                     _world = setup.World; //Important to get a new each time a new game is started (important that the GameSetup impl is implementing a get method tha provides a new world object each time)
                     IRoom startingRoom = _world.GetRoom(setup.StartingRoomName)!;
                     _player = new Player("Torleif", 25, 25, 15, 15, 3, startingRoom); //TODO: An input UI for this
+                    //TODO: Think through messy context making this ugly thing unnecessary
+                    tuiResult = new TuiResult(GameState.Main, new Context(_world, _player, startingRoom.Enter(new Context(_world, _player))));
+                    mainView = new MainUserInterface(_world, _player!, _interpreter);
                 }
             }
-            else if (gameState == GameState.Main)
+            else if (tuiResult.TargetView == GameState.Main)
             {
-                ITextUserInterface mainView = new MainUserInterface(_world, _player!, _interpreter);
-                gameState = mainView.Execute();
+                tuiResult = mainView!.Execute(new Context(_world, _player!, tuiResult.Context?.ActionResult));
             }
-            else if (gameState == GameState.Quit)
+            else if (tuiResult.TargetView == GameState.Quit)
             {
                 Quit();
             }
-            else if (gameState == GameState.Completed)
+            else if (tuiResult.TargetView == GameState.Completed)
             {
-                //TODO: View for this?
-                AnsiConsole.MarkupLine("[bold green]Du klarade spelet! Grattis![/]");
-                _ =  AnsiConsole.Prompt(new TextPrompt<string>("Tryck enter..."));
-                gameState = GameState.Title;
+                SuccessUI successUI = new(setup.SuccessComment);
+                tuiResult = successUI.Execute(new Context(_world, _player!, tuiResult.Context?.ActionResult));
             }
-            else if (gameState == GameState.Death)
+            else if (tuiResult.TargetView == GameState.Death)
             {
                 DeathUI deathUI = new(setup.DeathComment);
-                gameState = deathUI.Execute();
+                tuiResult = deathUI.Execute(new Context(_world, _player!, tuiResult.Context?.ActionResult));
+            }
+            else if (tuiResult.TargetView == GameState.Fight)
+            {
+                BattleUserInterface battleUI = new();
+                tuiResult = battleUI.Execute(new Context(_world, _player!, tuiResult.Context?.ActionResult));
             }
         }
     }

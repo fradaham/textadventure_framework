@@ -93,8 +93,8 @@ public class RollingTextPanel
     private void UpdatePanel()
     {
         allLines = GetWrappedLines();
-        int lastLine = currentLine + Height >= allLines.Count()? allLines.Count() - 1 : currentLine + Height - 1;
-        IEnumerable<string> visibleLines = allLines[currentLine..(lastLine + 1)]; 
+        int lastLine = currentLine + Height >= allLines.Count()? allLines.Count() : currentLine + Height;
+        IEnumerable<string> visibleLines = allLines[currentLine..lastLine]; 
         Markup storyMarkup = new Markup(string.Join("\n", visibleLines)).Overflow(Overflow.Crop);
         InnerPanel = new Panel(storyMarkup);//new Panel(new Padder(storyMarkup, new Padding(1,1)));
         InnerPanel.Expand().BorderColor(Color.Green).Header(Header);

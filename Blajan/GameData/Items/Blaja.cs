@@ -55,7 +55,7 @@ public class Blaja : SwedishAbstractItem
                     return new ActionResult()
                     {
                         Message = $"Du tvingar envist ner dina fingar i blajan för att känna på den, och en stickande känsla rör sig uppför armen. Du kan plötsligt inte röra dig! Skräckslaget ser du hur blajan börjar att vandra uppför din arm varefter köttet på din arm fräts bort. En våg går genom blajan som nu böjer sig över dig och omsluter dig helt medans du skriker i dödsplågor. Ditt liv ändar här, inuti en lömsk blaja.",
-                        StoryEvent = StoryEvent.Fail
+                        GameResult = GameResult.Fail
                     };
                 }
                 else
@@ -75,7 +75,7 @@ public class Blaja : SwedishAbstractItem
                 return new ActionResult()
                 {
                     Message = $"Du tvingar envist ner dina fingar i blajan och försöker greppa om så mycket du kan. En stickande känsla rör sig uppför armen. Du kan plötsligt inte röra dig! Skräckslaget ser du hur blajan börjar att vandra uppför din arm varefter köttet på din arm fräts bort. En våg går genom blajan som nu böjer sig över dig och omsluter dig helt medans du skriker i dödsplågor. Ditt liv ändar här, inuti en lömsk blaja.",
-                    StoryEvent = StoryEvent.Fail
+                    GameResult = GameResult.Fail
                 };
             }
             else

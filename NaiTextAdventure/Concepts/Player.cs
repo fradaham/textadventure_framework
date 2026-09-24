@@ -5,13 +5,13 @@ namespace Nai.TextAdventure.Concepts;
 public class Player(string name, byte health, byte maxHealth, byte fightingSkill, byte maxFightingSkill, byte gold, IRoom room)
 {
     public string Name { get; } = name;
-    public byte Health { get; set; } = health;
+    public int Health { get; set; } = health;
 
-    public byte MaxHealth { get; set; } = maxHealth;
+    public int MaxHealth { get; set; } = maxHealth;
 
-    public byte FightingSkill { get; set; } = fightingSkill;
+    public int FightingSkill { get; set; } = fightingSkill;
 
-    public byte MaxFightingSkill { get; set; } = maxFightingSkill;
+    public int MaxFightingSkill { get; set; } = maxFightingSkill;
 
     public byte Gold {get; set; } = gold;
 

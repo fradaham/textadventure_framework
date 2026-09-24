@@ -18,7 +18,7 @@ public class TitleUI: ITextUserInterface
         _madeBy = madeBy;
     }
 
-    public GameState Execute()
+    public TuiResult Execute(Context context)
     {
         AnsiConsole.Clear();
         FigletText title = new(_title);
@@ -51,9 +51,9 @@ public class TitleUI: ITextUserInterface
         ConsoleKey userInput = Console.ReadKey(intercept: true).Key;
 
         return userInput switch {
-            ConsoleKey.D1 => GameState.Main,
-            ConsoleKey.D2 => GameState.Quit,
-            _ => GameState.Title
+            ConsoleKey.D1 => new TuiResult(GameState.Main),
+            ConsoleKey.D2 => new TuiResult(GameState.Quit),
+            _ => new TuiResult(GameState.Title)
         };
        
     }

@@ -30,6 +30,8 @@ public class GameSetup: IGameSetup
                 [
                     new Kallare(),
                     new Tradgard(),
+                    new Grind(),
+                    new Skog()
                 ],
                 UnassignedItems =
                 [

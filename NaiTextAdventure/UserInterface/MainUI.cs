@@ -61,26 +61,34 @@ internal sealed class MainUserInterface : ITextUserInterface
         footerLayout.Size = 3;
         bodyLayout.SplitColumns(storyLayout, inventoryLayout);
         rootLayout.SplitRows(headerLayout, bodyLayout, footerLayout);
-        textPanel = new(player.Room.ToString()!, "[bold] LOGGBOK [/]", (AnsiConsole.Profile.Width - inventoryLayout.Size - 4).Value, (AnsiConsole.Profile.Height - headerLayout.Size - footerLayout.Size - 2).Value);
+        textPanel = new("", "[bold] LOGGBOK [/]", (AnsiConsole.Profile.Width - inventoryLayout.Size - 4).Value, (AnsiConsole.Profile.Height - headerLayout.Size - footerLayout.Size - 2).Value);
     }
 
-    public GameState Execute()
+    public TuiResult Execute(Context context)
     {
-        GameState? exitState = null;
+        TuiResult? exitState = null;
+        ActionResult? incomingAction = context.ActionResult;
+        bool incomingActionProcessed = false;
         AnsiConsole.Live(rootLayout).Start(ctx =>
         {
+            if (incomingAction != null && !incomingActionProcessed)
+            {
+                exitState = ProcessActionResult(context.ActionResult);    
+            }
+            
             Update();
             ctx.Refresh();
+
             while (exitState == null)
             {
                 ConsoleKeyInfo input = Console.ReadKey(intercept: true);
                 if (input.Key == ConsoleKey.F12)
                 {
-                    exitState = GameState.Quit;
+                    exitState = new TuiResult(GameState.Quit);
                 }
                 else if(input.Key == ConsoleKey.F11)
                 {
-                    exitState = GameState.Title;
+                    exitState = new TuiResult(GameState.Title);
                 }
                 else
                 {
@@ -102,25 +110,7 @@ internal sealed class MainUserInterface : ITextUserInterface
                         {
                             action = CreatePlayerAction(parsingResult);
                             ActionResult? result = _player.Room.InterAct(new Context(_world, _player), action);
-                            AppendToLog(result?.Message?? "");
-                            if (result?.MoveToRoomId != null)
-                            {
-                                IRoom? newRoom =_world.GetRoom(result.MoveToRoomId);
-                                _player.Room = newRoom ?? throw new Exception($"Cannot find room with name '{result.MoveToRoomId}' in world. Check game setup.");
-                                AppendToLog(_player.Room.ToString() ?? "");
-                            }
-                            else if (result?.StoryEvent != null) 
-                            {
-                                if (result.StoryEvent == StoryEvent.Success)
-                                {
-                                    exitState = GameState.Completed;
-                                }
-                                else if (result.StoryEvent == StoryEvent.Fail)
-                                {
-                                    exitState = GameState.Death;
-                                }
-                            }
-
+                            exitState = ProcessActionResult(result);
                         }
                         catch(InputException e)
                         {
@@ -135,9 +125,62 @@ internal sealed class MainUserInterface : ITextUserInterface
                 Update();
                 ctx.Refresh();
             }
+
+            if (exitState != null)
+            {
+                if (exitState.TargetView == GameState.Fight)
+                {
+                    AppendToLog($"Tryck valfri tangent för för att börja bulta på {exitState.Context?.ActionResult?.Fight?.Name ?? "NoName"}.");
+                }
+                else if (exitState.TargetView == GameState.Completed || exitState.TargetView == GameState.Death)
+                {
+                   AppendToLog($"Tryck valfri tangent...");
+                }
+                Update();
+                ctx.Refresh();
+                _ = Console.ReadKey(intercept: true);
+            }
         });
         
-        return exitState!.Value;
+        return exitState!;
+    }
+
+    private TuiResult? ProcessActionResult(ActionResult? result)
+    {
+        try
+        {
+            AppendToLog(result?.Message?? "");
+            if (result?.MoveToRoomId != null)
+            {
+                IRoom? newRoom =_world.GetRoom(result.MoveToRoomId);
+                _player.Room = newRoom ?? throw new Exception($"Cannot find room with name '{result.MoveToRoomId}' in world. Check game setup.");
+                return ProcessActionResult(_player.Room.Enter(new Context(_world, _player)));
+            }
+            else if(result?.Fight != null)
+            {
+                return new TuiResult(GameState.Fight, new Context(_world, _player, result));
+            }
+            else if (result?.GameResult != null) 
+            {
+                if (result.GameResult == GameResult.Success)
+                {
+                    return new TuiResult(GameState.Completed, new Context(_world, _player));
+                }
+                else if (result.GameResult == GameResult.Fail)
+                {
+                    return new TuiResult(GameState.Death, new Context(_world, _player));
+                }
+            }
+        }
+        catch(InputException e)
+        {
+            AppendToLog(e.Message);
+        }
+        catch(Exception e)
+        {
+            AppendToLog(Markup.Escape($"Technical error: {e}"));
+        }
+        return null;
     }
 
     private PlayerAction CreatePlayerAction(ParsingResult parsingResult)

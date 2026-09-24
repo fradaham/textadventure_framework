@@ -4,10 +4,10 @@ using System.Reflection.Metadata.Ecma335;
 
 namespace Nai.TextAdventure.UserInterface;
 
-public class DeathUI: ITextUserInterface
+public class SuccessUI: ITextUserInterface
 {
     private readonly string? _comment;
-    public DeathUI(string? comment)
+    public SuccessUI(string? comment)
     {
         _comment = comment;
     }
@@ -15,27 +15,27 @@ public class DeathUI: ITextUserInterface
     public TuiResult Execute(Context context)
     {
         AnsiConsole.Clear();
-        FigletText deathText = new("DU DOG!");
-        deathText.Color(Color.Red1);
-        deathText.Justification = Justify.Left;
+        FigletText successText = new("DU KLARADE SPELET!");
+        successText.Color(Color.Blue3_1);
+        successText.Justification = Justify.Left;
         
         Text instructions = new Text($"1 - starta om spelet\n2 - Avsluta", new Style(Color.RosyBrown));
         
-        Align deathTextAligned = Align.Center(deathText, VerticalAlignment.Bottom).Height(AnsiConsole.Profile.Height/3).Width(AnsiConsole.Profile.Width);
-        AnsiConsole.Write(deathTextAligned);
+        Align successTextAligned = Align.Center(successText, VerticalAlignment.Bottom).Height(AnsiConsole.Profile.Height/3).Width(AnsiConsole.Profile.Width);
+        AnsiConsole.Write(successTextAligned);
 
         Align? commentAligned = null;
         Align? decoration = null;
         if (_comment != null)
         {
-            Text comment = new Text($"{_comment}", new Style(Color.Red3));
+            Text comment = new Text($"{_comment}", new Style(Color.SkyBlue1));
             commentAligned = Align.Center(comment).Height(1);
             decoration = Align.Center(new Text("--<|>--", new Style(Color.Aqua)), VerticalAlignment.Top).Height(2);
             AnsiConsole.Write(decoration);
             AnsiConsole.Write(commentAligned);
         }
 
-        Align instructionsAligned = Align.Center(instructions, VerticalAlignment.Bottom).Height(AnsiConsole.Profile.Height - deathTextAligned.Height - 1 - (commentAligned != null? commentAligned.Height + 1 : 0) - (decoration != null? decoration.Height + 1 : 0));
+        Align instructionsAligned = Align.Center(instructions, VerticalAlignment.Bottom).Height(AnsiConsole.Profile.Height - successTextAligned.Height - 1 - (commentAligned != null? commentAligned.Height + 1 : 0) - (decoration != null? decoration.Height + 1 : 0));
         AnsiConsole.Write(instructionsAligned);
 
         ConsoleKey userInput;
@@ -48,7 +48,7 @@ public class DeathUI: ITextUserInterface
         return userInput switch {
             ConsoleKey.D1 => new TuiResult(GameState.Main),
             ConsoleKey.D2 => new TuiResult(GameState.Quit),
-            _ => throw new Exception($"Unsupported case '{userInput}' in death UI input")
+            _ => throw new Exception($"Unsupported case '{userInput}' in success UI input")
         };
        
     }

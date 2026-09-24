@@ -15,6 +15,28 @@ public class Morakniv : SwedishAbstractItem
 
     public override ActionResult? HandleAction(Context context, PlayerAction action)
     {
+        if (action.Predicate.Verb == Verbs.Släng && action.DirectObject == this)
+        {
+            return new ActionResult()
+            {
+                Message = "Nu blir det teststrid!",
+                Fight = new Opponent()
+                {
+                    FightingSkill = 10,
+                    Health = 15,
+                    Name = "Falukorv",
+                    SuccessEvent = new ActionResult()
+                    {
+                        Message = "Du krämade falukorven!"
+                    },
+                    FailEvent = new ActionResult()
+                    {
+                        GameResult = GameResult.Fail,
+                        Message = "Du blev så fett härskad av en härsken falukorv!"
+                    }
+                }                
+            };
+        }
         return null;
     }
 }
