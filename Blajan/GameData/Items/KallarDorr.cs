@@ -14,6 +14,7 @@ public class KallarDorr : SwedishAbstractItem
         new SweNoun("trädörr", Genus.Utrum),
         new SweNoun("dörr", Genus.Utrum)
     ];
+    public override bool IsFixed => true;
 
     private bool isOpen = false;
 

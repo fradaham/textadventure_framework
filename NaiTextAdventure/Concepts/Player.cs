@@ -29,5 +29,4 @@ public class Player(string name, byte health, byte maxHealth, byte fightingSkill
 
         return entities;
     }
-
 }

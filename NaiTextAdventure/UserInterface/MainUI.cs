@@ -2,6 +2,7 @@ using Spectre.Console;
 using Nai.TextAdventure.Concepts;
 using Nai.TextAdventure.Language.Concepts;
 using Nai.TextAdventure.Language.Swedish;
+using System.Collections.Immutable;
 
 namespace Nai.TextAdventure.UserInterface;
 internal sealed class MainUserInterface : ITextUserInterface
@@ -230,6 +231,12 @@ internal sealed class MainUserInterface : ITextUserInterface
         if (placeAdverbialStr != null)
         {
             placeAdverbial = entities.FirstOrDefault(d => d.IsMatch(placeAdverbialStr));
+            if (placeAdverbial == null && predicate.Verb == Verbs.Gå) //Special case
+            {
+                IEnumerable<IRoom> adjacentRooms =_player.Room.Exits.Where(e => e.IsActivated).Select(e => e.GetTargetRoom(_world));
+                IRoom? matchingRoom = adjacentRooms.FirstOrDefault(r => r.IsMatch(placeAdverbialStr));
+                placeAdverbial = matchingRoom != null?_player.Room.Exits.FirstOrDefault(e => e.TargetRoomName == matchingRoom.Name.Name) : null;
+            }
             if (placeAdverbial == null)
             {
                 notFound.Add(placeAdverbialStr);

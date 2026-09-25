@@ -26,7 +26,7 @@ public class Grind : SwedishAbstractRoom
             ],
             Description = "Det är en stenportal som är en del av den stenmur som kringgärdar trädgården.",
             ExitMessage = "Du öppnar grinden, den gnisslar till, och kliver in i porten ut från trädgården.",
-            TargetRoom = "Skog"
+            TargetRoomName = "Skog"
         }
     ];
 

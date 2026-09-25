@@ -9,6 +9,7 @@ public sealed class SwedishItem: IEntity
     public required INoun Name { get; init; }
     public IEnumerable<INoun>? Synonyms { get; init; }
     public Func<Context, PlayerAction, ActionResult?> HandleAction {get; init; } = (c, a) => throw new NotImplementedException();
+    public bool IsFixed {get; set;} = false;
 
     public required string Description {get; init;}
 
@@ -38,6 +39,13 @@ public sealed class SwedishItem: IEntity
                 return new ActionResult()
                 {
                     Message = $"Du har redan tagit upp {Name.DefiniteForm}"
+                };
+            }
+            else if (IsFixed)
+            {
+                return new ActionResult()
+                {
+                    Message = $"Det går inte att ta upp {Name.DefiniteForm}."
                 };
             }
             else

@@ -18,6 +18,8 @@ public abstract class SwedishAbstractRoom: IRoom
 
     public abstract string Description { get; }
 
+    public bool IsFixed {get;} = true;
+
     public override string ToString()
     {
         string items = Items.Count() > 0? $"\n\nFöremål:\n\n {string.Join("\n", Items.Select(i => new string([i.Name.Name[0]]).ToUpper() + i.Name.Name[1..]))}\n" : "";
@@ -49,7 +51,7 @@ public abstract class SwedishAbstractRoom: IRoom
         //If not implemented, or HandleAction returns null, do general handling:
         if (action.Predicate.Verb == Verbs.Titta)
         {
-            if (action.PlaceAdverbial == null || (action.PlaceAdverbial == this && (action.PlaceAdverbialInit == "på" || action.PlaceAdverbialInit == "i")))
+            if (action.PlaceAdverbial == null || (action.PlaceAdverbial == this && (action.PlaceAdverbialInit == "på" || action.PlaceAdverbialInit == "i")) || (action.PlaceAdverbial == this && action.PlaceAdverbialInit == null))
             {
                 return new ActionResult()
                 {

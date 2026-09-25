@@ -20,7 +20,7 @@ public class Blaja : SwedishAbstractItem
 
     public override ActionResult? HandleAction(Context context, PlayerAction action)
     {
-        if (action.Predicate.Verb == Verbs.Undersök)
+        if (action.Predicate.Verb == Verbs.Undersök && action.DirectObject == this)
         {
             if (action.MannerAdverbial is Morakniv)
             {
@@ -30,7 +30,7 @@ public class Blaja : SwedishAbstractItem
                     hasProducedKey = true;
                     return new ActionResult()
                     {
-                        Message = "Du böjer dig ner och med en inre motvilja sticker du ner morakniven i blajan. Du försöker att hålla fingrarna så långt bort som möjligt från den vidriga ytan med bubblorna. Du kan svära på att blajan utstrålar en pyrande illvilja när du sticker kniven i den. Du känner det underliggande golvet med knivspetsen, men plötsligt går spetsen emot något föremål som ligger där nere i blajan. Försiktigt fiskar du upp föremålet med kniven. Det är en gammal nyckel av större sort. När du reser dig upp ramlar nyckeln ner på golvet en bit från blajan med ett ljudligt plask."
+                        Message = "Du böjer dig ner och med en inre motvilja sticker du ner morakniven i blajan. Du försöker att hålla fingrarna så långt bort som möjligt från den vidriga ytan med bubblorna. Du kan svära på att blajan utstrålar en pyrande illvilja när du sticker kniven i den. Du känner det underliggande golvet med knivspetsen och även något som verkar vara en avloppsbrunn, men plötsligt går spetsen emot något föremål som ligger där nere i blajan. Försiktigt fiskar du upp föremålet med kniven. Det är en gammal nyckel av större sort. När du reser dig upp ramlar nyckeln ner på golvet en bit från blajan med ett ljudligt plask."
                     };
                 }
                 else

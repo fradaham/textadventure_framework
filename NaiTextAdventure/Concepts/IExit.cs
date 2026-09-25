@@ -6,9 +6,11 @@ public interface IExit: IEntity
 {
     IEnumerable<string>? AllowedPrepositions {get; init;}
 
-    string TargetRoom { get; init; }
+    string TargetRoomName { get; init; }
 
     string? ExitMessage {get; init; }
 
     bool IsActivated {get; set;}
+
+    IRoom GetTargetRoom(World world); 
 }

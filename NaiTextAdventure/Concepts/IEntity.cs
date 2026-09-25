@@ -7,6 +7,8 @@ public interface IEntity: IInteractable, IDenominational
     Guid Id {get;}
 
     string Description { get; }
+
+    bool IsFixed { get; }
 }
 
 // public interface IStatefullItem<T>: IItem

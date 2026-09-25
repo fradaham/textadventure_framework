@@ -23,7 +23,7 @@ public class Tradgard : SwedishAbstractRoom
             Synonyms =
             [],
             Description = "Källaren är den enda som är kvar av ett hus som har funnits här i sluttningen tidigare. Den sida som vätter mot trädgården är ovan jord, och i källarväggen av betong finns en öppen dörr.",
-            TargetRoom = "Källare",
+            TargetRoomName = "Källare",
             ExitMessage = "Du kliver in genom dörröppningen till källaren. Unken luft slår emot dig som en vägg.",
         },
         new SwedishExit()
@@ -35,7 +35,7 @@ public class Tradgard : SwedishAbstractRoom
                 new SweNoun("gång", Genus.Utrum),
             ],
             Description = "Det är en grusgång som leder genom trädgården till tomtgränsen, där det verkar finnas en mur med en grind i.",
-            TargetRoom = "Grind",
+            TargetRoomName = "Grind",
             ExitMessage = "Du går längs trädgårdsgången mot grinden. Gången sluttar nedåt. Gruset krasar under dina fötter på de platser där gräset inte fått fäste ännu.",
         }
     ];
