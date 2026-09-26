@@ -15,4 +15,10 @@
     <ProjectReference Include="..\NaiTextAdventure\NaiTextAdventure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update=".\GameData\Music\*.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+</ItemGroup>
+
 </Project>

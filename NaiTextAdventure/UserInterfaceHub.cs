@@ -16,7 +16,7 @@ public class UserInterfaceHub(IGameSetup setup)
     public void Run()
     {
         TuiResult tuiResult = new TuiResult(GameState.Title);
-        TitleUI titleView = new TitleUI(setup.Title, setup.SubTitle, setup.Creator);
+        TitleUI titleView = new TitleUI(setup.Title, setup.SubTitle, setup.Creator, setup.TitleMusic);
         ITextUserInterface? mainView = null;
         Player dummyPlayer = new Player("DUMMY", 25, 25, 15, 15, 3, setup.World.GetRoom(setup.StartingRoomName)!); //TODO: Think through messy context making this unnecessary
         
@@ -32,7 +32,7 @@ public class UserInterfaceHub(IGameSetup setup)
                     _player = new Player("Torleif", 25, 25, 15, 15, 3, startingRoom); //TODO: An input UI for this
                     //TODO: Think through messy context making this ugly thing unnecessary
                     tuiResult = new TuiResult(GameState.Main, new Context(_world, _player, startingRoom.Enter(new Context(_world, _player))));
-                    mainView = new MainUserInterface(_world, _player!, _interpreter);
+                    mainView = new MainUserInterface(_world, _player!, _interpreter, setup.MainMusic);
                 }
             }
             else if (tuiResult.TargetView == GameState.Main)
@@ -45,17 +45,17 @@ public class UserInterfaceHub(IGameSetup setup)
             }
             else if (tuiResult.TargetView == GameState.Completed)
             {
-                SuccessUI successUI = new(setup.SuccessComment);
+                SuccessUI successUI = new(setup.SuccessComment, setup.SuccessMusic);
                 tuiResult = successUI.Execute(new Context(_world, _player!, tuiResult.Context?.ActionResult));
             }
             else if (tuiResult.TargetView == GameState.Death)
             {
-                DeathUI deathUI = new(setup.DeathComment);
+                DeathUI deathUI = new(setup.DeathComment, setup.DeathMusic);
                 tuiResult = deathUI.Execute(new Context(_world, _player!, tuiResult.Context?.ActionResult));
             }
             else if (tuiResult.TargetView == GameState.Fight)
             {
-                BattleUserInterface battleUI = new();
+                BattleUserInterface battleUI = new(setup.BattleMusic);
                 tuiResult = battleUI.Execute(new Context(_world, _player!, tuiResult.Context?.ActionResult));
             }
         }

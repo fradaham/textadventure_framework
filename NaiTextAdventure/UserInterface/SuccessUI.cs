@@ -1,19 +1,29 @@
 using Spectre.Console;
 using Nai.TextAdventure.Concepts;
 using System.Reflection.Metadata.Ecma335;
+using Nai.TextAdventure.Sound;
 
 namespace Nai.TextAdventure.UserInterface;
 
 public class SuccessUI: ITextUserInterface
 {
     private readonly string? _comment;
-    public SuccessUI(string? comment)
+
+    private readonly string? _successMusicPath;
+    public SuccessUI(string? comment, string? musicPath)
     {
         _comment = comment;
+        _successMusicPath = musicPath;
     }
 
     public TuiResult Execute(Context context)
     {
+        SoundPlayer? soundPlayer = null;
+        if (_successMusicPath != null)
+        {
+            soundPlayer = new(_successMusicPath);
+            soundPlayer.Play();
+        }
         AnsiConsole.Clear();
         FigletText successText = new("DU KLARADE SPELET!");
         successText.Color(Color.Blue3_1);
@@ -44,6 +54,8 @@ public class SuccessUI: ITextUserInterface
             userInput = Console.ReadKey(intercept: true).Key;
         }
         while (userInput != ConsoleKey.D1 && userInput != ConsoleKey.D2);   
+
+        soundPlayer?.Stop();
 
         return userInput switch {
             ConsoleKey.D1 => new TuiResult(GameState.Main),

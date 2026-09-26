@@ -1,19 +1,28 @@
 using Spectre.Console;
 using Nai.TextAdventure.Concepts;
 using System.Reflection.Metadata.Ecma335;
+using Nai.TextAdventure.Sound;
 
 namespace Nai.TextAdventure.UserInterface;
 
 public class DeathUI: ITextUserInterface
 {
     private readonly string? _comment;
-    public DeathUI(string? comment)
+    private readonly string? _deathMusicPath;
+    public DeathUI(string? comment, string? musicPath)
     {
         _comment = comment;
+        _deathMusicPath = musicPath;
     }
 
     public TuiResult Execute(Context context)
     {
+        SoundPlayer? soundPlayer = null;
+        if (_deathMusicPath != null)
+        {
+            soundPlayer = new(_deathMusicPath);
+            soundPlayer.Play();
+        }
         AnsiConsole.Clear();
         FigletText deathText = new("DU DOG!");
         deathText.Color(Color.Red1);
@@ -44,6 +53,8 @@ public class DeathUI: ITextUserInterface
             userInput = Console.ReadKey(intercept: true).Key;
         }
         while (userInput != ConsoleKey.D1 && userInput != ConsoleKey.D2);   
+
+        soundPlayer?.Stop();
 
         return userInput switch {
             ConsoleKey.D1 => new TuiResult(GameState.Main),

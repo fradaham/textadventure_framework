@@ -16,6 +16,16 @@ public interface IGameSetup
 
     string? SuccessComment { get; }
 
+    string? TitleMusic { get; }
+
+    string? MainMusic {get;}
+
+    string? DeathMusic {get;}
+
+    string? SuccessMusic {get;}
+
+    string? BattleMusic {get;}
+
     World World { get; }
 
     IEnumerable<IEntity> InitialPlayerInventory {get;}

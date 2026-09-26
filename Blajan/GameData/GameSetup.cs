@@ -20,6 +20,16 @@ public class GameSetup: IGameSetup
 
     public string SuccessComment {get;} = "Du är smartare än en blaja - ännu finns det hopp för mänskligheten!";
 
+    public string TitleMusic {get;} = "./GameData/Music/title_bau.wav";
+
+    public string? MainMusic {get;} = "./GameData/Music/darkness_2013.wav";
+
+    public string? DeathMusic {get;} = "./GameData/Music/slow.wav";
+
+    public string? SuccessMusic {get;} = "./GameData/Music/memtugg.wav";
+
+    public string? BattleMusic {get;} = "./GameData/Music/film_short.wav";
+
     public World World 
     { 
         get

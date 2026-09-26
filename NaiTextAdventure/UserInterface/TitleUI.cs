@@ -1,5 +1,6 @@
 using Spectre.Console;
 using Nai.TextAdventure.Concepts;
+using Nai.TextAdventure.Sound;
 
 namespace Nai.TextAdventure.UserInterface;
 
@@ -10,12 +11,15 @@ public class TitleUI: ITextUserInterface
     private readonly string _subTitle;
 
     private readonly string? _madeBy;
-    public TitleUI(string title, string subTitle, string? madeBy)
+
+    private readonly string? _titleMusic;
+    public TitleUI(string title, string subTitle, string? madeBy, string? titleMusic)
     {
         rootLayout = new Layout("Root");
         _title = title;
         _subTitle = subTitle;
         _madeBy = madeBy;
+        _titleMusic = titleMusic;
     }
 
     public TuiResult Execute(Context context)
@@ -47,8 +51,15 @@ public class TitleUI: ITextUserInterface
         AnsiConsole.Write(mainTitleAligned);
         AnsiConsole.Write(subTitle);
         AnsiConsole.Write(instructionsAligned);
+        SoundPlayer? player = null;
+        if (_titleMusic != null)
+        {
+            player = new(_titleMusic);
+            player.Play();
+        }
 
         ConsoleKey userInput = Console.ReadKey(intercept: true).Key;
+        player?.Stop();
 
         return userInput switch {
             ConsoleKey.D1 => new TuiResult(GameState.Main),

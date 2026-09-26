@@ -2,6 +2,7 @@ using Spectre.Console;
 using Nai.TextAdventure.Concepts;
 using Nai.TextAdventure.Language.Concepts;
 using Nai.TextAdventure.Language.Swedish;
+using Nai.TextAdventure.Sound;
 
 namespace Nai.TextAdventure.UserInterface;
 internal sealed class BattleUserInterface : ITextUserInterface
@@ -20,10 +21,13 @@ internal sealed class BattleUserInterface : ITextUserInterface
 
     private int enemyHealth;
 
+    private readonly string? _battleMusicPath;
+
     private RollingTextPanel textPanel;
 
-    public BattleUserInterface()
+    public BattleUserInterface(string? battleMusicPath)
     {
+        _battleMusicPath = battleMusicPath;
         rootLayout = new("Root");
         headerLayout = new("Header");
         headerLayout.Size = 6;
@@ -40,6 +44,13 @@ internal sealed class BattleUserInterface : ITextUserInterface
 
     public TuiResult Execute(Context context)
     {
+        SoundPlayer? soundPlayer = null;
+        if (_battleMusicPath != null)
+        {
+            soundPlayer = new(_battleMusicPath);
+            soundPlayer.Play();
+        }
+
         Opponent opponent = context.ActionResult?.Fight ?? throw new Exception("FightUI is engaged without an opponent included in context.");
         Player player = context.Player ?? throw new Exception("FightUI is engaged without an player included in context.");;
         enemyHealth = opponent.Health;
@@ -132,6 +143,8 @@ internal sealed class BattleUserInterface : ITextUserInterface
             }
         });
         
+        soundPlayer?.Stop();
+
         return exitState!;
     }
 

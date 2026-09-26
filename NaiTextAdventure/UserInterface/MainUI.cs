@@ -3,6 +3,7 @@ using Nai.TextAdventure.Concepts;
 using Nai.TextAdventure.Language.Concepts;
 using Nai.TextAdventure.Language.Swedish;
 using System.Collections.Immutable;
+using Nai.TextAdventure.Sound;
 
 namespace Nai.TextAdventure.UserInterface;
 internal sealed class MainUserInterface : ITextUserInterface
@@ -45,9 +46,12 @@ internal sealed class MainUserInterface : ITextUserInterface
     private IInterpreter _interpreter;
 
     private World _world;
+
+    private readonly string? _gameMusicPath;
     
-    public MainUserInterface(World world, Player player, IInterpreter interpreter)
+    public MainUserInterface(World world, Player player, IInterpreter interpreter, string? gameMusic)
     {
+        _gameMusicPath = gameMusic;
         _player = player;
         _interpreter = interpreter;
         _world = world;
@@ -67,6 +71,13 @@ internal sealed class MainUserInterface : ITextUserInterface
 
     public TuiResult Execute(Context context)
     {
+        SoundPlayer? soundPlayer = null;
+        if (_gameMusicPath != null)
+        {
+            soundPlayer = new(_gameMusicPath);
+            soundPlayer.Play();
+        }
+
         TuiResult? exitState = null;
         ActionResult? incomingAction = context.ActionResult;
         bool incomingActionProcessed = false;
@@ -142,6 +153,8 @@ internal sealed class MainUserInterface : ITextUserInterface
                 _ = Console.ReadKey(intercept: true);
             }
         });
+
+        soundPlayer?.Stop();
         
         return exitState!;
     }
