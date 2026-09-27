@@ -58,11 +58,14 @@ public class SuccessUI: ITextUserInterface
         soundPlayer?.Stop();
 
         return userInput switch {
-            ConsoleKey.D1 => new TuiResult(GameState.Main),
+            ConsoleKey.D1 => new TuiResult(GameState.Title),
             ConsoleKey.D2 => new TuiResult(GameState.Quit),
             _ => throw new Exception($"Unsupported case '{userInput}' in success UI input")
         };
        
     }
+
+    public void Reset()
+    {}
             
 }

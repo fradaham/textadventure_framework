@@ -68,5 +68,8 @@ public class TitleUI: ITextUserInterface
         };
        
     }
+
+    public void Reset()
+    {}
             
 }

@@ -52,6 +52,12 @@ public class RollingTextPanel
        UpdatePanel();
     }
 
+    public void Reset()
+    {
+        Text = string.Empty;
+        currentLine = 0;
+    }
+
     public void ScrollUp()
     {
         if (currentLine > 0)

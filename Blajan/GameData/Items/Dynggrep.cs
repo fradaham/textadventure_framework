@@ -19,6 +19,15 @@ public class Dynggrep : SwedishAbstractItem
 
     public override ActionResult? HandleAction(Context context, PlayerAction action)
     {
+        if (action.Predicate.Verb == Verbs.Ta && action.DirectObject == this && !context.Player.Inventory.Any(i => i is Dynggrep))
+        {
+            context.Player.FightingSkill += 5;
+        }
+        else if (action.Predicate.Verb == Verbs.Släpp && action.DirectObject == this && context.Player.Inventory.Any(i => i is Dynggrep))
+        {
+            context.Player.FightingSkill -= 5;
+        }
+
         return null;
     }
 }

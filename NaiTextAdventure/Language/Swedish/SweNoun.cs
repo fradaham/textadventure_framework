@@ -31,7 +31,7 @@ public class SweNoun(string name, Genus genus): INoun
     {
         string suffix = genus switch
         {
-            Genus.Utrum when (Name.EndsWith('l') || "aouåeiyäö".Contains(Name[(Name.Length - 1)])) => "n",
+            Genus.Utrum when (Name.EndsWith('l') && !Name.EndsWith("al")) || "aouåeiyäö".Contains(Name[(Name.Length - 1)]) => "n",
             Genus.Utrum => "en",
             Genus.Neutrum when "aouåeiyäö".Contains(Name[(Name.Length - 1)]) => "t",
             Genus.Neutrum => "et",

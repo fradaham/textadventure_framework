@@ -16,7 +16,15 @@ public class SoundPlayer
 
     private Mp3FileReaderBase? mp3FileReader;
 
-    public SoundPlayer(string filePath)
+    private WaveStream? waveStream;
+
+    // private Task playingTask;
+
+    // private CancellationToken cancToken;
+
+    private bool _isLooping;
+
+    public SoundPlayer(string filePath, bool looping = true)
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
@@ -33,35 +41,52 @@ public class SoundPlayer
 
         if (filePath.EndsWith(".wav"))
         {
-            wavFileReader = new AudioFileReader(filePath);
-            outputDevice.Init(wavFileReader);
+            waveStream = new AudioFileReader(filePath);
+            
         }   
         else if (filePath.EndsWith(".mp3"))
         {
-            var builder = new Mp3FileReaderBase.FrameDecompressorBuilder(waveFormat => new Mp3FrameDecompressor(waveFormat));
-            mp3FileReader = new Mp3FileReaderBase(filePath, builder);
-
-            outputDevice.Init(mp3FileReader);
+            Mp3FileReaderBase.FrameDecompressorBuilder builder = new Mp3FileReaderBase.FrameDecompressorBuilder(waveFormat => new Mp3FrameDecompressor(waveFormat));
+            waveStream = new Mp3FileReaderBase(filePath, builder);
         }
-        
 
+        if (waveStream != null)
+        {
+            if (looping)
+            {
+                waveStream = new LoopStream(waveStream);
+            }
+            outputDevice.Init(waveStream);
+        }
+
+        _isLooping = looping;
     }
     public void Play()
     {
+        // if (_isLooping)
+        // {
+        //     outputDevice.PlaybackStopped += HandleLoopingSound;
+        // }
         outputDevice.Play();
     }
 
+    // private void HandleLoopingSound(object? sender, StoppedEventArgs args)
+    // {
+    //     if (waveStream != null && args.Exception == null)
+    //     {
+    //         waveStream.Seek(0, SeekOrigin.Begin);
+    //         outputDevice.Play();  
+    //     }
+    // }
+
     public void Stop()
     {
+        // if (_isLooping)
+        // {
+        //     outputDevice.PlaybackStopped -= HandleLoopingSound;
+        // }
         outputDevice.Stop();
         outputDevice.Dispose();
-        if (mp3FileReader != null)
-        {
-            mp3FileReader.Dispose();
-        }
-        else if (wavFileReader != null)
-        {
-            wavFileReader.Dispose();
-        }
+        waveStream?.Dispose();
     }
 }

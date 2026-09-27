@@ -7,7 +7,7 @@ public class Program
 {
     public static void Main(string[] arg)
     {
-        UserInterfaceHub runner = new(new GameSetup());
-        runner.Run();
+        MainGameEngine naiTextGameEngine = new MainGameEngine(new GameSetup());
+        naiTextGameEngine.Run();
     }
 }

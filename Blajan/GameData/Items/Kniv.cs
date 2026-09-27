@@ -15,7 +15,7 @@ public class Morakniv : SwedishAbstractItem
 
     public override ActionResult? HandleAction(Context context, PlayerAction action)
     {
-        if ((action.Predicate.Verb == Verbs.Släng || action.Predicate.Verb == Verbs.Sätt) && action.DirectObject == this && action.PlaceAdverbial is Falukorv)
+        if ((action.Predicate.Verb == Verbs.Släng || action.Predicate.Verb == Verbs.Sätt || action.Predicate.Verb == Verbs.Stick) && action.DirectObject == this && action.PlaceAdverbial is Falukorv)
         {
             return new ActionResult()
             {
@@ -27,7 +27,19 @@ public class Morakniv : SwedishAbstractItem
                     Name = "Farfars falukorv",
                     SuccessEvent = new ActionResult()
                     {
-                        Message = "Du krämade falukorven!"
+                        Message = "Du krämade farfars falukorv. Det gör ont i hjärtat...men kanske fanns det någon andemening med detta? Du inser att striden stärkte din stridsförmåga.",
+                        Custom = (context) =>
+                        {
+                            if (context.Player.Room.Items.Contains(action.PlaceAdverbial))
+                            {
+                                context.Player.Room.Items.Remove(action.PlaceAdverbial);
+                            }
+                            else
+                            {
+                                context.Player.Inventory.Remove(action.PlaceAdverbial);
+                            }
+                            context.Player.FightingSkill += 5;
+                        }
                     },
                     FailEvent = new ActionResult()
                     {

@@ -148,6 +148,11 @@ internal sealed class BattleUserInterface : ITextUserInterface
         return exitState!;
     }
 
+    public void Reset()
+    {
+        textPanel.Reset();
+    }
+
     public void Update(Player player, Opponent opponent)
     {
         int consoleWidth = AnsiConsole.Profile.Width;

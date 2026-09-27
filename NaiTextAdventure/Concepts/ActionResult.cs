@@ -1,3 +1,5 @@
+using NAudio.Sequencing;
+
 namespace Nai.TextAdventure.Concepts;
 
 //Below a try to create different types of events instead of one general type (ActionResult). Not used yet.
@@ -16,6 +18,8 @@ public class ActionResult
     public string? MoveToRoomId { get; init;}
 
     public int? DeltaHealth { get; init;}
+
+    public Action<Context>? Custom {get; init;}
 
     public Opponent? Fight { get; init;} 
 

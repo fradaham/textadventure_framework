@@ -6,7 +6,7 @@ using System.Collections.Immutable;
 using Nai.TextAdventure.Sound;
 
 namespace Nai.TextAdventure.UserInterface;
-internal sealed class MainUserInterface : ITextUserInterface
+internal sealed class MainUI : ITextUserInterface, IPrintToUser
 {
     private readonly Layout rootLayout;
     private readonly Layout storyLayout;
@@ -27,13 +27,6 @@ internal sealed class MainUserInterface : ITextUserInterface
         textPanel.Append($"\n{text}\n");
     }
 
-    public void AppendToLog(string text, string style)
-    {
-        textPanel.Append(text, style);
-    }
-
-    private readonly Player _player;
-
     private bool inventoryActive = false;
     private int invIndex = 0;
 
@@ -43,18 +36,14 @@ internal sealed class MainUserInterface : ITextUserInterface
 
     public string UserCommand { get; internal set;} = "";
 
-    private IInterpreter _interpreter;
-
-    private World _world;
-
     private readonly string? _gameMusicPath;
-    
-    public MainUserInterface(World world, Player player, IInterpreter interpreter, string? gameMusic)
+
+    private readonly MainGameEngine _gameEngine;
+
+    public MainUI(MainGameEngine gameEngine, string? gameMusic)
     {
         _gameMusicPath = gameMusic;
-        _player = player;
-        _interpreter = interpreter;
-        _world = world;
+        _gameEngine = gameEngine;
         rootLayout = new("Root");
         headerLayout = new("Header");
         headerLayout.Size = 3;
@@ -67,6 +56,16 @@ internal sealed class MainUserInterface : ITextUserInterface
         bodyLayout.SplitColumns(storyLayout, inventoryLayout);
         rootLayout.SplitRows(headerLayout, bodyLayout, footerLayout);
         textPanel = new("", "[bold] LOGGBOK [/]", (AnsiConsole.Profile.Width - inventoryLayout.Size - 4).Value, (AnsiConsole.Profile.Height - headerLayout.Size - footerLayout.Size - 2).Value);
+    }
+
+    public void PrintMessage(string text)
+    {
+        AppendToLog(text);
+    }
+
+    public void Reset()
+    {
+        textPanel.Reset();
     }
 
     public TuiResult Execute(Context context)
@@ -85,10 +84,11 @@ internal sealed class MainUserInterface : ITextUserInterface
         {
             if (incomingAction != null && !incomingActionProcessed)
             {
-                exitState = ProcessActionResult(context.ActionResult);    
+                exitState = _gameEngine.ProcessActionResult(context.ActionResult, context.Player, this);
+                incomingActionProcessed = true;
             }
-            
-            Update();
+
+            Update(context);
             ctx.Refresh();
 
             while (exitState == null)
@@ -104,41 +104,42 @@ internal sealed class MainUserInterface : ITextUserInterface
                 }
                 else
                 {
-                    UserInput(input);
+                    UserInput(input, context);
                 }
 
                 if (input.Key == ConsoleKey.Enter)
                 {
                     string userInput = UserCommand;
-                    ParsingResult parsingResult = _interpreter.Parse(userInput);
-                    if (parsingResult.ErrorMessage is not null)
-                    {
-                       AppendToLog(parsingResult.ErrorMessage); 
-                    }
-                    else
-                    {
-                        PlayerAction action;
-                        try
-                        {
-                            action = CreatePlayerAction(parsingResult);
-                            ActionResult? result = _player.Room.InterAct(new Context(_world, _player), action);
-                            exitState = ProcessActionResult(result);
-                        }
-                        catch(InputException e)
-                        {
-                            AppendToLog(e.Message);
-                        }
-                        catch(Exception e)
-                        {
-                            AppendToLog(Markup.Escape($"Technical error: {e}"));
-                        }
-                    }
+                    exitState = _gameEngine.ProcessUserCommand(userInput, context.Player, this);
+                    // ParsingResult parsingResult = _interpreter.Parse(userInput);
+                    // if (parsingResult.ErrorMessage is not null)
+                    // {
+                    //    AppendToLog(parsingResult.ErrorMessage);
+                    // }
+                    // else
+                    // {
+                    //     PlayerAction action;
+                    //     try
+                    //     {
+                    //         action = CreatePlayerAction(parsingResult);
+                    //         ActionResult? result = _player.Room.InterAct(new Context(_world, _player), action);
+                    //         exitState = ProcessActionResult(result);
+                    //     }
+                    //     catch(InputException e)
+                    //     {
+                    //         AppendToLog(e.Message);
+                    //     }
+                    //     catch(Exception e)
+                    //     {
+                    //         AppendToLog(Markup.Escape($"Technical error: {e}"));
+                    //     }
+                    // }
                 }
-                Update();
+                Update(context);
                 ctx.Refresh();
             }
 
-            if (exitState != null)
+            if (exitState != null && (exitState.TargetView == GameState.Fight || exitState.TargetView == GameState.Completed || exitState.TargetView == GameState.Death))
             {
                 if (exitState.TargetView == GameState.Fight)
                 {
@@ -148,130 +149,130 @@ internal sealed class MainUserInterface : ITextUserInterface
                 {
                    AppendToLog($"Tryck valfri tangent...");
                 }
-                Update();
+                Update(context);
                 ctx.Refresh();
                 _ = Console.ReadKey(intercept: true);
             }
         });
 
         soundPlayer?.Stop();
-        
+
         return exitState!;
     }
 
-    private TuiResult? ProcessActionResult(ActionResult? result)
-    {
-        try
-        {
-            AppendToLog(result?.Message?? "");
-            if (result?.MoveToRoomId != null)
-            {
-                IRoom? newRoom =_world.GetRoom(result.MoveToRoomId);
-                _player.Room = newRoom ?? throw new Exception($"Cannot find room with name '{result.MoveToRoomId}' in world. Check game setup.");
-                return ProcessActionResult(_player.Room.Enter(new Context(_world, _player)));
-            }
-            else if(result?.Fight != null)
-            {
-                return new TuiResult(GameState.Fight, new Context(_world, _player, result));
-            }
-            else if (result?.GameResult != null) 
-            {
-                if (result.GameResult == GameResult.Success)
-                {
-                    return new TuiResult(GameState.Completed, new Context(_world, _player));
-                }
-                else if (result.GameResult == GameResult.Fail)
-                {
-                    return new TuiResult(GameState.Death, new Context(_world, _player));
-                }
-            }
-        }
-        catch(InputException e)
-        {
-            AppendToLog(e.Message);
-        }
-        catch(Exception e)
-        {
-            AppendToLog(Markup.Escape($"Technical error: {e}"));
-        }
-        return null;
-    }
+    // private TuiResult? ProcessActionResult(ActionResult? result)
+    // {
+    //     try
+    //     {
+    //         AppendToLog(result?.Message?? "");
+    //         if (result?.MoveToRoomId != null)
+    //         {
+    //             IRoom? newRoom =_world.GetRoom(result.MoveToRoomId);
+    //             _player.Room = newRoom ?? throw new Exception($"Cannot find room with name '{result.MoveToRoomId}' in world. Check game setup.");
+    //             return ProcessActionResult(_player.Room.Enter(new Context(_world, _player)));
+    //         }
+    //         else if(result?.Fight != null)
+    //         {
+    //             return new TuiResult(GameState.Fight, new Context(_world, _player, result));
+    //         }
+    //         else if (result?.GameResult != null)
+    //         {
+    //             if (result.GameResult == GameResult.Success)
+    //             {
+    //                 return new TuiResult(GameState.Completed, new Context(_world, _player));
+    //             }
+    //             else if (result.GameResult == GameResult.Fail)
+    //             {
+    //                 return new TuiResult(GameState.Death, new Context(_world, _player));
+    //             }
+    //         }
+    //     }
+    //     catch(InputException e)
+    //     {
+    //         AppendToLog(e.Message);
+    //     }
+    //     catch(Exception e)
+    //     {
+    //         AppendToLog(Markup.Escape($"Technical error: {e}"));
+    //     }
+    //     return null;
+    // }
 
-    private PlayerAction CreatePlayerAction(ParsingResult parsingResult)
-    {
-        if (parsingResult.Command == null)
-        {
-            throw new ArgumentException("ParsingResult.Command is null, cannot construct a PlayerAction from this object.");
-        }
+    // private PlayerAction CreatePlayerAction(ParsingResult parsingResult)
+    // {
+    //     if (parsingResult.Command == null)
+    //     {
+    //         throw new ArgumentException("ParsingResult.Command is null, cannot construct a PlayerAction from this object.");
+    //     }
 
-        Predicate predicate = parsingResult.Command.Predicate;
-        string? directObjectStr = parsingResult.SentenceParts?.GetValueOrDefault(SentenceParts.DirectObject.ToString())?.Value;
-        string? indirectObjectStr = parsingResult.SentenceParts?.GetValueOrDefault(SentenceParts.IndirectObject.ToString())?.Value;
-        string? placeAdverbialStr = parsingResult.SentenceParts?.GetValueOrDefault(SentenceParts.PlaceAdverbial.ToString())?.Value;
-        string? mannerAdverbialStr = parsingResult.SentenceParts?.GetValueOrDefault(SentenceParts.MannerAdverbial.ToString())?.Value;
-        string? placeAdverbialInitStr = parsingResult.SentenceParts?.GetValueOrDefault(SentenceParts.PlaceAdverbialInit.ToString())?.Value;
-        string? mannerAdverbialInitStr = parsingResult.SentenceParts?.GetValueOrDefault(SentenceParts.MannerAdverbialInit.ToString())?.Value;
-        //throw new Exception($"{directObjectStr}, {indirectObjectStr}, {placeAdverbialStr}, {placeAdverbialInitStr}, {mannerAdverbialStr}, {mannerAdverbialInitStr}");
-        IEntity? directObject, indirectObject, placeAdverbial, mannerAdverbial;
-        directObject = indirectObject = placeAdverbial = mannerAdverbial = null;
+    //     Predicate predicate = parsingResult.Command.Predicate;
+    //     string? directObjectStr = parsingResult.SentenceParts?.GetValueOrDefault(SentenceParts.DirectObject.ToString())?.Value;
+    //     string? indirectObjectStr = parsingResult.SentenceParts?.GetValueOrDefault(SentenceParts.IndirectObject.ToString())?.Value;
+    //     string? placeAdverbialStr = parsingResult.SentenceParts?.GetValueOrDefault(SentenceParts.PlaceAdverbial.ToString())?.Value;
+    //     string? mannerAdverbialStr = parsingResult.SentenceParts?.GetValueOrDefault(SentenceParts.MannerAdverbial.ToString())?.Value;
+    //     string? placeAdverbialInitStr = parsingResult.SentenceParts?.GetValueOrDefault(SentenceParts.PlaceAdverbialInit.ToString())?.Value;
+    //     string? mannerAdverbialInitStr = parsingResult.SentenceParts?.GetValueOrDefault(SentenceParts.MannerAdverbialInit.ToString())?.Value;
+    //     //throw new Exception($"{directObjectStr}, {indirectObjectStr}, {placeAdverbialStr}, {placeAdverbialInitStr}, {mannerAdverbialStr}, {mannerAdverbialInitStr}");
+    //     IEntity? directObject, indirectObject, placeAdverbial, mannerAdverbial;
+    //     directObject = indirectObject = placeAdverbial = mannerAdverbial = null;
 
-        List<IEntity> entities = _player.GetAllEntities().ToList();
-        List<string> notFound = new();
-        if (directObjectStr != null)
-        {
-            directObject = entities.FirstOrDefault(d => d.IsMatch(directObjectStr));
-            if (directObject == null)
-            {
-                notFound.Add(directObjectStr);
-            }
-        }
-        if (indirectObjectStr != null)
-        {
-            indirectObject = entities.FirstOrDefault(d => d.IsMatch(indirectObjectStr));
-            if (indirectObject == null)
-            {
-                notFound.Add(indirectObjectStr);
-            }
-        }
-        if (mannerAdverbialStr != null)
-        {
-            mannerAdverbial = entities.FirstOrDefault(d => d.IsMatch(mannerAdverbialStr));
-            if (mannerAdverbial == null)
-            {
-                notFound.Add(mannerAdverbialStr);
-            }
-        }
-        if (placeAdverbialStr != null)
-        {
-            placeAdverbial = entities.FirstOrDefault(d => d.IsMatch(placeAdverbialStr));
-            if (placeAdverbial == null && predicate.Verb == Verbs.Gå) //Special case
-            {
-                IEnumerable<IRoom> adjacentRooms =_player.Room.Exits.Where(e => e.IsActivated).Select(e => e.GetTargetRoom(_world));
-                IRoom? matchingRoom = adjacentRooms.FirstOrDefault(r => r.IsMatch(placeAdverbialStr));
-                placeAdverbial = matchingRoom != null?_player.Room.Exits.FirstOrDefault(e => e.TargetRoomName == matchingRoom.Name.Name) : null;
-            }
-            if (placeAdverbial == null)
-            {
-                notFound.Add(placeAdverbialStr);
-            }
-        }
-        if (notFound.Count() > 0)
-        {
-            throw new InputException($"{String.Join(", ", notFound)} finns inte här.");
-        }
-        return new PlayerAction()
-        {
-            IndirectObject = indirectObject,
-            Predicate = predicate,
-            DirectObject = directObject,
-            PlaceAdverbial = placeAdverbial,
-            MannerAdverbial  = mannerAdverbial,
-            MannerAdverbialInit = mannerAdverbialInitStr,
-            PlaceAdverbialInit = placeAdverbialInitStr    
-        };
-    }
+    //     List<IEntity> entities = _player.GetAllEntities().ToList();
+    //     List<string> notFound = new();
+    //     if (directObjectStr != null)
+    //     {
+    //         directObject = entities.FirstOrDefault(d => d.IsMatch(directObjectStr));
+    //         if (directObject == null)
+    //         {
+    //             notFound.Add(directObjectStr);
+    //         }
+    //     }
+    //     if (indirectObjectStr != null)
+    //     {
+    //         indirectObject = entities.FirstOrDefault(d => d.IsMatch(indirectObjectStr));
+    //         if (indirectObject == null)
+    //         {
+    //             notFound.Add(indirectObjectStr);
+    //         }
+    //     }
+    //     if (mannerAdverbialStr != null)
+    //     {
+    //         mannerAdverbial = entities.FirstOrDefault(d => d.IsMatch(mannerAdverbialStr));
+    //         if (mannerAdverbial == null)
+    //         {
+    //             notFound.Add(mannerAdverbialStr);
+    //         }
+    //     }
+    //     if (placeAdverbialStr != null)
+    //     {
+    //         placeAdverbial = entities.FirstOrDefault(d => d.IsMatch(placeAdverbialStr));
+    //         if (placeAdverbial == null && predicate.Verb == Verbs.Gå) //Special case
+    //         {
+    //             IEnumerable<IRoom> adjacentRooms =_player.Room.Exits.Where(e => e.IsActivated).Select(e => e.GetTargetRoom(_world));
+    //             IRoom? matchingRoom = adjacentRooms.FirstOrDefault(r => r.IsMatch(placeAdverbialStr));
+    //             placeAdverbial = matchingRoom != null?_player.Room.Exits.FirstOrDefault(e => e.TargetRoomName == matchingRoom.Name.Name) : null;
+    //         }
+    //         if (placeAdverbial == null)
+    //         {
+    //             notFound.Add(placeAdverbialStr);
+    //         }
+    //     }
+    //     if (notFound.Count() > 0)
+    //     {
+    //         throw new InputException($"{String.Join(", ", notFound)} finns inte här.");
+    //     }
+    //     return new PlayerAction()
+    //     {
+    //         IndirectObject = indirectObject,
+    //         Predicate = predicate,
+    //         DirectObject = directObject,
+    //         PlaceAdverbial = placeAdverbial,
+    //         MannerAdverbial  = mannerAdverbial,
+    //         MannerAdverbialInit = mannerAdverbialInitStr,
+    //         PlaceAdverbialInit = placeAdverbialInitStr
+    //     };
+    // }
 
-    public void Update()
+    public void Update(Context context)
     {
         int consoleWidth = AnsiConsole.Profile.Width;
         int consoleHeight = AnsiConsole.Profile.Height;
@@ -280,24 +281,24 @@ internal sealed class MainUserInterface : ITextUserInterface
 
         textPanel.Height = storyHeight;
         textPanel.Width = storyWidth;
-        
+
         storyLayout.Update(textPanel.InnerPanel);
 
         BarChart healthBar = new BarChart()
-            .WithMaxValue(_player.MaxHealth)
-            .AddItem(   $"Hälsa ({_player.MaxHealth})"
-                        ,_player.Health
-                        ,(((double)_player.Health)/_player.MaxHealth) switch 
+            .WithMaxValue(context.Player.MaxHealth)
+            .AddItem(   $"Hälsa ({context.Player.MaxHealth})"
+                        ,context.Player.Health
+                        ,(((double)context.Player.Health)/context.Player.MaxHealth) switch
                         {
                             > 0.75 => Color.Green,
                             > 0.25 and <= 0.75 => Color.Yellow,
                             _ => Color.Red
                         });
-            
+
 
         BarChart spBar = new BarChart()
             .WithMaxValue(15)
-            .AddItem($"Stridsförmåga ({_player.MaxFightingSkill})", _player.FightingSkill, Color.LightCyan3);
+            .AddItem($"Stridsförmåga ({context.Player.MaxFightingSkill})", context.Player.FightingSkill, Color.LightCyan3);
 
         Grid grid = new();
         grid.AddColumn(new GridColumn() { Width = (consoleWidth - 4)/3, Alignment = Justify.Left, NoWrap = true });
@@ -305,7 +306,7 @@ internal sealed class MainUserInterface : ITextUserInterface
         grid.AddColumn(new GridColumn() { Width = (consoleWidth - 4)/3, Alignment = Justify.Right, NoWrap = true });
         // grid.AddRow(healthBar, new Markup($"[yellow]Guldmynt:[/] {player.Gold}"), new Markup($"[blue]Plats:[/] Källare"));
         // grid.AddRow(spBar);
-        grid.AddRow(new Markup($"Hälsa: {_player.Health}"), new Markup($"Stridsförmåga: {_player.FightingSkill}"), new Markup($"[blue]Plats:[/] Källare"));
+        grid.AddRow(new Markup($"Hälsa: {context.Player.Health}"), new Markup($"Stridsförmåga: {context.Player.FightingSkill}"), new Markup($"[blue]Plats:[/] Källare"));
 
         // Columns headerContent = new(healthBar, spBar, new Markup($"[red]Kroppspoäng:[/] {player.Health}/100   |   [yellow]Guldmynt:[/] {player.Gold}   |   [blue]Plats:[/] {player.Location.Name}}}"));
         // headerContent.Expand();
@@ -319,8 +320,8 @@ internal sealed class MainUserInterface : ITextUserInterface
         // debugLayout.Update(new Panel(new Markup($"Lines: {storyMarkup.Lines} | Length: {storyMarkup.Length} | S_height: {storyHeight} | S_width: {storyWidth}  | allLines: {allLines.Count()}  | visLines: {visibleLines.Count()}  | currL: {currentLine}"))
         //     .Expand()
         //     .BorderColor(Color.Green).Header("[bold] DEBUG [/]"));
-            
-        string inventoryMarkup = string.Join("\n", _player.Inventory.Select((item, index) => $"{((inventoryActive && index == invIndex)? "[bold black on cyan]":"")}-{item.Name.Name}{((inventoryActive && index == invIndex)? "[/]" : "")}"));
+
+        string inventoryMarkup = string.Join("\n", context.Player.Inventory.Select((item, index) => $"{((inventoryActive && index == invIndex)? "[bold black on cyan]":"")}-{item.Name.Name}{((inventoryActive && index == invIndex)? "[/]" : "")}"));
         Markup invMarkup = new Markup(inventoryMarkup);
         invMarkup.Overflow = Overflow.Ellipsis;
         Panel invPanel = new(invMarkup)
@@ -335,21 +336,21 @@ internal sealed class MainUserInterface : ITextUserInterface
         );
 
         string promptToShow = promptInput + " ";
-        Markup promptMarkup = new Markup($"> {promptToShow[..cursorPos]}[invert]{promptToShow[cursorPos]}[/]{promptToShow[(cursorPos + 1)..]}");    
+        Markup promptMarkup = new Markup($"> {promptToShow[..cursorPos]}[invert]{promptToShow[cursorPos]}[/]{promptToShow[(cursorPos + 1)..]}");
         footerLayout.Update(
             new Panel(Align.Left(promptMarkup))
             .BorderColor(Color.Grey)
         );
     }
 
-    public void UserInput(ConsoleKeyInfo input)
+    public void UserInput(ConsoleKeyInfo input, Context context)
     {
         if (input.Key == ConsoleKey.Enter)
         {
             UserCommand = new string(promptInput);
-            textPanel.Append($"\n> {promptInput}\n"); 
+            textPanel.Append($"\n> {promptInput}\n");
             promptInput = "";
-            cursorPos = 0;           
+            cursorPos = 0;
         }
         else if (input.Key == ConsoleKey.Backspace)
         {
@@ -379,7 +380,7 @@ internal sealed class MainUserInterface : ITextUserInterface
                 invIndex--;
                 if (invIndex < 0)
                 {
-                    invIndex = _player.Inventory.Count() - 1;
+                    invIndex = context.Player.Inventory.Count() - 1;
                 }
             }
             else
@@ -392,7 +393,7 @@ internal sealed class MainUserInterface : ITextUserInterface
             if (inventoryActive)
             {
                 invIndex++;
-                if (invIndex >= _player.Inventory.Count())
+                if (invIndex >= context.Player.Inventory.Count())
                 {
                     invIndex = 0;
                 }

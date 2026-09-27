@@ -40,21 +40,30 @@ public class Grind : SwedishAbstractRoom
         if (!hasBattledBlajan)
         {
             IExit portal = Exits.First(e => e.Name.Name == "portal");
+            Opponent blajan = new Opponent()
+            {
+                FightingSkill = 23,
+                Health = 20,
+                Name = "Ärkeblajan",
+                FailEvent = new ActionResult()
+                {
+                    Message = "Du dog, nedsmält i en blaja. Du är ett enda stort misslyckande...",
+                    GameResult = GameResult.Fail
+                },
+                SuccessEvent = new ActionResult()
+                {
+                    Message = "Blajan sjunker ihop och slurpas långsamt men säkert ner i avloppet igen. Det känns som att din seger tog själen ur den, för känslan är bara simpelt klet nu. Kletet kommer nog att spolas bort ur avloppssystemet med nästa regn.",
+                }
+            };
             if (command.Predicate.Verb == Verbs.Gå && (command.DirectObject == portal || command.PlaceAdverbial == portal || command.MannerAdverbial == portal))
             {
-                
                 hasBattledBlajan = true;
                 if (context.Player.Inventory.Any(i => i is Dynggrep))
                 {
                     return new ActionResult()
                     {
                         Message = "Du blir attackerad av en blaja som likt en tjock tentakel ormar sig upp ur avloppsbrunnen! Du greppar ett stadigt tag om din trogna dynggrep och tackar tyst din lyckliga stjärna för att du plockade upp detta mäktiga vapen inför denna strid - en strid för dig liv!",
-                        Fight = new Opponent()
-                        {
-                            FightingSkill = 10,
-                            Health = 20,
-                            Name = "Ärkeblajan"
-                        }
+                        Fight = blajan,
                     };
                 }
                 else
@@ -62,12 +71,7 @@ public class Grind : SwedishAbstractRoom
                     return new ActionResult()
                     {
                         Message = "Du blir attackerad av en blaja som likt en tjock tentakel ormar sig upp ur avloppsbrunnen! Skräckslaget inser du vilken mäktig fiende du står inför och måste slåss mot till döden!",
-                        Fight = new Opponent()
-                        {
-                            FightingSkill = 20,
-                            Health = 20,
-                            Name = "Ärkeblajan"
-                        }
+                        Fight = blajan
                     };
                 }
             }

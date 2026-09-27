@@ -15,7 +15,7 @@ namespace Nai.TextAdventure.Language.Swedish
                 predicateVerbs.AddRange(command.Predicate.GetAllMatchingAlternatives());
             }
             IEnumerable<string> orderedPredicateVerbs = predicateVerbs.OrderByDescending(v => v.Length);
-            string? foundMatchingPredicateVerb = orderedPredicateVerbs.FirstOrDefault(v => input.StartsWith(v, StringComparison.InvariantCultureIgnoreCase));
+            string? foundMatchingPredicateVerb = orderedPredicateVerbs.FirstOrDefault(v => input.StartsWith(v + ' ', StringComparison.InvariantCultureIgnoreCase));
 
             if (foundMatchingPredicateVerb == null)
             {

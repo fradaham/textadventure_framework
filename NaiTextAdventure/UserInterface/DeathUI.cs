@@ -37,7 +37,7 @@ public class DeathUI: ITextUserInterface
         Align? decoration = null;
         if (_comment != null)
         {
-            Text comment = new Text($"{_comment}", new Style(Color.Red3));
+            Text comment = new Text($"{context.ActionResult?.Message ??_comment }", new Style(Color.Red3));
             commentAligned = Align.Center(comment).Height(1);
             decoration = Align.Center(new Text("--<|>--", new Style(Color.Aqua)), VerticalAlignment.Top).Height(2);
             AnsiConsole.Write(decoration);
@@ -57,11 +57,14 @@ public class DeathUI: ITextUserInterface
         soundPlayer?.Stop();
 
         return userInput switch {
-            ConsoleKey.D1 => new TuiResult(GameState.Main),
+            ConsoleKey.D1 => new TuiResult(GameState.Title),
             ConsoleKey.D2 => new TuiResult(GameState.Quit),
             _ => throw new Exception($"Unsupported case '{userInput}' in death UI input")
         };
        
     }
+
+    public void Reset()
+    {}
             
 }

@@ -5,218 +5,79 @@ using Nai.TextAdventure.UserInterface;
 
 namespace Nai.TextAdventure;
 
-public class UserInterfaceHub(IGameSetup setup)
+public class UserInterfaceHub
 {
-    private World _world = setup.World;
+    private World _world;
 
-    private Player? _player;
+    private Player _player;
 
-    private IInterpreter _interpreter = setup.MainInterpreter;
+    private IInterpreter _interpreter;
 
-    public void Run()
+    private ITextUserInterface _titleUI, _mainUI, _deathUI, _successUI, _battleUI;
+
+    private IGameSetup _setup;
+
+    public UserInterfaceHub(IGameSetup setup, MainGameEngine engine)
     {
-        TuiResult tuiResult = new TuiResult(GameState.Title);
-        TitleUI titleView = new TitleUI(setup.Title, setup.SubTitle, setup.Creator, setup.TitleMusic);
-        ITextUserInterface? mainView = null;
-        Player dummyPlayer = new Player("DUMMY", 25, 25, 15, 15, 3, setup.World.GetRoom(setup.StartingRoomName)!); //TODO: Think through messy context making this unnecessary
+        _setup = setup;
+        _world = setup.World;
+        _interpreter = setup.MainInterpreter;
+        _titleUI = new TitleUI(setup.Title, setup.SubTitle, setup.Creator, setup.TitleMusic);
+        _mainUI = new MainUI(engine, setup.MainMusic);
+        _deathUI = new DeathUI(setup.DeathComment, setup.DeathMusic);
+        _successUI = new SuccessUI(setup.SuccessComment, setup.SuccessMusic);
+        _battleUI = new BattleUserInterface(setup.BattleMusic);
+        _player = new Player("DUMMY", 25, 25, 15, 15, 3, setup.World.GetRoom(setup.StartingRoomName)!); //TODO: Think through messy context making this unnecessary
+    }
+
+    public void Run(GameState initState)    
+    {
+        TuiResult tuiResult = new TuiResult(initState);
         
         while(true)
         {
             if (tuiResult.TargetView == GameState.Title)
             {
-                tuiResult = titleView.Execute(new Context(setup.World, dummyPlayer));
+                tuiResult = _titleUI.Execute(new Context(_world, _player));
                 if (tuiResult.TargetView == GameState.Main)
                 {
-                    _world = setup.World; //Important to get a new each time a new game is started (important that the GameSetup impl is implementing a get method tha provides a new world object each time)
-                    IRoom startingRoom = _world.GetRoom(setup.StartingRoomName)!;
+                    _world = _setup.World; //Important to get a new each time a new game is started (important that the GameSetup impl is implementing a get method tha provides a new world object each time)
+                    IRoom startingRoom = _world.GetRoom(_setup.StartingRoomName)!;
                     _player = new Player("Torleif", 25, 25, 15, 15, 3, startingRoom); //TODO: An input UI for this
                     //TODO: Think through messy context making this ugly thing unnecessary
                     tuiResult = new TuiResult(GameState.Main, new Context(_world, _player, startingRoom.Enter(new Context(_world, _player))));
-                    mainView = new MainUserInterface(_world, _player!, _interpreter, setup.MainMusic);
+                    _mainUI.Reset();
                 }
             }
             else if (tuiResult.TargetView == GameState.Main)
             {
-                tuiResult = mainView!.Execute(new Context(_world, _player!, tuiResult.Context?.ActionResult));
+                tuiResult = _mainUI.Execute(new Context(_world, _player!, tuiResult.Context?.ActionResult));
             }
             else if (tuiResult.TargetView == GameState.Quit)
             {
-                Quit();
+                break;
             }
             else if (tuiResult.TargetView == GameState.Completed)
             {
-                SuccessUI successUI = new(setup.SuccessComment, setup.SuccessMusic);
-                tuiResult = successUI.Execute(new Context(_world, _player!, tuiResult.Context?.ActionResult));
+                tuiResult = _successUI.Execute(new Context(_world, _player!, tuiResult.Context?.ActionResult));
             }
             else if (tuiResult.TargetView == GameState.Death)
             {
-                DeathUI deathUI = new(setup.DeathComment, setup.DeathMusic);
-                tuiResult = deathUI.Execute(new Context(_world, _player!, tuiResult.Context?.ActionResult));
+                tuiResult = _deathUI.Execute(new Context(_world, _player!, tuiResult.Context?.ActionResult));
             }
             else if (tuiResult.TargetView == GameState.Fight)
             {
-                BattleUserInterface battleUI = new(setup.BattleMusic);
-                tuiResult = battleUI.Execute(new Context(_world, _player!, tuiResult.Context?.ActionResult));
+                tuiResult = _battleUI.Execute(new Context(_world, _player!, tuiResult.Context?.ActionResult));
+                _battleUI.Reset();
             }
         }
     }
 
-    private void Quit()
-    {
-        AnsiConsole.Clear();
-        AnsiConsole.MarkupLine($"[bold yellow] {setup.QuitPhrase ?? "--------------"}[/]");
-        Environment.Exit(0);
-    }
-
-    // public void Run()
-    // {
-    //     IView currentView = new DefaultView(_player);
-    //     FinishCode? finishCode = null;
-
-    //     AnsiConsole.Live(currentView.Layout).Start(ctx =>
-    //     {
-    //         currentView.Update();
-    //         ctx.Refresh();
-    //         while (finishCode == null)
-    //         {
-                
-
-    //             // string command = AnsiConsole.Ask<string>("[green]>[/]");
-    //             ConsoleKeyInfo input = Console.ReadKey(intercept: true);
-
-                
-    //             //ConsoleKey input = Console.ReadKey(intercept: true).Key;
-    //             if (input.Key == ConsoleKey.F12)
-    //             {
-    //                 finishCode = FinishCode.Quit;
-    //             }
-    //             else
-    //             {
-    //                 currentView.UserInput(input);
-    //             }
-
-    //             // if (command == "quit")
-    //             // {
-    //             //     quit = true;
-    //             // }
-
-    //             if (input.Key == ConsoleKey.Enter && currentView is MainUserInterface defaultView)
-    //             {
-    //                 string userInput = defaultView.UserCommand;
-    //                 ParsingResult parsingResult = _interpreter.Parse(userInput);
-    //                 if (parsingResult.ErrorMessage is not null)
-    //                 {
-    //                    defaultView.AppendToLog(parsingResult.ErrorMessage); 
-    //                 }
-    //                 else
-    //                 {
-    //                     PlayerAction action;
-    //                     try
-    //                     {
-    //                         action = CreatePlayerAction(parsingResult);
-    //                         ActionResult? result = _player.Room.InterAct(new Context(_world, _player), action);
-    //                         defaultView.AppendToLog(result != null? result.Message: "Det går inte.");
-    //                         if (result?.MoveToRoomId != null)
-    //                         {
-    //                             IRoom? newRoom =_world.GetRoom(result.MoveToRoomId);
-    //                             _player.Room = newRoom ?? throw new Exception($"Felkonfigurerat namn på rum: {result.MoveToRoomId}");
-    //                             defaultView.AppendToLog(_player.Room.ToString() ?? "");
-    //                         }
-    //                         else if (result?.GameFinished != null)
-    //                         {
-    //                             finishCode = result?.GameFinished;
-    //                         }
-
-    //                     }
-    //                     catch(InputException e)
-    //                     {
-    //                         defaultView.AppendToLog(e.Message);
-    //                     }
-    //                     catch(Exception e)
-    //                     {
-    //                         defaultView.AppendToLog(Markup.Escape($"Tekniskt fel: {e}"));
-    //                     }
-    //                 }
-    //             }
-    //             currentView.Update();
-    //             ctx.Refresh();
-    //         }
-    //     });
-        
-    //     return finishCode!.Value;
-    // }
-
-    // private PlayerAction CreatePlayerAction(ParsingResult parsingResult)
-    // {
-    //     if (parsingResult.Command == null)
-    //     {
-    //         throw new ArgumentException("ParsingResult.Command is null, cannot construct a PlayerAction from this object.");
-    //     }
-
-    //     Predicate predicate = parsingResult.Command.Predicate;
-    //     string? directObjectStr = parsingResult.SentenceParts?.GetValueOrDefault(SentenceParts.DirectObject.ToString())?.Value;
-    //     string? indirectObjectStr = parsingResult.SentenceParts?.GetValueOrDefault(SentenceParts.IndirectObject.ToString())?.Value;
-    //     string? placeAdverbialStr = parsingResult.SentenceParts?.GetValueOrDefault(SentenceParts.PlaceAdverbial.ToString())?.Value;
-    //     string? mannerAdverbialStr = parsingResult.SentenceParts?.GetValueOrDefault(SentenceParts.MannerAdverbial.ToString())?.Value;
-    //     string? placeAdverbialInitStr = parsingResult.SentenceParts?.GetValueOrDefault(SentenceParts.PlaceAdverbialInit.ToString())?.Value;
-    //     string? mannerAdverbialInitStr = parsingResult.SentenceParts?.GetValueOrDefault(SentenceParts.MannerAdverbialInit.ToString())?.Value;
-    //     //throw new Exception($"{directObjectStr}, {indirectObjectStr}, {placeAdverbialStr}, {placeAdverbialInitStr}, {mannerAdverbialStr}, {mannerAdverbialInitStr}");
-    //     IEntity? directObject, indirectObject, placeAdverbial, mannerAdverbial;
-    //     directObject = indirectObject = placeAdverbial = mannerAdverbial = null;
-
-    //     List<IEntity> entities = _player.GetAllEntities().ToList();
-    //     List<string> notFound = new();
-    //     if (directObjectStr != null)
-    //     {
-    //         directObject = entities.FirstOrDefault(d => d.IsMatch(directObjectStr));
-    //         if (directObject == null)
-    //         {
-    //             notFound.Add(directObjectStr);
-    //         }
-    //     }
-    //     if (indirectObjectStr != null)
-    //     {
-    //         indirectObject = entities.FirstOrDefault(d => d.IsMatch(indirectObjectStr));
-    //         if (indirectObject == null)
-    //         {
-    //             notFound.Add(indirectObjectStr);
-    //         }
-    //     }
-    //     if (mannerAdverbialStr != null)
-    //     {
-    //         mannerAdverbial = entities.FirstOrDefault(d => d.IsMatch(mannerAdverbialStr));
-    //         if (mannerAdverbial == null)
-    //         {
-    //             notFound.Add(mannerAdverbialStr);
-    //         }
-    //     }
-    //     if (placeAdverbialStr != null)
-    //     {
-    //         placeAdverbial = entities.FirstOrDefault(d => d.IsMatch(placeAdverbialStr));
-    //         if (placeAdverbial == null)
-    //         {
-    //             notFound.Add(placeAdverbialStr);
-    //         }
-    //     }
-    //     if (notFound.Count() > 0)
-    //     {
-    //         throw new InputException($"{String.Join(", ", notFound)} finns inte här.");
-    //     }
-    //     return new PlayerAction()
-    //     {
-    //         IndirectObject = indirectObject,
-    //         Predicate = predicate,
-    //         DirectObject = directObject,
-    //         PlaceAdverbial = placeAdverbial,
-    //         MannerAdverbial  = mannerAdverbial,
-    //         MannerAdverbialInit = mannerAdverbialInitStr,
-    //         PlaceAdverbialInit = placeAdverbialInitStr    
-    //     };
-    // }
+    
 }
 
-public class InputException: Exception
+public class TextInputException: Exception
 {
-    public InputException(string message): base(message)
+    public TextInputException(string message): base(message)
     {}
 }

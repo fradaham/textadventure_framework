@@ -3,26 +3,11 @@ using Spectre.Console;
 
 namespace Nai.TextAdventure.UserInterface;
 
-internal interface IView
-{
-    Layout Layout { get; }
-    void Update();
-
-    void UserInput(ConsoleKeyInfo key);
-
-    ViewExitData Execute();
-
-}
-
-internal class ViewExitData
-{
-    internal required IView FromView { get; init;} 
-    internal IView? ToView { get; init;} 
-}
-
 public interface ITextUserInterface
 {
     TuiResult Execute(Context context);
+
+    void Reset();
 }
 
 public enum GameState

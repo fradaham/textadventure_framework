@@ -2,5 +2,10 @@ namespace Nai.TextAdventure.Language.Concepts;
 
 public enum SentenceParts
 {
-    DirectObject, IndirectObject, PlaceAdverbial, MannerAdverbial, MannerAdverbialInit, PlaceAdverbialInit
+    DirectObject, 
+    IndirectObject, 
+    PlaceAdverbial, 
+    MannerAdverbial, 
+    MannerAdverbialInit, 
+    PlaceAdverbialInit
 }
