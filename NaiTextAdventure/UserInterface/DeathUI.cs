@@ -15,7 +15,7 @@ public class DeathUI: ITextUserInterface
         _deathMusicPath = musicPath;
     }
 
-    public TuiResult Execute(Context context)
+    public TuiResult Execute(Context context, ActionResult? incomingActionResult = null)
     {
         SoundPlayer? soundPlayer = null;
         if (_deathMusicPath != null)
@@ -37,7 +37,7 @@ public class DeathUI: ITextUserInterface
         Align? decoration = null;
         if (_comment != null)
         {
-            Text comment = new Text($"{context.ActionResult?.Message ??_comment }", new Style(Color.Red3));
+            Text comment = new Text($"{incomingActionResult?.Message ??_comment }", new Style(Color.Red3));
             commentAligned = Align.Center(comment).Height(1);
             decoration = Align.Center(new Text("--<|>--", new Style(Color.Aqua)), VerticalAlignment.Top).Height(2);
             AnsiConsole.Write(decoration);

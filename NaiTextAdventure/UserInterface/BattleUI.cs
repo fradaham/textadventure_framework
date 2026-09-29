@@ -42,7 +42,7 @@ internal sealed class BattleUserInterface : ITextUserInterface
         textPanel = new("", "[bold] STRIDSLOGG [/]", AnsiConsole.Profile.Width - 2, (AnsiConsole.Profile.Height - headerLayout.Size - opponentsLayout.Size - 2).Value);
     }
 
-    public TuiResult Execute(Context context)
+    public TuiResult Execute(Context context, ActionResult? incomingActionResult)
     {
         SoundPlayer? soundPlayer = null;
         if (_battleMusicPath != null)
@@ -51,7 +51,7 @@ internal sealed class BattleUserInterface : ITextUserInterface
             soundPlayer.Play();
         }
 
-        Opponent opponent = context.ActionResult?.Fight ?? throw new Exception("FightUI is engaged without an opponent included in context.");
+        Opponent opponent = incomingActionResult?.Fight ?? throw new Exception("FightUI is engaged without an opponent included in context.");
         Player player = context.Player ?? throw new Exception("FightUI is engaged without an player included in context.");;
         enemyHealth = opponent.Health;
         TuiResult? exitState = null;
@@ -114,7 +114,7 @@ internal sealed class BattleUserInterface : ITextUserInterface
                     };
                     AppendToLog("Nederlag!");
                     AppendToLog("Tryck valfri tangent för att fortsätta.");
-                    exitState = new TuiResult(targetView, new Context(context.World, player, opponent.FailEvent));
+                    exitState = new TuiResult(targetView, opponent.FailEvent);
                 }
                 else if (enemyHealth <= 0)
                 {
@@ -124,7 +124,7 @@ internal sealed class BattleUserInterface : ITextUserInterface
                         GameResult.Fail => GameState.Death,
                         _ => GameState.Main
                     };
-                    exitState = new TuiResult(targetView, new Context(context.World, player, opponent.SuccessEvent));
+                    exitState = new TuiResult(targetView, opponent.SuccessEvent);
                     AppendToLog("Seger!");
                     AppendToLog("Tryck valfri tangent för att fortsätta.");
                 }

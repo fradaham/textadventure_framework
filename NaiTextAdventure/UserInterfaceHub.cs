@@ -7,9 +7,11 @@ namespace Nai.TextAdventure;
 
 public class UserInterfaceHub
 {
-    private World _world;
+    // private World _world;
 
-    private Player _player;
+    // private Player _player;
+
+    private Context _context;
 
     private IInterpreter _interpreter;
 
@@ -20,14 +22,15 @@ public class UserInterfaceHub
     public UserInterfaceHub(IGameSetup setup, MainGameEngine engine)
     {
         _setup = setup;
-        _world = setup.World;
+        //World world = setup.World;
         _interpreter = setup.MainInterpreter;
         _titleUI = new TitleUI(setup.Title, setup.SubTitle, setup.Creator, setup.TitleMusic);
         _mainUI = new MainUI(engine, setup.MainMusic);
         _deathUI = new DeathUI(setup.DeathComment, setup.DeathMusic);
         _successUI = new SuccessUI(setup.SuccessComment, setup.SuccessMusic);
         _battleUI = new BattleUserInterface(setup.BattleMusic);
-        _player = new Player("DUMMY", 25, 25, 15, 15, 3, setup.World.GetRoom(setup.StartingRoomName)!); //TODO: Think through messy context making this unnecessary
+        Player player = new Player("DUMMY", 25, 25, 15, 15, 3, setup.World.GetRoom(setup.StartingRoomName)!); //TODO: Think through messy context making this unnecessary
+        _context = new Context(setup.World, player);
     }
 
     public void Run(GameState initState)    
@@ -38,20 +41,21 @@ public class UserInterfaceHub
         {
             if (tuiResult.TargetView == GameState.Title)
             {
-                tuiResult = _titleUI.Execute(new Context(_world, _player));
+                tuiResult = _titleUI.Execute(_context);
                 if (tuiResult.TargetView == GameState.Main)
                 {
-                    _world = _setup.World; //Important to get a new each time a new game is started (important that the GameSetup impl is implementing a get method tha provides a new world object each time)
-                    IRoom startingRoom = _world.GetRoom(_setup.StartingRoomName)!;
-                    _player = new Player("Torleif", 25, 25, 15, 15, 3, startingRoom); //TODO: An input UI for this
+                    World world = _setup.World; //Important to get a new each time a new game is started (important that the GameSetup impl is implementing a get method tha provides a new world object each time)
+                    IRoom startingRoom = world.GetRoom(_setup.StartingRoomName)!;
+                    Player player = new Player("Torleif", 25, 25, 15, 15, 3, startingRoom); //TODO: An input UI for this
                     //TODO: Think through messy context making this ugly thing unnecessary
-                    tuiResult = new TuiResult(GameState.Main, new Context(_world, _player, startingRoom.Enter(new Context(_world, _player))));
+                    _context = new Context(_setup.World, player);
+                    tuiResult = new TuiResult(GameState.Main, startingRoom.Enter(_context));
                     _mainUI.Reset();
                 }
             }
             else if (tuiResult.TargetView == GameState.Main)
             {
-                tuiResult = _mainUI.Execute(new Context(_world, _player!, tuiResult.Context?.ActionResult));
+                tuiResult = _mainUI.Execute(_context, tuiResult.PassedOnActionResult);
             }
             else if (tuiResult.TargetView == GameState.Quit)
             {
@@ -59,15 +63,15 @@ public class UserInterfaceHub
             }
             else if (tuiResult.TargetView == GameState.Completed)
             {
-                tuiResult = _successUI.Execute(new Context(_world, _player!, tuiResult.Context?.ActionResult));
+                tuiResult = _successUI.Execute(_context, tuiResult.PassedOnActionResult);
             }
             else if (tuiResult.TargetView == GameState.Death)
             {
-                tuiResult = _deathUI.Execute(new Context(_world, _player!, tuiResult.Context?.ActionResult));
+                tuiResult = _deathUI.Execute(_context, tuiResult.PassedOnActionResult);
             }
             else if (tuiResult.TargetView == GameState.Fight)
             {
-                tuiResult = _battleUI.Execute(new Context(_world, _player!, tuiResult.Context?.ActionResult));
+                tuiResult = _battleUI.Execute(_context, tuiResult.PassedOnActionResult);
                 _battleUI.Reset();
             }
         }

@@ -90,17 +90,17 @@ public class MainGameEngine
             }
             else if(result?.Fight != null)
             {
-                return new TuiResult(GameState.Fight, new Context(_world, player, result));
+                return new TuiResult(GameState.Fight, result);
             }
             else if (result?.GameResult != null) 
             {
                 if (result.GameResult == GameResult.Success)
                 {
-                    return new TuiResult(GameState.Completed, new Context(_world, player));
+                    return new TuiResult(GameState.Completed);
                 }
                 else if (result.GameResult == GameResult.Fail)
                 {
-                    return new TuiResult(GameState.Death, new Context(_world, player));
+                    return new TuiResult(GameState.Death);
                 }
             }
         }

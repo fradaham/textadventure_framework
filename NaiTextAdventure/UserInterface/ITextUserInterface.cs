@@ -5,7 +5,7 @@ namespace Nai.TextAdventure.UserInterface;
 
 public interface ITextUserInterface
 {
-    TuiResult Execute(Context context);
+    TuiResult Execute(Context context, ActionResult? incomingActionResult = null);
 
     void Reset();
 }
@@ -27,10 +27,11 @@ public class TuiResult(GameState targetView)
 {
     public GameState TargetView {get;} = targetView;
 
-    public Context? Context {get; init;}
+    //public Context? Context {get; init;}
+    public ActionResult? PassedOnActionResult {get; }
 
-    public TuiResult(GameState targetView, Context context): this(targetView)
+    public TuiResult(GameState targetView, ActionResult? actionResult): this(targetView)
     {
-        Context = context;
+        PassedOnActionResult = actionResult;
     }
 }

@@ -16,7 +16,7 @@ public class SuccessUI: ITextUserInterface
         _successMusicPath = musicPath;
     }
 
-    public TuiResult Execute(Context context)
+    public TuiResult Execute(Context context, ActionResult? incomingActionResult = null)
     {
         SoundPlayer? soundPlayer = null;
         if (_successMusicPath != null)

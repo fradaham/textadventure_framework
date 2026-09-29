@@ -22,7 +22,7 @@ public class TitleUI: ITextUserInterface
         _titleMusic = titleMusic;
     }
 
-    public TuiResult Execute(Context context)
+    public TuiResult Execute(Context context, ActionResult? incomingActionResult = null)
     {
         AnsiConsole.Clear();
         FigletText title = new(_title);

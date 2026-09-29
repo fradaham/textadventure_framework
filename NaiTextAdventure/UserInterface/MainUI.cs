@@ -68,7 +68,7 @@ internal sealed class MainUI : ITextUserInterface, IPrintToUser
         textPanel.Reset();
     }
 
-    public TuiResult Execute(Context context)
+    public TuiResult Execute(Context context, ActionResult? incomingActionResult)
     {
         SoundPlayer? soundPlayer = null;
         if (_gameMusicPath != null)
@@ -78,14 +78,11 @@ internal sealed class MainUI : ITextUserInterface, IPrintToUser
         }
 
         TuiResult? exitState = null;
-        ActionResult? incomingAction = context.ActionResult;
-        bool incomingActionProcessed = false;
         AnsiConsole.Live(rootLayout).Start(ctx =>
         {
-            if (incomingAction != null && !incomingActionProcessed)
+            if (incomingActionResult != null)
             {
-                exitState = _gameEngine.ProcessActionResult(context.ActionResult, context.Player, this);
-                incomingActionProcessed = true;
+                exitState = _gameEngine.ProcessActionResult(incomingActionResult, context.Player, this);
             }
 
             Update(context);
@@ -143,7 +140,7 @@ internal sealed class MainUI : ITextUserInterface, IPrintToUser
             {
                 if (exitState.TargetView == GameState.Fight)
                 {
-                    AppendToLog($"Tryck valfri tangent för för att börja bulta på {exitState.Context?.ActionResult?.Fight?.Name ?? "NoName"}.");
+                    AppendToLog($"Tryck valfri tangent för för att börja bulta på {exitState.PassedOnActionResult?.Fight?.Name ?? "NoName"}.");
                 }
                 else if (exitState.TargetView == GameState.Completed || exitState.TargetView == GameState.Death)
                 {
