@@ -69,8 +69,16 @@ public class Kallare : SwedishAbstractRoom
     public override string Description => $"Du är i en fuktig källare utan fönster. Det finns en gammal tjärad trädörr. Det gurglar någonstans och en blaja sväller på golvet. I ett hörn ligger en hög med skräp.";
     
 
-    public override ActionResult? HandleAction(Context context, PlayerAction command)
+    public override ActionResult? HandleAction(Context context, PlayerAction action)
     {
+        if (action.Predicate.Verb == Verbs.Hjälp && action.DirectObject == this)
+        {
+            return new ActionResult()
+            {
+                Message = "Du vill ta dig ut ur källaren. Det luktar inte mumsigt här. Försök att undersöka det som finns här, även det som verkar motbjudande. Men var försiktig."
+            };
+        }
+        
         return null;
     }
 }

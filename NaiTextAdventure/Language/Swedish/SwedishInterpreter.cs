@@ -15,7 +15,7 @@ namespace Nai.TextAdventure.Language.Swedish
                 predicateVerbs.AddRange(command.Predicate.GetAllMatchingAlternatives());
             }
             IEnumerable<string> orderedPredicateVerbs = predicateVerbs.OrderByDescending(v => v.Length);
-            string? foundMatchingPredicateVerb = orderedPredicateVerbs.FirstOrDefault(v => input.StartsWith(v + ' ', StringComparison.InvariantCultureIgnoreCase));
+            string? foundMatchingPredicateVerb = orderedPredicateVerbs.FirstOrDefault(v => input.StartsWith(v + ' ', StringComparison.InvariantCultureIgnoreCase) || input.Equals(v, StringComparison.InvariantCultureIgnoreCase));
 
             if (foundMatchingPredicateVerb == null)
             {
@@ -45,6 +45,14 @@ namespace Nai.TextAdventure.Language.Swedish
                 Command = matchingCommand,
                 SentenceParts = matchingGroups
             };
+        }
+
+        public string Help()
+        {
+            string helpText = "Tolken stödjer följande kommandon: \n";
+            helpText += String.Join(", ", Definitions.Commands.Select(c => c.Predicate.Verb));
+
+            return helpText;
         }
     }
 }

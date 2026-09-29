@@ -21,6 +21,7 @@ namespace Nai.TextAdventure.Language.Swedish
         public const string Torka = "torka";
         public const string Torka_av = "torka av";
         public const string Stick = "stick";
+        public const string Hjälp = "hjälp";
     }
 
     public static class Definitions
@@ -214,12 +215,25 @@ namespace Nai.TextAdventure.Language.Swedish
             {
                 Predicate = new Predicate()
                 {
-                    Infinitiv = "stick",
+                    Infinitiv = "sticka",
                     Verb = Verbs.Stick,
                 },
                 Patterns =
                 [
                     new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+) (?<{SentenceParts.PlaceAdverbialInit}>i|på|under) (?<{SentenceParts.PlaceAdverbial}>[a-zåäö ]+)")
+                ]
+            },
+            new Command()
+            {
+                Predicate = new Predicate()
+                {
+                    Infinitiv = "hjälpa",
+                    Verb = Verbs.Hjälp,
+                },
+                Patterns =
+                [
+                    new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+)"),
+                    new Regex(@$"^")
                 ]
             }
             

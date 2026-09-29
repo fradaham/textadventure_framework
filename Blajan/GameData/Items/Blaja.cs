@@ -87,6 +87,13 @@ public class Blaja : SwedishAbstractItem
                 };
             }
         }
+        else if (action.Predicate.Verb == Verbs.Hjälp && action.DirectObject == this)
+        {
+            return new ActionResult()
+            {
+                Message = "Tänk om det finns något som blajan döljer? Men ska du undersöka detta vidriga slem så måste du använda ett lämpligt verktyg, så till vida du inte vill prova att doppa fingrarna i monstruöst evolverat latrininnehåll."
+            };
+        }
 
         return null;
     }

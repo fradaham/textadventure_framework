@@ -41,8 +41,6 @@ public class MainGameEngine
     
     internal TuiResult? ProcessUserCommand(string command, Player player, IPrintToUser userUI)
     {
-        TuiResult? exitState = null;
-
         ParsingResult parsingResult = _interpreter.Parse(command);
         if (parsingResult.ErrorMessage is not null)
         {
@@ -50,12 +48,23 @@ public class MainGameEngine
         }
         else
         {
+            if (parsingResult.Command == null)
+            {
+                throw new ArgumentException("ParsingResult.Command is null, cannot construct a PlayerAction from this object.");
+            }
             PlayerAction action;
             try
             {
                 action = CreatePlayerAction(parsingResult, player, _world);
-                ActionResult? result = player.Room.InterAct(new Context(_world, player), action);
-                exitState = ProcessActionResult(result, player, userUI);
+                if (parsingResult.Command.Predicate.Verb == Verbs.Hjälp && action.DirectObject == null) //Needs to be more general, not using swedish defs. And this should check that no object exist
+                {
+                    userUI.PrintMessage(_interpreter.Help());
+                }
+                else 
+                {
+                    ActionResult? result = player.Room.InterAct(new Context(_world, player), action);
+                    return ProcessActionResult(result, player, userUI);
+                }
             }
             catch(TextInputException e)
             {
@@ -67,7 +76,7 @@ public class MainGameEngine
             }
         }
 
-        return exitState;
+        return null;
     }
 
     internal TuiResult? ProcessActionResult(ActionResult? result, Player player, IPrintToUser userUI)
@@ -118,12 +127,7 @@ public class MainGameEngine
 
     private PlayerAction CreatePlayerAction(ParsingResult parsingResult, Player player, World world)
     {
-        if (parsingResult.Command == null)
-        {
-            throw new ArgumentException("ParsingResult.Command is null, cannot construct a PlayerAction from this object.");
-        }
-
-        Predicate predicate = parsingResult.Command.Predicate;
+        Predicate predicate = parsingResult.Command!.Predicate;
         string? directObjectStr = parsingResult.SentenceParts?.GetValueOrDefault(SentenceParts.DirectObject.ToString())?.Value;
         string? indirectObjectStr = parsingResult.SentenceParts?.GetValueOrDefault(SentenceParts.IndirectObject.ToString())?.Value;
         string? placeAdverbialStr = parsingResult.SentenceParts?.GetValueOrDefault(SentenceParts.PlaceAdverbial.ToString())?.Value;
