@@ -12,17 +12,7 @@ public class SoundPlayer
 {
     private IWavePlayer outputDevice;
 
-    private AudioFileReader? wavFileReader;
-
-    private Mp3FileReaderBase? mp3FileReader;
-
     private WaveStream? waveStream;
-
-    // private Task playingTask;
-
-    // private CancellationToken cancToken;
-
-    private bool _isLooping;
 
     public SoundPlayer(string filePath, bool looping = true)
     {
@@ -58,33 +48,15 @@ public class SoundPlayer
             }
             outputDevice.Init(waveStream);
         }
-
-        _isLooping = looping;
     }
+
     public void Play()
     {
-        // if (_isLooping)
-        // {
-        //     outputDevice.PlaybackStopped += HandleLoopingSound;
-        // }
         outputDevice.Play();
     }
 
-    // private void HandleLoopingSound(object? sender, StoppedEventArgs args)
-    // {
-    //     if (waveStream != null && args.Exception == null)
-    //     {
-    //         waveStream.Seek(0, SeekOrigin.Begin);
-    //         outputDevice.Play();  
-    //     }
-    // }
-
     public void Stop()
     {
-        // if (_isLooping)
-        // {
-        //     outputDevice.PlaybackStopped -= HandleLoopingSound;
-        // }
         outputDevice.Stop();
         outputDevice.Dispose();
         waveStream?.Dispose();

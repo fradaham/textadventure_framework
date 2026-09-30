@@ -15,7 +15,7 @@ public class Kallare : SwedishAbstractRoom
         new KallarDorr(),
         new Blaja(),
         new Falukorv(),
-        new SwedishItem()
+        new SwedishItem() //just trying out the non-abstract class. Actually a little wrong as this item should hold state (if it has been examined or not)
         {
             Name = new SweNoun("skräp", Genus.Neutrum),
             Synonyms = [new SweNoun("skräphög", Genus.Utrum)],

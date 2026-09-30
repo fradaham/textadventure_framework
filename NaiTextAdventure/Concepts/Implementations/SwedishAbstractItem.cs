@@ -3,6 +3,10 @@ using Nai.TextAdventure.Language.Swedish;
 
 namespace Nai.TextAdventure.Concepts.Implementations;
 
+/// <summary>
+/// A default implementation for items with swedish denomination and interaction
+/// Use this class to implement new items, especially items that need to hold some kind of state in the game
+/// </summary>
 public abstract class SwedishAbstractItem: IEntity
 {
     public Guid Id { get; } = Guid.NewGuid();

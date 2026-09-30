@@ -3,6 +3,9 @@ using Nai.TextAdventure.Language.Swedish;
 
 namespace Nai.TextAdventure.Concepts.Implementations;
 
+/// <summary>
+/// Can be used if the item doesn't need to hold any additional state 
+/// </summary>
 public sealed class SwedishItem: IEntity
 {
     public Guid Id { get; } = Guid.NewGuid();

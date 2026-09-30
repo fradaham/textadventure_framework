@@ -12,8 +12,6 @@ public class MainGameEngine
 
     private World _world;
 
-    private Player? _player;
-
     private UserInterfaceHub _uiHub;
 
     private string? _quitPhrase;

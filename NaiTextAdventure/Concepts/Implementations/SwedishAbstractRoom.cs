@@ -5,6 +5,9 @@ using Nai.TextAdventure.Language.Swedish;
 
 namespace Nai.TextAdventure.Concepts.Implementations;
 
+/// <summary>
+/// A default implementation for rooms with swedish denomination and interaction
+/// </summary>
 public abstract class SwedishAbstractRoom: IRoom
 {
     public Guid Id { get; } = Guid.NewGuid();

@@ -16,8 +16,6 @@ internal sealed class MainUI : ITextUserInterface, IPrintToUser
 
     private readonly Layout footerLayout;
 
-    private readonly char cursor = '\u2588';
-
     private int cursorPos = 0;
 
     public Layout Layout { get { return rootLayout; }}
