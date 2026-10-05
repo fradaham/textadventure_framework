@@ -124,7 +124,7 @@ public class RollingTextPanel
                 for (int i = 0; i < words.Length; i++)
                 {
                     string word = words[i];
-                    if (foldedLine.Length + word.Length < Width)
+                    if (foldedLine.Length + word.Length + 1 < Width)
                     {
                         foldedLine += $"{word} ";
                     }
