@@ -33,7 +33,7 @@ public class TitleUI: ITextUserInterface
             Justification = Justify.Center
         };  
         
-        Text instructions = new Text($"1 - starta spelet\n2 - Avsluta\n3 - Om", new Style(Color.RosyBrown));
+        Text instructions = new Text($"1 - starta spelet\n2 - Om\n3 - Avsluta", new Style(Color.RosyBrown));
 
         Align? creatorAligned = null;
         if (_madeBy != null)
@@ -51,6 +51,7 @@ public class TitleUI: ITextUserInterface
         AnsiConsole.Write(mainTitleAligned);
         AnsiConsole.Write(subTitle);
         AnsiConsole.Write(instructionsAligned);
+        
         SoundPlayer? player = null;
         if (_titleMusic != null)
         {
@@ -58,12 +59,19 @@ public class TitleUI: ITextUserInterface
             player.Play();
         }
 
-        ConsoleKey userInput = Console.ReadKey(intercept: true).Key;
+        ConsoleKey userInput;
+        do
+        {
+            userInput = Console.ReadKey(intercept: true).Key;
+        }
+        while (userInput != ConsoleKey.D1 && userInput != ConsoleKey.D2 && userInput != ConsoleKey.D3);   
+        
         player?.Stop();
 
         return userInput switch {
             ConsoleKey.D1 => new TuiResult(GameState.Main),
-            ConsoleKey.D2 => new TuiResult(GameState.Quit),
+            ConsoleKey.D2 => new TuiResult(GameState.About),
+            ConsoleKey.D3 => new TuiResult(GameState.Quit),
             _ => new TuiResult(GameState.Title)
         };
        

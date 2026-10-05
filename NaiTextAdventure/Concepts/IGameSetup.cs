@@ -8,6 +8,8 @@ public interface IGameSetup
 
     string SubTitle {get;}
 
+    string About { get; }
+
     string? QuitPhrase { get; }
 
     string? Creator { get; }

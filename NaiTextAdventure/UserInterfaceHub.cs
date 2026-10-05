@@ -7,15 +7,11 @@ namespace Nai.TextAdventure;
 
 public class UserInterfaceHub
 {
-    // private World _world;
-
-    // private Player _player;
-
     private Context _context;
 
     private IInterpreter _interpreter;
 
-    private ITextUserInterface _titleUI, _mainUI, _deathUI, _successUI, _battleUI;
+    private ITextUserInterface _titleUI, _mainUI, _deathUI, _successUI, _battleUI, _aboutUI;
 
     private IGameSetup _setup;
 
@@ -29,6 +25,7 @@ public class UserInterfaceHub
         _deathUI = new DeathUI(setup.DeathComment, setup.DeathMusic);
         _successUI = new SuccessUI(setup.SuccessComment, setup.SuccessMusic);
         _battleUI = new BattleUserInterface(setup.BattleMusic);
+        _aboutUI = new AboutUI(setup.About);
         Player player = new Player("DUMMY", 25, 25, 15, 15, 3, setup.World.GetRoom(setup.StartingRoomName)!); //TODO: Think through messy context making this unnecessary
         _context = new Context(setup.World, player);
     }
@@ -73,6 +70,10 @@ public class UserInterfaceHub
             {
                 tuiResult = _battleUI.Execute(_context, tuiResult.PassedOnActionResult);
                 _battleUI.Reset();
+            }
+            else if (tuiResult.TargetView == GameState.About)
+            {
+                tuiResult = _aboutUI.Execute(_context, tuiResult.PassedOnActionResult);
             }
         }
     }
