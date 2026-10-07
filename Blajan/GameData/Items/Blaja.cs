@@ -100,7 +100,7 @@ public class Blaja : SwedishAbstractItem
             {
                 return new ActionResult()
                 {
-                    Message = $"Du böjer dig ner och tvingar dig att fantisera att det är chokladpudding på golvet. Med munnen formad till en tratt börjar du att suga i dig blajan. Efter några sekunder exploderar din röv i ett hav av blajkräm, du drivs som en raket rakt genom källartaket och fortsätter accelera upp mot månen. Någonstans utanför jordens atmosfär tappar du medvetandet, vilket gör att du slipper känna kraften in nedslaget på månen som formar en ny krater på dess yta.",
+                    Message = $"Du böjer dig ner och tvingar dig att fantisera att det är chokladpudding på golvet. Med munnen formad till en tratt börjar du att suga i dig blajan. Efter några sekunder exploderar din röv i ett hav av blajkräm, du drivs som en raket rakt genom källartaket och fortsätter accelera upp mot månen. Någonstans utanför jordens atmosfär tappar du medvetandet, vilket gör att du slipper känna kraften i ditt nedslag på månen som formar en ny krater på dess yta.",
                     GameResult = GameResult.Fail
                 };
             }
