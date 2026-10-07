@@ -93,6 +93,25 @@ public class Blaja : SwedishAbstractItem
             {
                 Message = "Tänk om det finns något som blajan döljer? Men ska du undersöka detta vidriga slem så måste du använda ett lämpligt verktyg, så till vida du inte vill prova att doppa fingrarna i monstruöst evolverat latrininnehåll."
             };
+        } 
+        else if (action.Predicate.Verb == Verbs.Ät && action.DirectObject == this)
+        {
+            if (persistentStupido)
+            {
+                return new ActionResult()
+                {
+                    Message = $"Du böjer dig ner och tvingar dig att fantisera att det är chokladpudding på golvet. Med munnen formad till en tratt börjar du att suga i dig blajan. Efter några sekunder exploderar din röv i ett hav av blajkräm, du drivs som en raket rakt genom källartaket och fortsätter accelera upp mot månen. Någonstans utanför jordens atmosfär tappar du medvetandet, vilket gör att du slipper känna kraften in nedslaget på månen som formar en ny krater på dess yta.",
+                    GameResult = GameResult.Fail
+                };
+            }
+            else
+            {
+                persistentStupido = true;
+                return new ActionResult()
+                {
+                    Message = "Hur lockande det än kan vara att låtsas att det är chokladpudding, så lyckas du inte just den här gången. ",
+                };
+            }
         }
 
         return null;

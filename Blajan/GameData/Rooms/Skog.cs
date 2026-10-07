@@ -16,7 +16,7 @@ public class Skog : SwedishAbstractRoom
 
     public override IEnumerable<INoun> Synonyms => [];
 
-    public override string Description => $"Du står vid änden på trädgårdsgången invid en grind som sitter i en portal med ett valv som välver sig från vardera mursida. Det är en klassisk järngrind. Den är svartmålad och har franska liljor på spetsarna som sticker upp längs överkanten. \n\n Här i änden på gången är det en lågpunkt där en avloppsbrunn är placerad.";
+    public override string Description => $"";
     
     public override ActionResult? Enter(Context context)
     {

@@ -52,7 +52,7 @@ public class Grind : SwedishAbstractRoom
                 },
                 SuccessEvent = new ActionResult()
                 {
-                    Message = "Blajan sjunker ihop och slurpas långsamt men säkert ner i avloppet igen. Det känns som att din seger tog själen ur den, för känslan är bara simpelt klet nu. Kletet kommer nog att spolas bort ur avloppssystemet med nästa regn.",
+                    Message = "Blajan sjunker ihop och slurpas långsamt men säkert ner i avloppet igen. Det känns som att din seger tog själen ur den, för känslan är bara simpelt själlöst klet nu. Kletet kommer nog att spolas bort ur avloppssystemet med nästa regn.",
                 }
             };
             if (command.Predicate.Verb == Verbs.Gå && (command.DirectObject == portal || command.PlaceAdverbial == portal || command.MannerAdverbial == portal))
@@ -62,7 +62,7 @@ public class Grind : SwedishAbstractRoom
                 {
                     return new ActionResult()
                     {
-                        Message = "Du blir attackerad av en blaja som likt en tjock tentakel ormar sig upp ur avloppsbrunnen! Du greppar ett stadigt tag om din trogna dynggrep och tackar tyst din lyckliga stjärna för att du plockade upp detta mäktiga vapen inför denna strid - en strid för dig liv!",
+                        Message = "Du tar ett steg över avloppsbrunnen för att gå ut genom portalen, men något griper tag om ditt ben! Du blir du attackerad av en blaja som likt en tjock tentakel ormar sig upp ur avloppsbrunnen! Du greppar ett stadigt tag om din trogna dynggrep och tackar tyst din lyckliga stjärna för att du plockade upp detta mäktiga vapen inför denna strid - en strid för dig liv!",
                         Fight = blajan,
                     };
                 }
@@ -70,7 +70,7 @@ public class Grind : SwedishAbstractRoom
                 {
                     return new ActionResult()
                     {
-                        Message = "Du blir attackerad av en blaja som likt en tjock tentakel ormar sig upp ur avloppsbrunnen! Skräckslaget inser du vilken mäktig fiende du står inför och måste slåss mot till döden!",
+                        Message = "Du tar ett steg över avloppsbrunnen för att gå ut genom portalen, men något griper tag om ditt ben! Du blir attackerad av en blaja som likt en tjock tentakel ormar sig upp ur avloppsbrunnen! Skräckslaget inser du vilken mäktig fiende du står inför och måste slåss mot till döden!",
                         Fight = blajan
                     };
                 }
