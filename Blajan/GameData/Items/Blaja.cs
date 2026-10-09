@@ -20,7 +20,7 @@ public class Blaja : SwedishAbstractItem
 
     public override ActionResult? HandleAction(Context context, PlayerAction action)
     {
-        if (action.Predicate.Verb == Verbs.Undersök && action.DirectObject == this)
+        if (action.Predicate == Predicates.Undersök && action.DirectObject == this)
         {
             if (action.MannerAdverbial is Morakniv)
             {
@@ -68,7 +68,7 @@ public class Blaja : SwedishAbstractItem
                 }
             }
         }
-        else if(action.Predicate.Verb == Verbs.Ta)
+        else if(action.Predicate == Predicates.Ta)
         {
             if (persistentStupido)
             {
@@ -87,14 +87,14 @@ public class Blaja : SwedishAbstractItem
                 };
             }
         }
-        else if (action.Predicate.Verb == Verbs.Hjälp && action.DirectObject == this)
+        else if (action.Predicate == Predicates.Hjälp && action.DirectObject == this)
         {
             return new ActionResult()
             {
                 Message = "Tänk om det finns något som blajan döljer? Men ska du undersöka detta vidriga slem så måste du använda ett lämpligt verktyg, så till vida du inte vill prova att doppa fingrarna i monstruöst evolverat latrininnehåll."
             };
         } 
-        else if (action.Predicate.Verb == Verbs.Ät && action.DirectObject == this)
+        else if (action.Predicate == Predicates.Ät && action.DirectObject == this)
         {
             if (persistentStupido)
             {

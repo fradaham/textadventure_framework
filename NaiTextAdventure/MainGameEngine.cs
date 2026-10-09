@@ -54,7 +54,7 @@ public class MainGameEngine
             try
             {
                 action = CreatePlayerAction(parsingResult, player, _world);
-                if (parsingResult.Command.Predicate.Verb == Verbs.Hjälp && action.DirectObject == null) //Needs to be more general, not using swedish defs. And this should check that no object exist
+                if (parsingResult.Command.Predicate == Predicates.Hjälp && action.DirectObject == null) //Needs to be more general, not using swedish defs. And this should check that no object exist
                 {
                     userUI.PrintMessage(_interpreter.Help());
                 }
@@ -165,7 +165,7 @@ public class MainGameEngine
         if (placeAdverbialStr != null)
         {
             placeAdverbial = entities.FirstOrDefault(d => d.IsMatch(placeAdverbialStr));
-            if (placeAdverbial == null && predicate.Verb == Verbs.Gå) //Special case
+            if (placeAdverbial == null && predicate == Predicates.Gå) //Special case
             {
                 IEnumerable<IRoom> adjacentRooms = player.Room.Exits.Where(e => e.IsActivated).Select(e => e.GetTargetRoom(world));
                 IRoom? matchingRoom = adjacentRooms.FirstOrDefault(r => r.IsMatch(placeAdverbialStr));

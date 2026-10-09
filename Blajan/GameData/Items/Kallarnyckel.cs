@@ -22,7 +22,7 @@ public class KallarNyckel : SwedishAbstractItem
     public override ActionResult? HandleAction(Context context, PlayerAction action)
     {
         
-        if (action.Predicate.Verb == Verbs.Ta && action.DirectObject == this)
+        if (action.Predicate == Predicates.Ta && action.DirectObject == this)
         {
             if (!context.Player.Inventory.Contains(this))
             {
@@ -52,7 +52,7 @@ public class KallarNyckel : SwedishAbstractItem
                 };
             }
         }
-        else if (action.Predicate.Verb == Verbs.Torka || action.Predicate.Verb == Verbs.Torka_av)
+        else if (action.Predicate == Predicates.Torka || action.Predicate == Predicates.Torka_av)
         {
             if (action.DirectObject == this)
             {

@@ -31,7 +31,7 @@ public abstract class SwedishAbstractItem: IEntity
         {}
         //If not implemented, or HandleAction returns null, do general handling:
 
-        if (action.Predicate.Verb == Verbs.Ta && action.DirectObject == this && action.MannerAdverbial == null)
+        if (action.Predicate == Predicates.Ta && action.DirectObject == this && action.MannerAdverbial == null)
         {
             if (context.Player.Inventory.Contains(this))
             {
@@ -57,7 +57,7 @@ public abstract class SwedishAbstractItem: IEntity
                 };
             }
         }
-        else if (action.Predicate.Verb == Verbs.Släpp && action.DirectObject == this)
+        else if (action.Predicate == Predicates.Släpp && action.DirectObject == this)
         {
             if (context.Player.Inventory.Contains(this))
             {
@@ -76,7 +76,7 @@ public abstract class SwedishAbstractItem: IEntity
                 };
             }
         }
-        else if ((action.Predicate.Verb == Verbs.Undersök && action.DirectObject == this && action.MannerAdverbial == null) || (action.Predicate.Verb == Verbs.Titta && action.PlaceAdverbial == this && (action.PlaceAdverbialInit == null || action.PlaceAdverbialInit == "på")))
+        else if ((action.Predicate == Predicates.Undersök && action.DirectObject == this && action.MannerAdverbial == null) || (action.Predicate == Predicates.Titta && action.PlaceAdverbial == this && (action.PlaceAdverbialInit == null || action.PlaceAdverbialInit == "på")))
         {
             return new ActionResult()
             {

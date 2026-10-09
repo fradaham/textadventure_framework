@@ -35,7 +35,7 @@ public sealed class SwedishItem: IEntity
         {}
         //If not implemented, or HandleAction returns null, do general handling:
 
-        if (action.Predicate.Verb == Verbs.Ta && action.DirectObject == this)
+        if (action.Predicate == Predicates.Ta && action.DirectObject == this)
         {
             if (context.Player.Inventory.Contains(this))
             {
@@ -61,7 +61,7 @@ public sealed class SwedishItem: IEntity
                 };
             }
         }
-        else if (action.Predicate.Verb == Verbs.Släpp && action.DirectObject == this)
+        else if (action.Predicate == Predicates.Släpp && action.DirectObject == this)
         {
             if (context.Player.Inventory.Contains(this))
             {
@@ -80,7 +80,7 @@ public sealed class SwedishItem: IEntity
                 };
             }
         }
-        else if(action.Predicate.Verb == Verbs.Titta)
+        else if(action.Predicate == Predicates.Titta)
         {
             return new ActionResult()
             {

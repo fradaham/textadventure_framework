@@ -15,7 +15,7 @@ public class Morakniv : SwedishAbstractItem
 
     public override ActionResult? HandleAction(Context context, PlayerAction action)
     {
-        if ((action.Predicate.Verb == Verbs.Släng || action.Predicate.Verb == Verbs.Sätt || action.Predicate.Verb == Verbs.Stick) && action.DirectObject == this && action.PlaceAdverbial is Falukorv)
+        if ((action.Predicate == Predicates.Släng || action.Predicate == Predicates.Sätt || action.Predicate == Predicates.Stick) && action.DirectObject == this && action.PlaceAdverbial is Falukorv)
         {
             return new ActionResult()
             {

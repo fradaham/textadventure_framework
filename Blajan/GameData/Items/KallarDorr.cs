@@ -26,7 +26,7 @@ public class KallarDorr : SwedishAbstractItem
     
     public override ActionResult? HandleAction(Context context, PlayerAction action)
     {
-        if (action.Predicate.Verb == Verbs.Öppna)
+        if (action.Predicate == Predicates.Öppna)
         {
             if (isOpen)
             {
@@ -53,7 +53,7 @@ public class KallarDorr : SwedishAbstractItem
                 };
             }
         }
-        else if(action.Predicate.Verb == Verbs.Stäng && action.DirectObject == this)
+        else if(action.Predicate == Predicates.Stäng && action.DirectObject == this)
         {
             if (isOpen)
             {
@@ -72,7 +72,7 @@ public class KallarDorr : SwedishAbstractItem
                 };
             }
         }
-        else if (action.Predicate.Verb == Verbs.Lås_upp && action.DirectObject == this)
+        else if (action.Predicate == Predicates.Lås_upp && action.DirectObject == this)
         {
             if(!isLocked)
             {
@@ -135,7 +135,7 @@ public class KallarDorr : SwedishAbstractItem
                 };
             }
         }
-        else if (action.Predicate.Verb == Verbs.Lås)
+        else if (action.Predicate == Predicates.Lås)
         {
             if(isLocked)
             {
@@ -190,7 +190,7 @@ public class KallarDorr : SwedishAbstractItem
                 }
             }
         }
-        else if (action.Predicate.Verb == Verbs.Sätt && action.DirectObject is KallarNyckel && action.PlaceAdverbial == this && action.PlaceAdverbialInit == "i")
+        else if (action.Predicate == Predicates.Sätt && action.DirectObject is KallarNyckel && action.PlaceAdverbial == this && action.PlaceAdverbialInit == "i")
         {
             if (!hasKey)
             {
@@ -218,7 +218,7 @@ public class KallarDorr : SwedishAbstractItem
                 };
             }
         }
-        else if (action.Predicate.Verb == Verbs.Ta && action.DirectObject is KallarNyckel && action.PlaceAdverbial == this && (action.PlaceAdverbialInit == "från" || action.PlaceAdverbialInit == "i"))
+        else if (action.Predicate == Predicates.Ta && action.DirectObject is KallarNyckel && action.PlaceAdverbial == this && (action.PlaceAdverbialInit == "från" || action.PlaceAdverbialInit == "i"))
         {
             if (hasKey)
             {

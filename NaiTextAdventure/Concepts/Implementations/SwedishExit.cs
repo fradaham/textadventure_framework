@@ -43,7 +43,7 @@ public sealed class SwedishExit: IExit
         {}
         //If not implemented, or HandleAction returns null, do general handling:
 
-        if (action.Predicate.Verb == Verbs.Gå && (action.MannerAdverbial == this || action.PlaceAdverbial == this))
+        if (action.Predicate == Predicates.Gå && (action.MannerAdverbial == this || action.PlaceAdverbial == this))
         {
             return new ActionResult()
             {
@@ -52,7 +52,7 @@ public sealed class SwedishExit: IExit
             };
         
         }
-        else if (action.Predicate.Verb == Verbs.Titta && action.PlaceAdverbial == this)
+        else if (action.Predicate == Predicates.Titta && action.PlaceAdverbial == this)
         {
             return new ActionResult()
             {

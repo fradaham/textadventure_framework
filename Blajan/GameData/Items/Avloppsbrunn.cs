@@ -20,7 +20,7 @@ public class AvloppsBrunn : SwedishAbstractItem
 
     public override ActionResult? HandleAction(Context context, PlayerAction action)
     {
-        if (action.Predicate.Verb == Verbs.Ta && action.DirectObject == this)
+        if (action.Predicate == Predicates.Ta && action.DirectObject == this)
         {
             return new ActionResult()
             {

@@ -15,7 +15,7 @@ public class Falukorv : SwedishAbstractItem
 
     public override ActionResult? HandleAction(Context context, PlayerAction action)
     {
-        if (action.Predicate.Verb == Verbs.Ät && action.DirectObject == this)
+        if (action.Predicate == Predicates.Ät && action.DirectObject == this)
         {
             context.Player.Health -= 3;
             return new ActionResult()
@@ -23,7 +23,7 @@ public class Falukorv : SwedishAbstractItem
                 Message = "Du smakar på ett hörn, vilket utan dröjsmål får din mage och strupe att transformeras till en kraftfull fontän. Effektivt tömmer du ut ditt maginnehåll mot den närmsta väggen. Hade det inte varit spya så hade du kunnat praktisera som en mänsklig högtryckstvätt. Alltså vafan, vad har hänt med farfars kvalitetsfalukorv!? Nu har någon skitit i den blå skåpet.",
             };
         }
-        else if (action.Predicate.Verb == Verbs.Undersök && action.DirectObject == this)
+        else if (action.Predicate == Predicates.Undersök && action.DirectObject == this)
         {
             return new ActionResult()
             {

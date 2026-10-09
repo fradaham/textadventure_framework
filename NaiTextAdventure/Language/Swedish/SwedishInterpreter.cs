@@ -9,13 +9,13 @@ namespace Nai.TextAdventure.Language.Swedish
         {
             input = input.Trim();
             //First find starting predicate, defining command (match longest possible)
-            List<string> predicateVerbs = new();
+            List<string> predicatePredicates = new();
             foreach (Command command in Definitions.Commands)
             {
-                predicateVerbs.AddRange(command.Predicate.GetAllMatchingAlternatives());
+                predicatePredicates.AddRange(command.Predicate.GetAllMatchingAlternatives());
             }
-            IEnumerable<string> orderedPredicateVerbs = predicateVerbs.OrderByDescending(v => v.Length);
-            string? foundMatchingPredicateVerb = orderedPredicateVerbs.FirstOrDefault(v => input.StartsWith(v + ' ', StringComparison.InvariantCultureIgnoreCase) || input.Equals(v, StringComparison.InvariantCultureIgnoreCase));
+            IEnumerable<string> orderedPredicatePredicates = predicatePredicates.OrderByDescending(v => v.Length);
+            string? foundMatchingPredicateVerb = orderedPredicatePredicates.FirstOrDefault(v => input.StartsWith(v + ' ', StringComparison.InvariantCultureIgnoreCase) || input.Equals(v, StringComparison.InvariantCultureIgnoreCase));
 
             if (foundMatchingPredicateVerb == null)
             {
@@ -25,7 +25,7 @@ namespace Nai.TextAdventure.Language.Swedish
                 };
             }
 
-            Command matchingCommand = Definitions.Commands.First(command => command.Predicate.Verb.Equals(foundMatchingPredicateVerb) || (command.Predicate.Synonyms?.Any(s => s.Equals(foundMatchingPredicateVerb)) ?? false));
+            Command matchingCommand = Definitions.Commands.First(command => command.Predicate.Imperativ.Equals(foundMatchingPredicateVerb) || (command.Predicate.Synonyms?.Any(s => s.Equals(foundMatchingPredicateVerb)) ?? false));
             
             //Try to parse the rest of the input according to command patterns
             string rest = input[foundMatchingPredicateVerb.Length..].Trim();
@@ -50,7 +50,7 @@ namespace Nai.TextAdventure.Language.Swedish
         public string Help()
         {
             string helpText = "Tolken stödjer följande kommandon: \n";
-            helpText += String.Join(", ", Definitions.Commands.Select(c => c.Predicate.Verb));
+            helpText += String.Join(", ", Definitions.Commands.Select(c => c.Predicate.Imperativ));
 
             return helpText;
         }

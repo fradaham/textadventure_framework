@@ -4,25 +4,111 @@ using Nai.TextAdventure.Language.Concepts;
 
 namespace Nai.TextAdventure.Language.Swedish
 {
-    public static class Verbs
+    public static class Predicates
     {
-        public const string Gå = "gå";
-        public const string Ta = "ta";
-        public const string Lägg = "lägg";
-        public const string Sätt = "sätt";
-        public const string Släng = "släng";
-        public const string Släpp = "släpp";
-        public const string Undersök = "undersök";
-        public const string Stäng = "stäng";
-        public const string Öppna = "öppna";
-        public const string Lås = "lås";
-        public const string Lås_upp = "lås upp";
-        public const string Titta = "titta";
-        public const string Torka = "torka";
-        public const string Torka_av = "torka av";
-        public const string Stick = "stick";
-        public const string Hjälp = "hjälp";
-        public const string Ät = "ät";
+        public static readonly Predicate Gå = new()
+        {
+            Infinitiv = "gå",
+            Imperativ = "gå",
+            Synonyms = ["knalla"]
+        };
+
+        public static readonly Predicate Lägg = new()
+        {
+            Infinitiv = "lägga",
+            Imperativ = "lägg",
+        };
+
+        public static readonly Predicate Ta = new()
+        {
+            Infinitiv = "ta",
+            Synonyms = ["tag", "ta upp", "tag upp", "plocka upp"],
+            Imperativ = "ta",
+        };
+
+        public static readonly Predicate Öppna = new()
+        {
+            Infinitiv = "öppna",
+            Imperativ = "öppna",
+        };
+
+        public static readonly Predicate Stäng = new Predicate()
+        {
+            Infinitiv = "stänga",
+            Imperativ = "stäng",
+        };
+
+        public static readonly Predicate Sätt = new Predicate()
+        {
+            Infinitiv = "sätta",
+            Imperativ = "sätt",
+        };
+
+        public static readonly Predicate Släpp = new Predicate()
+        {
+            Infinitiv = "släppa",
+            Imperativ = "släpp",
+        };
+
+        public static readonly Predicate Lås_upp = new Predicate()
+        {
+            Infinitiv = "låsa upp",
+            Imperativ = "lås upp",
+        };
+
+        public static readonly Predicate Lås = new Predicate()
+        {
+            Infinitiv = "låsa",
+            Imperativ = "lås",
+        };
+
+        public static readonly Predicate Titta = new Predicate()
+        {
+            Infinitiv = "titta",
+            Imperativ = "titta"
+        };
+
+        public static readonly Predicate Undersök = new Predicate()
+        {
+            Infinitiv = "undersöka",
+            Imperativ = "undersök"
+        };
+
+        public static readonly Predicate Torka = new Predicate()
+        {
+            Infinitiv = "torka",
+            Imperativ = "torka"
+        };
+
+        public static readonly Predicate Torka_av = new Predicate()
+        {
+            Infinitiv = "torka av",
+            Imperativ = "torka av"
+        };
+
+        public static readonly Predicate Släng = new Predicate()
+        {
+            Infinitiv = "slänga",
+            Imperativ = "släng",        
+        };
+
+        public static readonly Predicate Stick = new Predicate()
+        {
+            Infinitiv = "sticka",
+            Imperativ = "stick",
+        };
+
+        public static readonly Predicate Hjälp = new Predicate()
+        {
+            Infinitiv = "hjälpa",
+            Imperativ = "hjälp",
+        };
+
+        public static readonly Predicate Ät = new Predicate()
+        {
+            Infinitiv = "äta",
+            Imperativ = "ät",
+        };
     }
 
     public static class Definitions
@@ -31,12 +117,7 @@ namespace Nai.TextAdventure.Language.Swedish
         [
             new Command()
             {
-                Predicate = new Predicate()
-                {
-                    Infinitiv = "gå",
-                    Verb = Verbs.Gå,
-                    Synonyms = ["knalla"]
-                },
+                Predicate = Predicates.Gå,
                 Patterns =
                 [
                     new Regex(@$"^(?<{SentenceParts.PlaceAdverbial}>[a-zåäö ]+) (?<{SentenceParts.MannerAdverbialInit}>i|på|under|genom|längs) (?<{SentenceParts.MannerAdverbial}>[a-zåäö ]+)"),
@@ -47,11 +128,7 @@ namespace Nai.TextAdventure.Language.Swedish
             },
             new Command()
             {
-                Predicate = new Predicate()
-                {
-                    Infinitiv = "lägga",
-                    Verb = Verbs.Lägg,
-                },
+                Predicate = Predicates.Lägg,
                 Patterns =
                 [
                     new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+) (?<{SentenceParts.PlaceAdverbialInit}>i|på|under) (?<{SentenceParts.PlaceAdverbial}>[a-zåäö ]+)")
@@ -59,12 +136,7 @@ namespace Nai.TextAdventure.Language.Swedish
             },
             new Command()
             {
-                Predicate = new Predicate()
-                {
-                    Infinitiv = "ta",
-                    Synonyms = ["tag", "ta upp", "tag upp", "plocka upp"],
-                    Verb = Verbs.Ta,
-                },
+                Predicate = Predicates.Ta,
                 Patterns =
                 [
                     new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+) (?<{SentenceParts.PlaceAdverbialInit}>i|på|under|från) (?<{SentenceParts.PlaceAdverbial}>[a-zåäö ]+)"),
@@ -74,11 +146,7 @@ namespace Nai.TextAdventure.Language.Swedish
             },
             new Command()
             {
-                Predicate = new Predicate()
-                {
-                    Infinitiv = "öppna",
-                    Verb = Verbs.Öppna,
-                },
+                Predicate = Predicates.Öppna,
                 Patterns =
                 [
                     new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+) (?<{SentenceParts.MannerAdverbialInit}>med) (?<{SentenceParts.MannerAdverbial}>[a-zåäö ]+)"),
@@ -87,11 +155,7 @@ namespace Nai.TextAdventure.Language.Swedish
             },
             new Command()
             {
-                Predicate = new Predicate()
-                {
-                    Infinitiv = "stänga",
-                    Verb = Verbs.Stäng,
-                },
+                Predicate = Predicates.Stäng,
                 Patterns =
                 [
                     new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+) (?<{SentenceParts.MannerAdverbialInit}>med) (?<{SentenceParts.MannerAdverbial}>[a-zåäö ]+)"),
@@ -100,11 +164,7 @@ namespace Nai.TextAdventure.Language.Swedish
             },
             new Command()
             {
-                Predicate = new Predicate()
-                {
-                    Infinitiv = "sätta",
-                    Verb = Verbs.Sätt,
-                },
+                Predicate = Predicates.Sätt,
                 Patterns =
                 [
                     new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+) (?<{SentenceParts.PlaceAdverbialInit}>i|på|under) (?<{SentenceParts.PlaceAdverbial}>[a-zåäö ]+)")
@@ -112,11 +172,7 @@ namespace Nai.TextAdventure.Language.Swedish
             },
             new Command()
             {
-                Predicate = new Predicate()
-                {
-                    Infinitiv = "släppa",
-                    Verb = Verbs.Släpp,
-                },
+                Predicate = Predicates.Släpp,
                 Patterns =
                 [
                     new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+) (?<{SentenceParts.PlaceAdverbialInit}>i|på|under) (?<{SentenceParts.PlaceAdverbial}>[a-zåäö ]+)"),
@@ -125,11 +181,7 @@ namespace Nai.TextAdventure.Language.Swedish
             },
             new Command()
             {
-                Predicate = new Predicate()
-                {
-                    Infinitiv = "låsa upp",
-                    Verb = Verbs.Lås_upp,
-                },
+                Predicate = Predicates.Lås_upp,
                 Patterns =
                 [
                     new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+) (?<{SentenceParts.MannerAdverbialInit}>med) (?<{SentenceParts.MannerAdverbial}>[a-zåäö ]+)"),
@@ -138,11 +190,7 @@ namespace Nai.TextAdventure.Language.Swedish
             },
             new Command()
             {
-                Predicate = new Predicate()
-                {
-                    Infinitiv = "låsa",
-                    Verb = Verbs.Lås,
-                },
+                Predicate = Predicates.Lås,
                 Patterns =
                 [
                     new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+) (?<{SentenceParts.MannerAdverbialInit}>med) (?<{SentenceParts.MannerAdverbial}>[a-zåäö ]+)"),
@@ -151,11 +199,7 @@ namespace Nai.TextAdventure.Language.Swedish
             },
             new Command()
             {
-                Predicate = new Predicate()
-                {
-                    Infinitiv = "titta",
-                    Verb = Verbs.Titta,
-                },
+                Predicate = Predicates.Titta,
                 Patterns =
                 [
                     new Regex(@$"^(?<{SentenceParts.PlaceAdverbialInit}>i|på|under|till|mot) (?<{SentenceParts.PlaceAdverbial}>[a-zåäö ]+)"),
@@ -165,11 +209,7 @@ namespace Nai.TextAdventure.Language.Swedish
             },
             new Command()
             {
-                Predicate = new Predicate()
-                {
-                    Infinitiv = "undersöka",
-                    Verb = Verbs.Undersök,
-                },
+                Predicate = Predicates.Undersök,
                 Patterns =
                 [
                     new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+) (?<{SentenceParts.MannerAdverbialInit}>med) (?<{SentenceParts.MannerAdverbial}>[a-zåäö ]+)"),
@@ -178,11 +218,7 @@ namespace Nai.TextAdventure.Language.Swedish
             },
             new Command()
             {
-                Predicate = new Predicate()
-                {
-                    Infinitiv = "torka",
-                    Verb = Verbs.Torka,
-                },
+                Predicate = Predicates.Torka,
                 Patterns =
                 [
                     new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+) (?<{SentenceParts.MannerAdverbialInit}>med) (?<{SentenceParts.MannerAdverbial}>[a-zåäö ]+)"),
@@ -190,11 +226,7 @@ namespace Nai.TextAdventure.Language.Swedish
             },
             new Command()
             {
-                Predicate = new Predicate()
-                {
-                    Infinitiv = "torka av",
-                    Verb = Verbs.Torka_av,
-                },
+                Predicate = Predicates.Torka_av,
                 Patterns =
                 [
                     new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+) (?<{SentenceParts.MannerAdverbialInit}>med) (?<{SentenceParts.MannerAdverbial}>[a-zåäö ]+)"),
@@ -202,11 +234,7 @@ namespace Nai.TextAdventure.Language.Swedish
             },
             new Command()
             {
-                Predicate = new Predicate()
-                {
-                    Infinitiv = "slänga",
-                    Verb = Verbs.Släng,
-                },
+                Predicate = Predicates.Släng,
                 Patterns =
                 [
                     new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+) (?<{SentenceParts.PlaceAdverbialInit}>i|på|under) (?<{SentenceParts.PlaceAdverbial}>[a-zåäö ]+)")
@@ -214,11 +242,7 @@ namespace Nai.TextAdventure.Language.Swedish
             },
             new Command()
             {
-                Predicate = new Predicate()
-                {
-                    Infinitiv = "sticka",
-                    Verb = Verbs.Stick,
-                },
+                Predicate = Predicates.Stick,
                 Patterns =
                 [
                     new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+) (?<{SentenceParts.PlaceAdverbialInit}>i|på|under) (?<{SentenceParts.PlaceAdverbial}>[a-zåäö ]+)")
@@ -226,11 +250,7 @@ namespace Nai.TextAdventure.Language.Swedish
             },
             new Command()
             {
-                Predicate = new Predicate()
-                {
-                    Infinitiv = "hjälpa",
-                    Verb = Verbs.Hjälp,
-                },
+                Predicate = Predicates.Hjälp,
                 Patterns =
                 [
                     new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+)"),
@@ -239,11 +259,7 @@ namespace Nai.TextAdventure.Language.Swedish
             },
             new Command()
             {
-                Predicate = new Predicate()
-                {
-                    Infinitiv = "äta",
-                    Verb = Verbs.Ät,
-                },
+                Predicate = Predicates.Ät,
                 Patterns =
                 [
                     new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+)"),

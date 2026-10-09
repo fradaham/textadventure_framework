@@ -4,7 +4,7 @@ namespace Nai.TextAdventure.Language.Concepts;
 
 public class Predicate
 {
-    public required string Verb { get; init; }
+    public required string Imperativ { get; init; }
 
     public required string Infinitiv { get; init; }
 
@@ -13,7 +13,7 @@ public class Predicate
     public IEnumerable<string> GetAllMatchingAlternatives()
     {
         IList<string> all = new List<string>();
-        all.Add(Verb);
+        all.Add(Imperativ);
         foreach (string syn in Synonyms ?? [])
         {
             all.Add(syn);

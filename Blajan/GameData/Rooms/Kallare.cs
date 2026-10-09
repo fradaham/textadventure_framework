@@ -22,7 +22,7 @@ public class Kallare : SwedishAbstractRoom
             IsFixed = true,
             Description = "Det är en skräphög i vilken det främst verkar ligga kartonger och annat pappersskräp. Men det är svårt att se vad som finns utan en närmare undersökning.",
             HandleAction = (context, action) => {
-                if (action.Predicate.Verb == Verbs.Undersök)
+                if (action.Predicate == Predicates.Undersök)
                 {
                     if (context.Player.Room.Items.Any(i => i is Morakniv) || context.Player.Inventory.Any(i => i is Morakniv))
                     {
@@ -71,7 +71,7 @@ public class Kallare : SwedishAbstractRoom
 
     public override ActionResult? HandleAction(Context context, PlayerAction action)
     {
-        if (action.Predicate.Verb == Verbs.Hjälp && action.DirectObject == this)
+        if (action.Predicate == Predicates.Hjälp && action.DirectObject == this)
         {
             return new ActionResult()
             {

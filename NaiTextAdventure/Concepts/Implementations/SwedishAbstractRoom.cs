@@ -25,9 +25,9 @@ public abstract class SwedishAbstractRoom: IRoom
 
     public override string ToString()
     {
-        string items = Items.Count() > 0? $"\n\nFöremål:\n\n {string.Join("\n", Items.Select(i => new string([i.Name.Name[0]]).ToUpper() + i.Name.Name[1..]))}\n" : "";
-        string exits = Exits.Where(e => e.IsActivated).Count() > 0? $"\n\nUtgångar:\n\n {string.Join("\n", Exits.Where(e => e.IsActivated).Select(i => new string([i.Name.Name[0]]).ToUpper() + i.Name.Name[1..]))}\n" : "";
-        return Description + items + exits;
+        string items = Items.Count() > 0? $"\n\nFöremål:\n\n {string.Join("\n", Items.Select(i => new string([i.Name.Name[0]]).ToUpper() + i.Name.Name[1..]))}" : String.Empty;
+        string exits = Exits.Where(e => e.IsActivated).Count() > 0? $"\n\nUtgångar:\n\n {string.Join("\n", Exits.Where(e => e.IsActivated).Select(i => new string([i.Name.Name[0]]).ToUpper() + i.Name.Name[1..]))}" : String.Empty;
+        return $"{Description}{items}{exits}";
     }
 
     public virtual ActionResult? Enter(Context context)
@@ -52,7 +52,7 @@ public abstract class SwedishAbstractRoom: IRoom
         {}
         
         //If not implemented, or HandleAction returns null, do general handling:
-        if (action.Predicate.Verb == Verbs.Titta)
+        if (action.Predicate == Predicates.Titta)
         {
             if (action.PlaceAdverbial == null || (action.PlaceAdverbial == this && (action.PlaceAdverbialInit == "på" || action.PlaceAdverbialInit == "i")) || (action.PlaceAdverbial == this && action.PlaceAdverbialInit == null))
             {
