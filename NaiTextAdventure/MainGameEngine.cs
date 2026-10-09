@@ -53,13 +53,9 @@ public class MainGameEngine
             PlayerAction action;
             try
             {
-                action = CreatePlayerAction(parsingResult, player, _world);
-                if ((parsingResult.Command.Predicate == Language.Swedish.Predicates.Hjälp || parsingResult.Command.Predicate == Language.English.Predicates.Help) && action.DirectObject == null) //Needs to be more general?
+                if (!HelpRequestProcessing(userUI, parsingResult))
                 {
-                    userUI.PrintMessage(_interpreter.Help());
-                }
-                else 
-                {
+                    action = CreatePlayerAction(parsingResult, player, _world);
                     ActionResult? result = player.Room.InterAct(new Context(_world, player), action);
                     return ProcessActionResult(result, player, userUI);
                 }
@@ -75,6 +71,32 @@ public class MainGameEngine
         }
 
         return null;
+    }
+
+    private bool HelpRequestProcessing(IPrintToUser userUI, ParsingResult parsingResult)
+    {
+        IPredicate predicate = parsingResult.Command!.Predicate;
+        string? directObjectStr = parsingResult.SentenceParts?.GetValueOrDefault(SentenceParts.DirectObject.ToString())?.Value;
+
+        if (parsingResult.Command.Predicate == Language.Swedish.Predicates.Hjälp || parsingResult.Command.Predicate == Language.English.Predicates.Help) //Needs to be more general?
+        {
+            if (directObjectStr == null)
+            {
+                userUI.PrintMessage(_interpreter.Help());
+                return true;
+            }
+            else
+            {
+                string? predicateHelpText = _interpreter.Help(directObjectStr);
+                if (predicateHelpText != null)
+                {
+                    userUI.PrintMessage(Markup.Escape(predicateHelpText));
+                    return true;
+                }
+            } 
+        }
+
+        return false;
     }
 
     internal TuiResult? ProcessActionResult(ActionResult? result, Player player, IPrintToUser userUI)

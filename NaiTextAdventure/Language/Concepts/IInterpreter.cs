@@ -4,9 +4,11 @@ namespace Nai.TextAdventure.Language.Concepts
 {
     public interface IInterpreter
     {
-        public ParsingResult Parse(string input);
+        ParsingResult Parse(string input);
 
-        public string Help();
+        string Help();
+
+        string? Help(string predicate);
     }
 }
 

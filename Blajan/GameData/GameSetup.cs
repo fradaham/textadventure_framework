@@ -3,6 +3,7 @@ using Blajan.GameData.Items;
 using Blajan.GameData.Rooms;
 using Nai.TextAdventure.Language.Concepts;
 using Nai.TextAdventure.Language.Swedish;
+using Nai.TextAdventure.Language.General;
 
 namespace Blajan.GameData;
 
