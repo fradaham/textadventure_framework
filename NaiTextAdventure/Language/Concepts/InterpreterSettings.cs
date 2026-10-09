@@ -1,0 +1,13 @@
+namespace Nai.TextAdventure.Language.Concepts;
+
+public interface IGeneralInterpreterSettings
+{   
+    IEnumerable<Command> Commands { get; }
+
+    string GeneralHelp();
+
+    string NoMatchingPredicateFound(string input);
+
+    string NoPatternMatchForPredicate(IPredicate predicate, string rest);
+    
+}

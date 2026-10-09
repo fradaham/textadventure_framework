@@ -9,7 +9,7 @@ public class PlayerAction
 
     public IEntity? IndirectObject {get; init;}
 
-    public required Predicate Predicate {get; init;}
+    public required IPredicate Predicate {get; init;}
 
     public IEntity? PlaceAdverbial {get; init;}
 

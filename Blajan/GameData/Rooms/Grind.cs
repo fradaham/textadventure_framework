@@ -55,7 +55,7 @@ public class Grind : SwedishAbstractRoom
                     Message = "Blajan sjunker ihop och slurpas långsamt men säkert ner i avloppet igen. Det känns som att din seger tog själen ur den, för känslan är bara simpelt själlöst klet nu. Kletet kommer nog att spolas bort ur avloppssystemet med nästa regn.",
                 }
             };
-            if (command.Predicate.Imperativ == Predicates.Gå && (command.DirectObject == portal || command.PlaceAdverbial == portal || command.MannerAdverbial == portal))
+            if (command.Predicate == Predicates.Gå && (command.DirectObject == portal || command.PlaceAdverbial == portal || command.MannerAdverbial == portal))
             {
                 hasBattledBlajan = true;
                 if (context.Player.Inventory.Any(i => i is Dynggrep))

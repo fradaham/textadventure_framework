@@ -54,7 +54,7 @@ public class MainGameEngine
             try
             {
                 action = CreatePlayerAction(parsingResult, player, _world);
-                if (parsingResult.Command.Predicate == Predicates.Hjälp && action.DirectObject == null) //Needs to be more general, not using swedish defs. And this should check that no object exist
+                if ((parsingResult.Command.Predicate == Language.Swedish.Predicates.Hjälp || parsingResult.Command.Predicate == Language.English.Predicates.Help) && action.DirectObject == null) //Needs to be more general?
                 {
                     userUI.PrintMessage(_interpreter.Help());
                 }
@@ -125,7 +125,7 @@ public class MainGameEngine
 
     private PlayerAction CreatePlayerAction(ParsingResult parsingResult, Player player, World world)
     {
-        Predicate predicate = parsingResult.Command!.Predicate;
+        IPredicate predicate = parsingResult.Command!.Predicate;
         string? directObjectStr = parsingResult.SentenceParts?.GetValueOrDefault(SentenceParts.DirectObject.ToString())?.Value;
         string? indirectObjectStr = parsingResult.SentenceParts?.GetValueOrDefault(SentenceParts.IndirectObject.ToString())?.Value;
         string? placeAdverbialStr = parsingResult.SentenceParts?.GetValueOrDefault(SentenceParts.PlaceAdverbial.ToString())?.Value;
@@ -165,7 +165,7 @@ public class MainGameEngine
         if (placeAdverbialStr != null)
         {
             placeAdverbial = entities.FirstOrDefault(d => d.IsMatch(placeAdverbialStr));
-            if (placeAdverbial == null && predicate == Predicates.Gå) //Special case
+            if (placeAdverbial == null && predicate.IsMovement) //Special case for movement commands (like go/gå, then you should be able to go the adjacent rooms, even if they are not here in this room)
             {
                 IEnumerable<IRoom> adjacentRooms = player.Room.Exits.Where(e => e.IsActivated).Select(e => e.GetTargetRoom(world));
                 IRoom? matchingRoom = adjacentRooms.FirstOrDefault(r => r.IsMatch(placeAdverbialStr));

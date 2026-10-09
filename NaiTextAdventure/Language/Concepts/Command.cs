@@ -4,7 +4,7 @@ namespace Nai.TextAdventure.Language.Concepts;
 
 public class Command
 {
-    public required Predicate Predicate { get; init; }
+    public required IPredicate Predicate { get; init; }
 
     public required IEnumerable<Regex> Patterns { get; init; }
 
