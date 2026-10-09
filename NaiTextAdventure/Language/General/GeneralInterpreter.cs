@@ -55,7 +55,7 @@ public class GeneralInterpreter: IInterpreter
 
     public string Help()
     {
-        return _settings.GeneralHelp();
+        return _settings.CommandListHelp();
     }
 
     private IEnumerable<string> GetCommandAlternatives(IPredicate predicate)

@@ -6,7 +6,7 @@ public class SwedishInterpreterSettings : IGeneralInterpreterSettings
 {
     public IEnumerable<Command> Commands => CommandDefinitions.Commands;
 
-    public string GeneralHelp()
+    public string CommandListHelp()
     {
         string helpText = "Tolken stödjer följande kommandon: \n";
         helpText += String.Join(", ", Commands.Select(c => c.Predicate.Imperativ));

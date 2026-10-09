@@ -4,7 +4,7 @@ public interface IGeneralInterpreterSettings
 {   
     IEnumerable<Command> Commands { get; }
 
-    string GeneralHelp();
+    string CommandListHelp();
 
     string NoMatchingPredicateFound(string input);
 
