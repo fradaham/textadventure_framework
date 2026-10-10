@@ -1,4 +1,6 @@
-namespace Nai.TextAdventure.Language.Concepts;
+using Nai.TextAdventure.Language.Concepts;
+
+namespace Nai.TextAdventure.Language.General;
 
 public interface IGeneralInterpreterSettings
 {   

@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
 using Nai.TextAdventure.Language.Concepts;
+using Nai.TextAdventure.Language.General;
 
 namespace Nai.TextAdventure.Language.English;
 
