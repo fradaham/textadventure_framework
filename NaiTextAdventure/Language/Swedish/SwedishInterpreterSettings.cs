@@ -12,6 +12,7 @@ public class SwedishInterpreterSettings : IGeneralInterpreterSettings
     {
         string helpText = "Tolken stödjer följande kommandon: \n";
         helpText += String.Join(", ", Commands.Select(c => c.Predicate.Imperativ));
+        helpText += "\n\nSkriv 'hjälp [kommando]' för att se vilka mönster ett visst kommando stödjer. Observera att även om tolken lyckas tolka kommandot, måste rum och föremål ha stöd för det du vill göra.";
 
         return helpText;
     }

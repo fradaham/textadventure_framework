@@ -8,7 +8,7 @@ using Spectre.Console;
 
 namespace Nai.TextAdventure;
 
-public class MainGameEngine
+public class TextGameEngine
 {   
     private IInterpreter _interpreter;
 
@@ -18,7 +18,7 @@ public class MainGameEngine
 
     private string? _quitPhrase;
 
-    public MainGameEngine(IGameSetup setup)
+    public TextGameEngine(IGameSetup setup)
     {
         _interpreter = setup.Language switch 
         {
@@ -89,7 +89,7 @@ public class MainGameEngine
         {
             if (directObjectStr == null)
             {
-                userUI.PrintMessage(_interpreter.Help());
+                userUI.PrintMessage(Markup.Escape(_interpreter.Help()));
                 return true;
             }
             else

@@ -36,9 +36,9 @@ internal sealed class MainUI : ITextUserInterface, IPrintToUser
 
     private readonly string? _gameMusicPath;
 
-    private readonly MainGameEngine _gameEngine;
+    private readonly TextGameEngine _gameEngine;
 
-    public MainUI(MainGameEngine gameEngine, string? gameMusic)
+    public MainUI(TextGameEngine gameEngine, string? gameMusic)
     {
         _gameMusicPath = gameMusic;
         _gameEngine = gameEngine;

@@ -11,7 +11,7 @@ public class UserInterfaceHub
 
     private IGameSetup _setup;
 
-    public UserInterfaceHub(IGameSetup setup, MainGameEngine engine)
+    public UserInterfaceHub(IGameSetup setup, TextGameEngine engine)
     {
         _setup = setup;
         //World world = setup.World;

@@ -7,7 +7,7 @@ public class Program
 {
     public static void Main(string[] arg)
     {
-        MainGameEngine naiTextGameEngine = new MainGameEngine(new GameSetup());
-        naiTextGameEngine.Run();
+        TextGameEngine textGameEngine = new TextGameEngine(new GameSetup());
+        textGameEngine.Run();
     }
 }
