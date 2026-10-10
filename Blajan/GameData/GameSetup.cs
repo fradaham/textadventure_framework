@@ -58,7 +58,7 @@ public class GameSetup: IGameSetup
 
     public string StartingRoomName {get;} = "källare";
 
-    public IInterpreter MainInterpreter { get; } = new GeneralInterpreter(new SwedishInterpreterSettings());
+    public GameLanguage Language { get; } = GameLanguage.Swedish;
 
     public string About { get; } = @"Detta är ett spel som visar hur NaiTextAdventure-biblioteket kan användas för att skapa enkla textspel. Det har också använts som testspel. Tillkomsten av både spelet och biblioteket styrdes av att min son sa att han ville lära sig att koda, och hans första idé var att göra ett textspel. Dock tyckte han efter en stund att det såg väldans trist ut med de sedvanliga konsoloperationerna. Detta drev mig till att skapa ett exempel på hur ett textspel skulle kunna se ut. Att man kunde göra det lite roligare. Spectre.Console hjälpte bra på vägen, men sen ledde det ena till det andra och plötsligt satt jag också och skapade ett enkelt ramverk för att skapa enkla textspel utefter ett visst mönster. Det måste dock påpekas att ramverket vid skrivande stund lämnar övrigt att önska på många punkter. Det är inte klart på långa vägar, men tillräckligt klart för att börja använda i en första omega-version (för spel på svenska för tillfället).
 

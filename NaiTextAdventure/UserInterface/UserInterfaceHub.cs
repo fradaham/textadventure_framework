@@ -1,6 +1,4 @@
-using Spectre.Console;
 using Nai.TextAdventure.Concepts;
-using Nai.TextAdventure.Language.Concepts;
 using Nai.TextAdventure.UserInterface;
 
 namespace Nai.TextAdventure;
@@ -8,8 +6,6 @@ namespace Nai.TextAdventure;
 public class UserInterfaceHub
 {
     private Context _context;
-
-    private IInterpreter _interpreter;
 
     private ITextUserInterface _titleUI, _mainUI, _deathUI, _successUI, _battleUI, _aboutUI;
 
@@ -19,7 +15,6 @@ public class UserInterfaceHub
     {
         _setup = setup;
         //World world = setup.World;
-        _interpreter = setup.MainInterpreter;
         _titleUI = new TitleUI(setup.Title, setup.SubTitle, setup.Creator, setup.TitleMusic);
         _mainUI = new MainUI(engine, setup.MainMusic);
         _deathUI = new DeathUI(setup.DeathComment, setup.DeathMusic);

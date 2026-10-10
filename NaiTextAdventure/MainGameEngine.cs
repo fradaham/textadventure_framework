@@ -1,5 +1,7 @@
 using Nai.TextAdventure.Concepts;
 using Nai.TextAdventure.Language.Concepts;
+using Nai.TextAdventure.Language.English;
+using Nai.TextAdventure.Language.General;
 using Nai.TextAdventure.Language.Swedish;
 using Nai.TextAdventure.UserInterface;
 using Spectre.Console;
@@ -18,7 +20,12 @@ public class MainGameEngine
 
     public MainGameEngine(IGameSetup setup)
     {
-        _interpreter = setup.MainInterpreter;
+        _interpreter = setup.Language switch 
+        {
+            GameLanguage.Swedish => new GeneralInterpreter(new SwedishInterpreterSettings()),
+            GameLanguage.English => new GeneralInterpreter(new EnglishInterpreterSettings()),
+            _ => throw new NotSupportedException("The language setting is not supported")
+        };
         _world = setup.World;
         _quitPhrase = setup.QuitPhrase;
         _uiHub = new UserInterfaceHub(setup, this);

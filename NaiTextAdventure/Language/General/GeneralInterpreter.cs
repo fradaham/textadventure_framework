@@ -62,17 +62,11 @@ public class GeneralInterpreter: IInterpreter
     {
         foreach(Command command in _settings.Commands)
         {
-            IEnumerable<string> predicateAlternatives = GetCommandAlternatives(command.Predicate);
+            IEnumerable<string> predicateAlternatives = [command.Predicate.Imperativ, command.Predicate.Infinitiv, ..command.Predicate.Synonyms ?? []];
             string? matchingPredicateStr = predicateAlternatives.FirstOrDefault(p => p.Equals(directObject, StringComparison.InvariantCultureIgnoreCase));
             if (matchingPredicateStr != null)
             {
-                string helpText = String.Empty;
-                foreach (Regex pattern in command.Patterns)
-                {
-                    string patternText = matchingPredicateStr + " " + String.Join(' ', pattern.GetGroupNames()) + "\n";
-                    helpText += matchingPredicateStr + " " + pattern.ToString().Replace("^", "") + "\n";
-                }
-                return helpText;
+                return _settings.CommandHelp(command);
             }
         }
 

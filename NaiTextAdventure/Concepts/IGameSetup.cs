@@ -34,5 +34,5 @@ public interface IGameSetup
 
     string StartingRoomName { get; }
 
-    IInterpreter MainInterpreter { get;}
+    GameLanguage Language { get; }
 }

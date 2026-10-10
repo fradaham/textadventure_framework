@@ -6,6 +6,8 @@ public interface IGeneralInterpreterSettings
 
     string CommandListHelp();
 
+    string CommandHelp(Command command);
+
     string NoMatchingPredicateFound(string input);
 
     string NoPatternMatchForPredicate(IPredicate predicate, string rest);
