@@ -1,5 +1,6 @@
 using Spectre.Console;
 using Nai.TextAdventure.Concepts;
+using Nai.TextAdventure.Language.Concepts;
 using System.Reflection.Metadata.Ecma335;
 using Nai.TextAdventure.Sound;
 
@@ -12,10 +13,12 @@ public class AboutUI: ITextUserInterface
     private readonly Layout headerLayout;
     private readonly Layout footerLayout;
     private readonly string? _freeText;
+    private readonly GameLanguage _language;
     private RollingTextPanel textPanel;
-    public AboutUI(string? freeText)
+    public AboutUI(string? freeText, GameLanguage language)
     {
         _freeText = freeText;
+        _language = language;
         rootLayout = new("Root");
         headerLayout = new("Header");
         footerLayout = new("Footer");
@@ -74,13 +77,13 @@ public class AboutUI: ITextUserInterface
         
         logLayout.Update(textPanel.InnerPanel);
 
-        FigletText aboutTitle = new("OM SPELET");
+        FigletText aboutTitle = new(UiText.AboutTitle(_language));
         aboutTitle.Color(Color.Yellow);
         aboutTitle.Justification = Justify.Center;
 
         headerLayout.Update(aboutTitle);
         
-        Text instructions = new Text($"(1) - tillbaka till titelskärmen (2) - Avsluta (\u2191) - text uppåt (\u2193) - text nedåt", new Style(Color.RosyBrown));
+        Text instructions = new Text($"(1) - {UiText.BackToTitle(_language)} (2) - {UiText.QuitOption(_language)} (\u2191) - {UiText.ScrollUp(_language)} (\u2193) - {UiText.ScrollDown(_language)}", new Style(Color.RosyBrown));
         Align footerAligned = Align.Center(instructions);
 
         footerLayout.Update(footerAligned);

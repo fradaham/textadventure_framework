@@ -1,5 +1,6 @@
 using Spectre.Console;
 using Nai.TextAdventure.Concepts;
+using Nai.TextAdventure.Language.Concepts;
 using Nai.TextAdventure.Sound;
 
 namespace Nai.TextAdventure.UserInterface;
@@ -11,15 +12,17 @@ public class TitleUI: ITextUserInterface
     private readonly string _subTitle;
 
     private readonly string? _madeBy;
+    private readonly GameLanguage _language;
 
     private readonly string? _titleMusic;
-    public TitleUI(string title, string subTitle, string? madeBy, string? titleMusic)
+    public TitleUI(string title, string subTitle, string? madeBy, string? titleMusic, GameLanguage language)
     {
         rootLayout = new Layout("Root");
         _title = title;
         _subTitle = subTitle;
         _madeBy = madeBy;
         _titleMusic = titleMusic;
+        _language = language;
     }
 
     public TuiResult Execute(Context context, ActionResult? incomingActionResult = null)
@@ -33,12 +36,12 @@ public class TitleUI: ITextUserInterface
             Justification = Justify.Center
         };  
         
-        Text instructions = new Text($"1 - starta spelet\n2 - Om\n3 - Avsluta", new Style(Color.RosyBrown));
+        Text instructions = new Text($"(1) - {UiText.StartGame(_language)}\n(2) - {UiText.AboutOption(_language)}\n(3) - {UiText.QuitOption(_language)}", new Style(Color.RosyBrown));
 
         Align? creatorAligned = null;
         if (_madeBy != null)
         {
-            Text creator = new Text($"{_madeBy} presenterar", new Style(Color.Black, Color.Blue));
+            Text creator = new Text(UiText.PresentedBy(_language, _madeBy), new Style(Color.Black, Color.Blue));
             creatorAligned = Align.Center(creator, VerticalAlignment.Top).Height(3);
             AnsiConsole.Write(creatorAligned);
             AnsiConsole.Write(Align.Center(new Text("--:-=<|>=-:--", new Style(Color.Aqua))));

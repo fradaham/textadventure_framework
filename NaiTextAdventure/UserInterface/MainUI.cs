@@ -35,13 +35,15 @@ internal sealed class MainUI : ITextUserInterface, IPrintToUser
     public string UserCommand { get; internal set;} = "";
 
     private readonly string? _gameMusicPath;
+    private readonly GameLanguage _language;
 
     private readonly TextGameEngine _gameEngine;
 
-    public MainUI(TextGameEngine gameEngine, string? gameMusic)
+    public MainUI(TextGameEngine gameEngine, string? gameMusic, GameLanguage language)
     {
         _gameMusicPath = gameMusic;
         _gameEngine = gameEngine;
+        _language = language;
         rootLayout = new("Root");
         headerLayout = new("Header");
         headerLayout.Size = 3;
@@ -53,7 +55,7 @@ internal sealed class MainUI : ITextUserInterface, IPrintToUser
         footerLayout.Size = 3;
         bodyLayout.SplitColumns(storyLayout, inventoryLayout);
         rootLayout.SplitRows(headerLayout, bodyLayout, footerLayout);
-        textPanel = new("", "[bold] LOGGBOK [/]", (AnsiConsole.Profile.Width - inventoryLayout.Size - 4).Value, (AnsiConsole.Profile.Height - headerLayout.Size - footerLayout.Size - 2).Value);
+        textPanel = new("", $"[bold] {UiText.Logbook(language)} [/]", (AnsiConsole.Profile.Width - inventoryLayout.Size - 4).Value, (AnsiConsole.Profile.Height - headerLayout.Size - footerLayout.Size - 2).Value);
     }
 
     public void PrintMessage(string text)
@@ -115,11 +117,11 @@ internal sealed class MainUI : ITextUserInterface, IPrintToUser
             {
                 if (exitState.TargetView == GameState.Fight)
                 {
-                    AppendToLog($"Tryck valfri tangent för för att börja bulta på {exitState.PassedOnActionResult?.Fight?.Name ?? "NoName"}.");
+                    AppendToLog(UiText.PressAnyKeyToBeginFight(_language, exitState.PassedOnActionResult?.Fight?.Name ?? "NoName"));
                 }
                 else if (exitState.TargetView == GameState.Completed || exitState.TargetView == GameState.Death)
                 {
-                   AppendToLog($"Tryck valfri tangent...");
+                   AppendToLog(UiText.PressAnyKeyToContinue(_language));
                 }
                 Update(context);
                 ctx.Refresh();
@@ -146,7 +148,7 @@ internal sealed class MainUI : ITextUserInterface, IPrintToUser
 
         BarChart healthBar = new BarChart()
             .WithMaxValue(context.Player.MaxHealth)
-            .AddItem(   $"Hälsa ({context.Player.MaxHealth})"
+            .AddItem(   $"{UiText.Health(_language)} ({context.Player.MaxHealth})"
                         ,context.Player.Health
                         ,(((double)context.Player.Health)/context.Player.MaxHealth) switch
                         {
@@ -158,7 +160,7 @@ internal sealed class MainUI : ITextUserInterface, IPrintToUser
 
         BarChart spBar = new BarChart()
             .WithMaxValue(15)
-            .AddItem($"Stridsförmåga ({context.Player.MaxFightingSkill})", context.Player.FightingSkill, Color.LightCyan3);
+            .AddItem($"{UiText.FightingSkill(_language)} ({context.Player.MaxFightingSkill})", context.Player.FightingSkill, Color.LightCyan3);
 
         Grid grid = new();
         grid.AddColumn(new GridColumn() { Width = (consoleWidth - 4)/3, Alignment = Justify.Left, NoWrap = true });
@@ -166,7 +168,7 @@ internal sealed class MainUI : ITextUserInterface, IPrintToUser
         grid.AddColumn(new GridColumn() { Width = (consoleWidth - 4)/3, Alignment = Justify.Right, NoWrap = true });
         // grid.AddRow(healthBar, new Markup($"[yellow]Guldmynt:[/] {player.Gold}"), new Markup($"[blue]Plats:[/] Källare"));
         // grid.AddRow(spBar);
-        grid.AddRow(new Markup($"Hälsa: {context.Player.Health}"), new Markup($"Stridsförmåga: {context.Player.FightingSkill}"), new Markup($"[blue]Plats:[/] Källare"));
+        grid.AddRow(new Markup($"{UiText.Health(_language)}: {context.Player.Health}"), new Markup($"{UiText.FightingSkill(_language)}: {context.Player.FightingSkill}"), new Markup($"[blue]{UiText.Location(_language)}:[/] Källare"));
 
         // Columns headerContent = new(healthBar, spBar, new Markup($"[red]Kroppspoäng:[/] {player.Health}/100   |   [yellow]Guldmynt:[/] {player.Gold}   |   [blue]Plats:[/] {player.Location.Name}}}"));
         // headerContent.Expand();
@@ -174,7 +176,7 @@ internal sealed class MainUI : ITextUserInterface, IPrintToUser
         //headerLayout.Update(new Panel(Align.Center(new Markup($"[red]Kroppspoäng:[/] {health}/100   |   [yellow]Guldmynt:[/] {gold}   |   [blue]Plats:[/] Källare")))
         headerLayout.Update(new Panel(grid)
         .BorderColor(Color.Red)
-        .Header("[b] SPELARSTATUS (S) [/]"));
+        .Header($"[b] {UiText.PlayerStatus(_language)} (S) [/]"));
 
 
         // debugLayout.Update(new Panel(new Markup($"Lines: {storyMarkup.Lines} | Length: {storyMarkup.Length} | S_height: {storyHeight} | S_width: {storyWidth}  | allLines: {allLines.Count()}  | visLines: {visibleLines.Count()}  | currL: {currentLine}"))
@@ -190,7 +192,7 @@ internal sealed class MainUI : ITextUserInterface, IPrintToUser
             Height = storyHeight + 2,
         };
         invPanel.BorderColor(Color.Blue);
-        invPanel.Header("[b] PACKNING (P) [/]");
+        invPanel.Header($"[b] {UiText.Inventory(_language)} (P) [/]" );
         inventoryLayout.Update(
             invPanel
         );

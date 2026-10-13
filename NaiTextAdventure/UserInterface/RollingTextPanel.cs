@@ -106,6 +106,11 @@ public class RollingTextPanel
         InnerPanel.Expand().BorderColor(Color.Green).Header(Header);
     }
 
+    private void UpdateAllWrappedText()
+    {
+        allLines = GetWrappedLines();
+    }
+
     private List<string> GetWrappedLines()
     {
         string[] lines = Text.Split("\n", StringSplitOptions.None);

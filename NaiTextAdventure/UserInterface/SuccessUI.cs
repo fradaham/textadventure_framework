@@ -1,5 +1,6 @@
 using Spectre.Console;
 using Nai.TextAdventure.Concepts;
+using Nai.TextAdventure.Language.Concepts;
 using System.Reflection.Metadata.Ecma335;
 using Nai.TextAdventure.Sound;
 
@@ -10,10 +11,12 @@ public class SuccessUI: ITextUserInterface
     private readonly string? _comment;
 
     private readonly string? _successMusicPath;
-    public SuccessUI(string? comment, string? musicPath)
+    private readonly GameLanguage _language;
+    public SuccessUI(string? comment, string? musicPath, GameLanguage language)
     {
         _comment = comment;
         _successMusicPath = musicPath;
+        _language = language;
     }
 
     public TuiResult Execute(Context context, ActionResult? incomingActionResult = null)
@@ -25,11 +28,11 @@ public class SuccessUI: ITextUserInterface
             soundPlayer.Play();
         }
         AnsiConsole.Clear();
-        FigletText successText = new("DU KLARADE SPELET!");
+        FigletText successText = new(UiText.YouCompletedTheGame(_language));
         successText.Color(Color.Blue3_1);
         successText.Justification = Justify.Left;
         
-        Text instructions = new Text($"1 - starta om spelet\n2 - Avsluta", new Style(Color.RosyBrown));
+        Text instructions = new Text($"1 - {UiText.RestartGame(_language)}\n2 - {UiText.QuitOption(_language)}", new Style(Color.RosyBrown));
         
         Align successTextAligned = Align.Center(successText, VerticalAlignment.Bottom).Height(AnsiConsole.Profile.Height/3).Width(AnsiConsole.Profile.Width);
         AnsiConsole.Write(successTextAligned);

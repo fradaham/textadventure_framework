@@ -15,12 +15,12 @@ public class UserInterfaceHub
     {
         _setup = setup;
         //World world = setup.World;
-        _titleUI = new TitleUI(setup.Title, setup.SubTitle, setup.Creator, setup.TitleMusic);
-        _mainUI = new MainUI(engine, setup.MainMusic);
-        _deathUI = new DeathUI(setup.DeathComment, setup.DeathMusic);
-        _successUI = new SuccessUI(setup.SuccessComment, setup.SuccessMusic);
-        _battleUI = new BattleUserInterface(setup.BattleMusic);
-        _aboutUI = new AboutUI(setup.About);
+        _titleUI = new TitleUI(setup.Title, setup.SubTitle, setup.Creator, setup.TitleMusic, setup.Language);
+        _mainUI = new MainUI(engine, setup.MainMusic, setup.Language);
+        _deathUI = new DeathUI(setup.DeathComment, setup.DeathMusic, setup.Language);
+        _successUI = new SuccessUI(setup.SuccessComment, setup.SuccessMusic, setup.Language);
+        _battleUI = new BattleUserInterface(setup.BattleMusic, setup.Language);
+        _aboutUI = new AboutUI(setup.About, setup.Language);
         Player player = new Player("DUMMY", 25, 25, 15, 15, 3, setup.World.GetRoom(setup.StartingRoomName)!); //TODO: Think through messy context making this unnecessary
         _context = new Context(setup.World, player);
     }

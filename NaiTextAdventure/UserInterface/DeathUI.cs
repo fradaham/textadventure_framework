@@ -1,5 +1,6 @@
 using Spectre.Console;
 using Nai.TextAdventure.Concepts;
+using Nai.TextAdventure.Language.Concepts;
 using System.Reflection.Metadata.Ecma335;
 using Nai.TextAdventure.Sound;
 
@@ -9,10 +10,12 @@ public class DeathUI: ITextUserInterface
 {
     private readonly string? _comment;
     private readonly string? _deathMusicPath;
-    public DeathUI(string? comment, string? musicPath)
+    private readonly GameLanguage _language;
+    public DeathUI(string? comment, string? musicPath, GameLanguage language)
     {
         _comment = comment;
         _deathMusicPath = musicPath;
+        _language = language;
     }
 
     public TuiResult Execute(Context context, ActionResult? incomingActionResult = null)
@@ -24,11 +27,11 @@ public class DeathUI: ITextUserInterface
             soundPlayer.Play();
         }
         AnsiConsole.Clear();
-        FigletText deathText = new("DU DOG!");
+        FigletText deathText = new(UiText.YouDied(_language));
         deathText.Color(Color.Red1);
         deathText.Justification = Justify.Left;
         
-        Text instructions = new Text($"1 - starta om spelet\n2 - Avsluta", new Style(Color.RosyBrown));
+        Text instructions = new Text($"1 - {UiText.RestartGame(_language)}\n2 - {UiText.QuitOption(_language)}", new Style(Color.RosyBrown));
         
         Align deathTextAligned = Align.Center(deathText, VerticalAlignment.Bottom).Height(AnsiConsole.Profile.Height/3).Width(AnsiConsole.Profile.Width);
         AnsiConsole.Write(deathTextAligned);
