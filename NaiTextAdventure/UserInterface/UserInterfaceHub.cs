@@ -1,5 +1,6 @@
 using Nai.TextAdventure.Concepts;
 using Nai.TextAdventure.UserInterface;
+using Nai.TextAdventure.UserInterface.Default;
 
 namespace Nai.TextAdventure;
 

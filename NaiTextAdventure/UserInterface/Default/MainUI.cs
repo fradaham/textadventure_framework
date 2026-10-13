@@ -5,7 +5,7 @@ using Nai.TextAdventure.Language.Swedish;
 using System.Collections.Immutable;
 using Nai.TextAdventure.Sound;
 
-namespace Nai.TextAdventure.UserInterface;
+namespace Nai.TextAdventure.UserInterface.Default;
 internal sealed class MainUI : ITextUserInterface, IPrintToUser
 {
     private readonly Layout rootLayout;

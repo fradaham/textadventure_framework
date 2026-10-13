@@ -1,10 +1,8 @@
 using Spectre.Console;
 using Nai.TextAdventure.Concepts;
 using Nai.TextAdventure.Language.Concepts;
-using System.Reflection.Metadata.Ecma335;
-using Nai.TextAdventure.Sound;
 
-namespace Nai.TextAdventure.UserInterface;
+namespace Nai.TextAdventure.UserInterface.Default;
 
 public class AboutUI: ITextUserInterface
 {

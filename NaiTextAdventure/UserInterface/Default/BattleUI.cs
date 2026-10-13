@@ -4,7 +4,7 @@ using Nai.TextAdventure.Language.Concepts;
 using Nai.TextAdventure.Language.Swedish;
 using Nai.TextAdventure.Sound;
 
-namespace Nai.TextAdventure.UserInterface;
+namespace Nai.TextAdventure.UserInterface.Default;
 internal sealed class BattleUserInterface : ITextUserInterface
 {
     private readonly Layout rootLayout;

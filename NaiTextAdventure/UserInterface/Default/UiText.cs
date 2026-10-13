@@ -1,6 +1,6 @@
 using Nai.TextAdventure.Language.Concepts;
 
-namespace Nai.TextAdventure.UserInterface;
+namespace Nai.TextAdventure.UserInterface.Default;
 
 public static class UiText
 {

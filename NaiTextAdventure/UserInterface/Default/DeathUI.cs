@@ -4,51 +4,50 @@ using Nai.TextAdventure.Language.Concepts;
 using System.Reflection.Metadata.Ecma335;
 using Nai.TextAdventure.Sound;
 
-namespace Nai.TextAdventure.UserInterface;
+namespace Nai.TextAdventure.UserInterface.Default;
 
-public class SuccessUI: ITextUserInterface
+public class DeathUI: ITextUserInterface
 {
     private readonly string? _comment;
-
-    private readonly string? _successMusicPath;
+    private readonly string? _deathMusicPath;
     private readonly GameLanguage _language;
-    public SuccessUI(string? comment, string? musicPath, GameLanguage language)
+    public DeathUI(string? comment, string? musicPath, GameLanguage language)
     {
         _comment = comment;
-        _successMusicPath = musicPath;
+        _deathMusicPath = musicPath;
         _language = language;
     }
 
     public TuiResult Execute(Context context, ActionResult? incomingActionResult = null)
     {
         SoundPlayer? soundPlayer = null;
-        if (_successMusicPath != null)
+        if (_deathMusicPath != null)
         {
-            soundPlayer = new(_successMusicPath);
+            soundPlayer = new(_deathMusicPath);
             soundPlayer.Play();
         }
         AnsiConsole.Clear();
-        FigletText successText = new(UiText.YouCompletedTheGame(_language));
-        successText.Color(Color.Blue3_1);
-        successText.Justification = Justify.Left;
+        FigletText deathText = new(UiText.YouDied(_language));
+        deathText.Color(Color.Red1);
+        deathText.Justification = Justify.Left;
         
         Text instructions = new Text($"1 - {UiText.RestartGame(_language)}\n2 - {UiText.QuitOption(_language)}", new Style(Color.RosyBrown));
         
-        Align successTextAligned = Align.Center(successText, VerticalAlignment.Bottom).Height(AnsiConsole.Profile.Height/3).Width(AnsiConsole.Profile.Width);
-        AnsiConsole.Write(successTextAligned);
+        Align deathTextAligned = Align.Center(deathText, VerticalAlignment.Bottom).Height(AnsiConsole.Profile.Height/3).Width(AnsiConsole.Profile.Width);
+        AnsiConsole.Write(deathTextAligned);
 
         Align? commentAligned = null;
         Align? decoration = null;
         if (_comment != null)
         {
-            Text comment = new Text($"{_comment}", new Style(Color.SkyBlue1));
+            Text comment = new Text($"{incomingActionResult?.Message ??_comment }", new Style(Color.Red3));
             commentAligned = Align.Center(comment).Height(1);
             decoration = Align.Center(new Text("--<|>--", new Style(Color.Aqua)), VerticalAlignment.Top).Height(2);
             AnsiConsole.Write(decoration);
             AnsiConsole.Write(commentAligned);
         }
 
-        Align instructionsAligned = Align.Center(instructions, VerticalAlignment.Bottom).Height(AnsiConsole.Profile.Height - successTextAligned.Height - 1 - (commentAligned != null? commentAligned.Height + 1 : 0) - (decoration != null? decoration.Height + 1 : 0));
+        Align instructionsAligned = Align.Center(instructions, VerticalAlignment.Bottom).Height(AnsiConsole.Profile.Height - deathTextAligned.Height - 1 - (commentAligned != null? commentAligned.Height + 1 : 0) - (decoration != null? decoration.Height + 1 : 0));
         AnsiConsole.Write(instructionsAligned);
 
         ConsoleKey userInput;
@@ -63,7 +62,7 @@ public class SuccessUI: ITextUserInterface
         return userInput switch {
             ConsoleKey.D1 => new TuiResult(GameState.Title),
             ConsoleKey.D2 => new TuiResult(GameState.Quit),
-            _ => throw new Exception($"Unsupported case '{userInput}' in success UI input")
+            _ => throw new Exception($"Unsupported case '{userInput}' in death UI input")
         };
        
     }

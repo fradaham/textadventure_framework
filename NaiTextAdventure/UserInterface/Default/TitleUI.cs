@@ -3,7 +3,7 @@ using Nai.TextAdventure.Concepts;
 using Nai.TextAdventure.Language.Concepts;
 using Nai.TextAdventure.Sound;
 
-namespace Nai.TextAdventure.UserInterface;
+namespace Nai.TextAdventure.UserInterface.Default;
 
 public class TitleUI: ITextUserInterface
 {
