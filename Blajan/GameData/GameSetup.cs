@@ -9,7 +9,7 @@ namespace Blajan.GameData;
 
 public class GameSetup: IGameSetup
 {
-    public GameLanguage Language { get; } = GameLanguage.English;
+    public GameLanguage Language { get; } = GameLanguage.Swedish;
 
     public string Title {get; } = "BLAJAN";
 
