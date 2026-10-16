@@ -24,22 +24,7 @@ public class Blaja : SwedishAbstractItem
         {
             if (action.MannerAdverbial is Morakniv)
             {
-                if (hasProducedKey == false)
-                {
-                    context.Player.Room.Items.Add(new KallarNyckel());
-                    hasProducedKey = true;
-                    return new ActionResult()
-                    {
-                        Message = "Du böjer dig ner och med en inre motvilja sticker du ner morakniven i blajan. Du försöker att hålla fingrarna så långt bort som möjligt från den vidriga ytan med bubblorna. Du kan svära på att blajan utstrålar en pyrande illvilja när du sticker kniven i den. Du känner det underliggande golvet med knivspetsen och även något som verkar vara en avloppsbrunn, men plötsligt går spetsen emot något föremål som ligger där nere i blajan. Försiktigt fiskar du upp föremålet med kniven. Det är en gammal nyckel av större sort. När du reser dig upp ramlar nyckeln ner på golvet en bit från blajan med ett ljudligt plask."
-                    };
-                }
-                else
-                {
-                    return new ActionResult()
-                    {
-                        Message = "Du sticker ner kniven i blajan igen, men det enda du känner är golvet under blajan, och en vidrig stank som fräter i dina näsborrar."
-                    };
-                }
+                return ExamineBlajaWithKnife(context);
             }
             else if (action.MannerAdverbial != null)
             {
@@ -67,6 +52,34 @@ public class Blaja : SwedishAbstractItem
                     };
                 }
             }
+        }
+        else if(action.Predicate == Predicates.Stick && action.PlaceAdverbial == this)
+        {
+            if (action.DirectObject is Morakniv)
+            {
+                return ExamineBlajaWithKnife(context);
+            }
+            else if (action.DirectObject != null)
+            {
+                return new ActionResult()
+                {
+                    Message = $"Du vill inte sticka ner {action.DirectObject.Name.DefiniteForm} i blajan."
+                };
+            }
+        }
+        else if(action.Predicate == Predicates.Sätt && action.PlaceAdverbial == this && action.DirectObject != null)
+        {
+            return new ActionResult()
+            {
+                Message = $"Du vill inte sätta {action.DirectObject.Name.DefiniteForm} i blajan."
+            };
+        }
+        else if(action.Predicate == Predicates.Släng && action.PlaceAdverbial == this && action.DirectObject != null)
+        {
+            return new ActionResult()
+            {
+                Message = $"Du vill inte slänga {action.DirectObject.Name.DefiniteForm} i blajan."
+            };
         }
         else if(action.Predicate == Predicates.Ta)
         {
@@ -115,5 +128,25 @@ public class Blaja : SwedishAbstractItem
         }
 
         return null;
+    }
+
+    private ActionResult ExamineBlajaWithKnife(Context context)
+    {
+        if (hasProducedKey == false)
+        {
+            context.Player.Room.Items.Add(new KallarNyckel());
+            hasProducedKey = true;
+            return new ActionResult()
+            {
+                Message = "Du böjer dig ner och med en inre motvilja sticker du ner morakniven i blajan. Du försöker att hålla fingrarna så långt bort som möjligt från den vidriga ytan med bubblorna. Du kan svära på att blajan utstrålar en pyrande illvilja när du sticker kniven i den. Du känner det underliggande golvet med knivspetsen och även något som verkar vara en avloppsbrunn, men plötsligt går spetsen emot något föremål som ligger där nere i blajan. Försiktigt fiskar du upp föremålet med kniven. Det är en gammal nyckel av större sort. När du reser dig upp ramlar nyckeln ner på golvet en bit från blajan med ett ljudligt plask."
+            };
+        }
+        else
+        {
+            return new ActionResult()
+            {
+                Message = "Du sticker ner kniven i blajan igen, men det enda du känner är golvet under blajan, och en vidrig stank som fräter i dina näsborrar."
+            };
+        }
     }
 }
