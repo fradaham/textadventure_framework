@@ -11,5 +11,5 @@ public class EngPredicate : IPredicate
 
     public IEnumerable<string>? Synonyms { get; init; }
 
-    public bool IsMovement { get; init;} = false;
+    public PredicateType Category { get; init; } = PredicateType.Other; //Default
 }

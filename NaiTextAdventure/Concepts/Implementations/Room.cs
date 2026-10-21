@@ -1,14 +1,13 @@
-using System.ComponentModel;
-using System.Globalization;
 using Nai.TextAdventure.Language.Concepts;
-using Nai.TextAdventure.Language.Swedish;
+using Nai.TextAdventure.Language.General;
 
 namespace Nai.TextAdventure.Concepts.Implementations;
 
 /// <summary>
-/// A default implementation for rooms with swedish denomination and interaction
+/// A default implementation for rooms with support for basic interaction in both swedish and english.
+/// Use this class to implement the rooms in the game.
 /// </summary>
-public abstract class SwedishAbstractRoom: IRoom
+public abstract class Room: IRoom
 {
     public Guid Id { get; } = Guid.NewGuid();
     public abstract List<IEntity> Items { get; }
@@ -23,10 +22,10 @@ public abstract class SwedishAbstractRoom: IRoom
 
     public bool IsFixed {get;} = true;
 
-    public override string ToString()
+    public string ToString(GameLanguage language)
     {
-        string items = Items.Count() > 0? $"\n\nFöremål:\n\n {string.Join("\n", Items.Select(i => new string([i.Name.Name[0]]).ToUpper() + i.Name.Name[1..]))}" : String.Empty;
-        string exits = Exits.Where(e => e.IsActivated).Count() > 0? $"\n\nUtgångar:\n\n {string.Join("\n", Exits.Where(e => e.IsActivated).Select(i => new string([i.Name.Name[0]]).ToUpper() + i.Name.Name[1..]))}" : String.Empty;
+        string items = Items.Count() > 0? $"\n\n{UserText.Items(language)}:\n\n {string.Join("\n", Items.Select(i => new string([i.Name.Name[0]]).ToUpper() + i.Name.Name[1..]))}" : String.Empty;
+        string exits = Exits.Where(e => e.IsActivated).Count() > 0? $"\n\n{UserText.Exits(language)}:\n\n {string.Join("\n", Exits.Where(e => e.IsActivated).Select(i => new string([i.Name.Name[0]]).ToUpper() + i.Name.Name[1..]))}" : String.Empty;
         return $"{Description}{items}{exits}";
     }
 
@@ -34,7 +33,7 @@ public abstract class SwedishAbstractRoom: IRoom
     {
         return new ActionResult()
         {
-            Message = this.ToString()
+            Message = this.ToString(context.Language)
         };
     }
 
@@ -52,15 +51,12 @@ public abstract class SwedishAbstractRoom: IRoom
         {}
         
         //If not implemented, or HandleAction returns null, do general handling:
-        if (action.Predicate == Predicates.Titta)
+        if (action.Predicate.Category == PredicateType.Examination && (action.DirectObject == this || action.PlaceAdverbial == this) || (action.DirectObject == null && action.PlaceAdverbial == null))
         {
-            if (action.PlaceAdverbial == null || (action.PlaceAdverbial == this && (action.PlaceAdverbialInit == "på" || action.PlaceAdverbialInit == "i")) || (action.PlaceAdverbial == this && action.PlaceAdverbialInit == null))
+            return new ActionResult()
             {
-                return new ActionResult()
-                {
-                    Message = this.ToString() ?? "Beskrivning saknas. Av någon underlig anledning tittar du, men ser ingenting...är det mörkt? Har du en ögonbindel? Vem vet..."
-                };
-            }
+                Message = this.ToString(context.Language)
+            };
         }
 
         if (action.DirectObject != this)
@@ -98,7 +94,7 @@ public abstract class SwedishAbstractRoom: IRoom
 
         return new ActionResult()
         {
-            Message = "Det går inte."
+            Message = UserText.CantDoThat(context.Language)
         };
     }
 

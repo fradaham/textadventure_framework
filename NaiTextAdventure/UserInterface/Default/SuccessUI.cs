@@ -1,8 +1,8 @@
 using Spectre.Console;
 using Nai.TextAdventure.Concepts;
 using Nai.TextAdventure.Language.Concepts;
-using System.Reflection.Metadata.Ecma335;
 using Nai.TextAdventure.Sound;
+using Nai.TextAdventure.Language.General;
 
 namespace Nai.TextAdventure.UserInterface.Default;
 
@@ -28,11 +28,11 @@ public class SuccessUI: ITextUserInterface
             soundPlayer.Play();
         }
         AnsiConsole.Clear();
-        FigletText successText = new(UiText.YouCompletedTheGame(_language));
+        FigletText successText = new(UserText.YouCompletedTheGame(_language));
         successText.Color(Color.Blue3_1);
         successText.Justification = Justify.Left;
         
-        Text instructions = new Text($"1 - {UiText.RestartGame(_language)}\n2 - {UiText.QuitOption(_language)}", new Style(Color.RosyBrown));
+        Text instructions = new Text($"1 - {UserText.RestartGame(_language)}\n2 - {UserText.QuitOption(_language)}", new Style(Color.RosyBrown));
         
         Align successTextAligned = Align.Center(successText, VerticalAlignment.Bottom).Height(AnsiConsole.Profile.Height/3).Width(AnsiConsole.Profile.Width);
         AnsiConsole.Write(successTextAligned);

@@ -1,4 +1,4 @@
-using Nai.TextAdventure.Language;
+using Nai.TextAdventure.Language.Concepts;
 
 namespace Nai.TextAdventure.Concepts;
 
@@ -9,5 +9,7 @@ public interface IRoom: IEntity
     List<IExit> Exits { get; }
 
     ActionResult? Enter(Context context);
+
+    string ToString(GameLanguage language);
 
 }

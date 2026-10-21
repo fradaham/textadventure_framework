@@ -1,9 +1,8 @@
 using Spectre.Console;
 using Nai.TextAdventure.Concepts;
 using Nai.TextAdventure.Language.Concepts;
-using Nai.TextAdventure.Language.Swedish;
-using System.Collections.Immutable;
 using Nai.TextAdventure.Sound;
+using Nai.TextAdventure.Language.General;
 
 namespace Nai.TextAdventure.UserInterface.Default;
 internal sealed class MainUI : ITextUserInterface, IPrintToUser
@@ -55,7 +54,7 @@ internal sealed class MainUI : ITextUserInterface, IPrintToUser
         footerLayout.Size = 3;
         bodyLayout.SplitColumns(storyLayout, inventoryLayout);
         rootLayout.SplitRows(headerLayout, bodyLayout, footerLayout);
-        textPanel = new("", $"[bold] {UiText.Logbook(language)} [/]", (AnsiConsole.Profile.Width - inventoryLayout.Size - 4).Value, (AnsiConsole.Profile.Height - headerLayout.Size - footerLayout.Size - 2).Value);
+        textPanel = new("", $"[bold] {UserText.Logbook(language)} [/]", (AnsiConsole.Profile.Width - inventoryLayout.Size - 4).Value, (AnsiConsole.Profile.Height - headerLayout.Size - footerLayout.Size - 2).Value);
     }
 
     public void PrintMessage(string text)
@@ -75,7 +74,7 @@ internal sealed class MainUI : ITextUserInterface, IPrintToUser
         {
             if (incomingActionResult != null)
             {
-                exitState = _gameEngine.ProcessActionResult(incomingActionResult, context.Player, this);
+                exitState = _gameEngine.ProcessActionResult(incomingActionResult, context, this);
             }
 
             Update(context);
@@ -107,7 +106,7 @@ internal sealed class MainUI : ITextUserInterface, IPrintToUser
                 if (input.Key == ConsoleKey.Enter)
                 {
                     string userInput = UserCommand;
-                    exitState = _gameEngine.ProcessUserCommand(userInput, context.Player, this);
+                    exitState = _gameEngine.ProcessUserCommand(userInput, context, this);
                 }
                 Update(context);
                 ctx.Refresh();
@@ -117,11 +116,11 @@ internal sealed class MainUI : ITextUserInterface, IPrintToUser
             {
                 if (exitState.TargetView == GameState.Fight)
                 {
-                    AppendToLog(UiText.PressAnyKeyToBeginFight(_language, exitState.PassedOnActionResult?.Fight?.Name ?? "NoName"));
+                    AppendToLog(UserText.PressAnyKeyToBeginFight(_language, exitState.PassedOnActionResult?.Fight?.Name ?? "NoName"));
                 }
                 else if (exitState.TargetView == GameState.Completed || exitState.TargetView == GameState.Death)
                 {
-                   AppendToLog(UiText.PressAnyKeyToContinue(_language));
+                   AppendToLog(UserText.PressAnyKeyToContinue(_language));
                 }
                 Update(context);
                 ctx.Refresh();
@@ -148,7 +147,7 @@ internal sealed class MainUI : ITextUserInterface, IPrintToUser
 
         BarChart healthBar = new BarChart()
             .WithMaxValue(context.Player.MaxHealth)
-            .AddItem(   $"{UiText.Health(_language)} ({context.Player.MaxHealth})"
+            .AddItem(   $"{UserText.Health(_language)} ({context.Player.MaxHealth})"
                         ,context.Player.Health
                         ,(((double)context.Player.Health)/context.Player.MaxHealth) switch
                         {
@@ -160,7 +159,7 @@ internal sealed class MainUI : ITextUserInterface, IPrintToUser
 
         BarChart spBar = new BarChart()
             .WithMaxValue(15)
-            .AddItem($"{UiText.FightingSkill(_language)} ({context.Player.MaxFightingSkill})", context.Player.FightingSkill, Color.LightCyan3);
+            .AddItem($"{UserText.FightingSkill(_language)} ({context.Player.MaxFightingSkill})", context.Player.FightingSkill, Color.LightCyan3);
 
         Grid grid = new();
         grid.AddColumn(new GridColumn() { Width = (consoleWidth - 4)/3, Alignment = Justify.Left, NoWrap = true });
@@ -168,7 +167,7 @@ internal sealed class MainUI : ITextUserInterface, IPrintToUser
         grid.AddColumn(new GridColumn() { Width = (consoleWidth - 4)/3, Alignment = Justify.Right, NoWrap = true });
         // grid.AddRow(healthBar, new Markup($"[yellow]Guldmynt:[/] {player.Gold}"), new Markup($"[blue]Plats:[/] Källare"));
         // grid.AddRow(spBar);
-        grid.AddRow(new Markup($"{UiText.Health(_language)}: {context.Player.Health}"), new Markup($"{UiText.FightingSkill(_language)}: {context.Player.FightingSkill}"), new Markup($"[blue]{UiText.Location(_language)}:[/] Källare"));
+        grid.AddRow(new Markup($"{UserText.Health(_language)}: {context.Player.Health}"), new Markup($"{UserText.FightingSkill(_language)}: {context.Player.FightingSkill}"), new Markup($"[blue]{UserText.Location(_language)}:[/] Källare"));
 
         // Columns headerContent = new(healthBar, spBar, new Markup($"[red]Kroppspoäng:[/] {player.Health}/100   |   [yellow]Guldmynt:[/] {player.Gold}   |   [blue]Plats:[/] {player.Location.Name}}}"));
         // headerContent.Expand();
@@ -176,7 +175,7 @@ internal sealed class MainUI : ITextUserInterface, IPrintToUser
         //headerLayout.Update(new Panel(Align.Center(new Markup($"[red]Kroppspoäng:[/] {health}/100   |   [yellow]Guldmynt:[/] {gold}   |   [blue]Plats:[/] Källare")))
         headerLayout.Update(new Panel(grid)
         .BorderColor(Color.Red)
-        .Header($"[b] {UiText.PlayerStatus(_language)} (S) [/]"));
+        .Header($"[b] {UserText.PlayerStatus(_language)} (S) [/]"));
 
 
         // debugLayout.Update(new Panel(new Markup($"Lines: {storyMarkup.Lines} | Length: {storyMarkup.Length} | S_height: {storyHeight} | S_width: {storyWidth}  | allLines: {allLines.Count()}  | visLines: {visibleLines.Count()}  | currL: {currentLine}"))
@@ -192,7 +191,7 @@ internal sealed class MainUI : ITextUserInterface, IPrintToUser
             Height = storyHeight + 2,
         };
         invPanel.BorderColor(Color.Blue);
-        invPanel.Header($"[b] {UiText.Inventory(_language)} (P) [/]" );
+        invPanel.Header($"[b] {UserText.Inventory(_language)} (P) [/]" );
         inventoryLayout.Update(
             invPanel
         );

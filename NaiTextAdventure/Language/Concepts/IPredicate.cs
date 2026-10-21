@@ -10,7 +10,7 @@ public interface IPredicate
 
     IEnumerable<string>? Synonyms { get; } 
 
-    bool IsMovement { get; } //Used to tag predicates indicating that they are used to move the player (like go/gå, run/spring)
+    PredicateType Category { get; } 
 }
 
 public class Predicate: IPredicate
@@ -21,7 +21,16 @@ public class Predicate: IPredicate
 
     public IEnumerable<string>? Synonyms { get; init; }
 
-    public bool IsMovement { get; init; } = false; 
-    
+    public PredicateType Category { get; init; } = PredicateType.Other; //Default
+}
+
+public enum PredicateType
+{
+    Other,
+    Movement,
+    Examination,
+    Retrieval, 
+    Discard
+
 }
 

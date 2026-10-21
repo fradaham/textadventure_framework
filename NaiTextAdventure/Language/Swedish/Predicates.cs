@@ -9,7 +9,7 @@ namespace Nai.TextAdventure.Language.Swedish;
         Infinitiv = "gå",
         Imperativ = "gå",
         Synonyms = ["knalla"],
-        IsMovement = true
+        Category = PredicateType.Movement
     };
 
     public static readonly Predicate Lägg = new()
@@ -23,6 +23,7 @@ namespace Nai.TextAdventure.Language.Swedish;
         Infinitiv = "ta",
         Synonyms = ["tag", "ta upp", "tag upp", "plocka upp"],
         Imperativ = "ta",
+        Category = PredicateType.Retrieval
     };
 
     public static readonly Predicate Öppna = new()
@@ -47,6 +48,7 @@ namespace Nai.TextAdventure.Language.Swedish;
     {
         Infinitiv = "släppa",
         Imperativ = "släpp",
+        Category = PredicateType.Discard
     };
 
     public static readonly Predicate Lås_upp = new()
@@ -64,13 +66,15 @@ namespace Nai.TextAdventure.Language.Swedish;
     public static readonly Predicate Titta = new()
     {
         Infinitiv = "titta",
-        Imperativ = "titta"
+        Imperativ = "titta",
+        Category = PredicateType.Examination
     };
 
     public static readonly Predicate Undersök = new()
     {
         Infinitiv = "undersöka",
-        Imperativ = "undersök"
+        Imperativ = "undersök",
+        Category = PredicateType.Examination
     };
 
     public static readonly Predicate Torka = new()

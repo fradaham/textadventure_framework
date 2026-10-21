@@ -13,8 +13,8 @@ public static class CommandDefinitions
             Predicate = Predicates.Gå,
             Patterns =
             [
-                new Regex(@$"^(?<{SentenceParts.PlaceAdverbial}>[a-zåäö ]+) (?<{SentenceParts.MannerAdverbialInit}>i|på|under|genom|längs) (?<{SentenceParts.MannerAdverbial}>[a-zåäö ]+)"),
-                new Regex(@$"^(?<{SentenceParts.PlaceAdverbialInit}>i|på|under|till|mot|genom|längs) (?<{SentenceParts.PlaceAdverbial}>[a-zåäö ]+)"),
+                //new Regex(@$"^(?<{SentenceParts.PlaceAdverbial}>[a-zåäö ]+) (?<{SentenceParts.MannerAdverbialInit}>i|på|under|genom|längs) (?<{SentenceParts.MannerAdverbial}>[a-zåäö ]+)"),
+                new Regex(@$"^(?<{SentenceParts.PlaceAdverbialInit}>i|på|under|till|mot|genom|ut genom|in genom|längs|in i|ut i) (?<{SentenceParts.PlaceAdverbial}>[a-zåäö ]+)"),
                 new Regex(@$"^(?<{SentenceParts.PlaceAdverbial}>[a-zåäö ]+)")
             ],
         },

@@ -2,6 +2,7 @@ using Spectre.Console;
 using Nai.TextAdventure.Concepts;
 using Nai.TextAdventure.Language.Concepts;
 using Nai.TextAdventure.Sound;
+using Nai.TextAdventure.Language.General;
 
 namespace Nai.TextAdventure.UserInterface.Default;
 
@@ -36,12 +37,12 @@ public class TitleUI: ITextUserInterface
             Justification = Justify.Center
         };  
         
-        Text instructions = new Text($"(1) - {UiText.StartGame(_language)}\n(2) - {UiText.AboutOption(_language)}\n(3) - {UiText.QuitOption(_language)}", new Style(Color.RosyBrown));
+        Text instructions = new Text($"(1) - {UserText.StartGame(_language)}\n(2) - {UserText.AboutOption(_language)}\n(3) - {UserText.QuitOption(_language)}", new Style(Color.RosyBrown));
 
         Align? creatorAligned = null;
         if (_madeBy != null)
         {
-            Text creator = new Text(UiText.PresentedBy(_language, _madeBy), new Style(Color.Black, Color.Blue));
+            Text creator = new Text(UserText.PresentedBy(_language, _madeBy), new Style(Color.Black, Color.Blue));
             creatorAligned = Align.Center(creator, VerticalAlignment.Top).Height(3);
             AnsiConsole.Write(creatorAligned);
             AnsiConsole.Write(Align.Center(new Text("--:-=<|>=-:--", new Style(Color.Aqua))));

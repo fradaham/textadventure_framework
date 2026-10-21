@@ -6,7 +6,7 @@ using Nai.TextAdventure.Language.Swedish;
 
 namespace Blajan.GameData.Rooms;
 
-public class Tradgard : SwedishAbstractRoom
+public class Tradgard : Room
 {
     public override INoun Name => new SweNoun("Trädgård", Genus.Utrum);
 
@@ -17,7 +17,7 @@ public class Tradgard : SwedishAbstractRoom
 
     public override List<IExit> Exits { get; } =
     [
-        new SwedishExit()
+        new Exit()
         {
             Name = new SweNoun("Källare", Genus.Utrum),
             Synonyms =
@@ -25,8 +25,9 @@ public class Tradgard : SwedishAbstractRoom
             Description = "Källaren är den enda som är kvar av ett hus som har funnits här i sluttningen tidigare. Den sida som vätter mot trädgården är ovan jord, och i källarväggen av betong finns en öppen dörr.",
             TargetRoomName = "Källare",
             ExitMessage = "Du kliver in genom dörröppningen till källaren. Unken luft slår emot dig som en vägg.",
+            AllowedPrepositions = ["till", "in i"],
         },
-        new SwedishExit()
+        new Exit()
         {
             Name = new SweNoun("trädgårdsgång", Genus.Utrum),
             Synonyms =
@@ -37,6 +38,7 @@ public class Tradgard : SwedishAbstractRoom
             Description = "Det är en grusgång som leder genom trädgården till tomtgränsen, där det verkar finnas en mur med en grind i.",
             TargetRoomName = "Grind",
             ExitMessage = "Du går längs trädgårdsgången mot grinden. Gången sluttar nedåt. Gruset krasar under dina fötter på de platser där gräset inte fått fäste ännu.",
+            AllowedPrepositions = ["längs", "på"],
         }
     ];
 

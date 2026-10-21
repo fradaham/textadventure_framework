@@ -5,7 +5,7 @@ using Nai.TextAdventure.Language.Swedish;
 
 namespace Blajan.GameData.Items;
 
-public class Morakniv : SwedishAbstractItem
+public class Morakniv : Item
 {
     public override INoun Name => new SweNoun("morakniv", Genus.Utrum);
 

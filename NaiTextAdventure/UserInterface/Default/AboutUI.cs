@@ -1,6 +1,7 @@
 using Spectre.Console;
 using Nai.TextAdventure.Concepts;
 using Nai.TextAdventure.Language.Concepts;
+using Nai.TextAdventure.Language.General;
 
 namespace Nai.TextAdventure.UserInterface.Default;
 
@@ -75,13 +76,13 @@ public class AboutUI: ITextUserInterface
         
         logLayout.Update(textPanel.InnerPanel);
 
-        FigletText aboutTitle = new(UiText.AboutTitle(_language));
+        FigletText aboutTitle = new(UserText.AboutTitle(_language));
         aboutTitle.Color(Color.Yellow);
         aboutTitle.Justification = Justify.Center;
 
         headerLayout.Update(aboutTitle);
         
-        Text instructions = new Text($"(1) - {UiText.BackToTitle(_language)} (2) - {UiText.QuitOption(_language)} (\u2191) - {UiText.ScrollUp(_language)} (\u2193) - {UiText.ScrollDown(_language)}", new Style(Color.RosyBrown));
+        Text instructions = new Text($"(1) - {UserText.BackToTitle(_language)} (2) - {UserText.QuitOption(_language)} (\u2191) - {UserText.ScrollUp(_language)} (\u2193) - {UserText.ScrollDown(_language)}", new Style(Color.RosyBrown));
         Align footerAligned = Align.Center(instructions);
 
         footerLayout.Update(footerAligned);

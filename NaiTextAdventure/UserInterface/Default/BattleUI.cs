@@ -1,8 +1,8 @@
 using Spectre.Console;
 using Nai.TextAdventure.Concepts;
 using Nai.TextAdventure.Language.Concepts;
-using Nai.TextAdventure.Language.Swedish;
 using Nai.TextAdventure.Sound;
+using Nai.TextAdventure.Language.General;
 
 namespace Nai.TextAdventure.UserInterface.Default;
 internal sealed class BattleUserInterface : ITextUserInterface
@@ -41,7 +41,7 @@ internal sealed class BattleUserInterface : ITextUserInterface
         opponentsLayout.Size = 5;
         opponentsLayout.SplitColumns(playerLayout, enemyLayout);
         rootLayout.SplitRows(headerLayout, opponentsLayout, logLayout);
-        textPanel = new("", $"[bold] {UiText.Logbook(_language)} [/]", AnsiConsole.Profile.Width - 2, (AnsiConsole.Profile.Height - headerLayout.Size - opponentsLayout.Size - 2).Value);
+        textPanel = new("", $"[bold] {UserText.Logbook(_language)} [/]", AnsiConsole.Profile.Width - 2, (AnsiConsole.Profile.Height - headerLayout.Size - opponentsLayout.Size - 2).Value);
     }
 
     public TuiResult Execute(Context context, ActionResult? incomingActionResult)
@@ -62,7 +62,7 @@ internal sealed class BattleUserInterface : ITextUserInterface
         AnsiConsole.Clear();
         AnsiConsole.Live(rootLayout).Start(ctx =>
         {
-            AppendToLog(UiText.PressAnyKeyToStart(_language));
+            AppendToLog(UserText.PressAnyKeyToStart(_language));
             Update(player, opponent);
             ctx.Refresh();
             while (exitState == null && player.Health > 0 && enemyHealth > 0)
@@ -91,16 +91,16 @@ internal sealed class BattleUserInterface : ITextUserInterface
                     if (damage > 0)
                     {
                         enemyHealth -= damage;
-                        AppendToLog(UiText.EnemyTookDamage(_language, damage));
+                        AppendToLog(UserText.EnemyTookDamage(_language, damage));
                     }
                     else if (damage < 0)
                     {
                         player.Health += damage;
-                        AppendToLog(UiText.PlayerTookDamage(_language, player.Name, -damage));
+                        AppendToLog(UserText.PlayerTookDamage(_language, player.Name, -damage));
                     }
                     else
                     {
-                        AppendToLog(UiText.EvenRound(_language));
+                        AppendToLog(UserText.EvenRound(_language));
                     }
                     round++;
                     
@@ -114,8 +114,8 @@ internal sealed class BattleUserInterface : ITextUserInterface
                         GameResult.Fail => GameState.Death,
                         _ => GameState.Main
                     };
-                    AppendToLog(UiText.Defeat(_language));
-                    AppendToLog(UiText.PressAnyKeyToContinue(_language));
+                    AppendToLog(UserText.Defeat(_language));
+                    AppendToLog(UserText.PressAnyKeyToContinue(_language));
                     exitState = new TuiResult(targetView, opponent.FailEvent);
                 }
                 else if (enemyHealth <= 0)
@@ -127,12 +127,12 @@ internal sealed class BattleUserInterface : ITextUserInterface
                         _ => GameState.Main
                     };
                     exitState = new TuiResult(targetView, opponent.SuccessEvent);
-                    AppendToLog(UiText.Victory(_language));
-                    AppendToLog(UiText.PressAnyKeyToContinue(_language));
+                    AppendToLog(UserText.Victory(_language));
+                    AppendToLog(UserText.PressAnyKeyToContinue(_language));
                 }
                 else
                 {
-                   AppendToLog(UiText.PressAnyKeyForRound(_language, round)); 
+                   AppendToLog(UserText.PressAnyKeyForRound(_language, round)); 
                 }
 
                 Update(player, opponent);
@@ -169,7 +169,7 @@ internal sealed class BattleUserInterface : ITextUserInterface
 
         BarChart healthBar = new BarChart()
             .WithMaxValue(player.MaxHealth)
-            .AddItem(   $"{UiText.Health(_language)} ({player.MaxHealth})"
+            .AddItem(   $"{UserText.Health(_language)} ({player.MaxHealth})"
                         ,player.Health
                         ,(((double)player.Health)/player.MaxHealth) switch 
                         {
@@ -181,8 +181,8 @@ internal sealed class BattleUserInterface : ITextUserInterface
 
         BarChart spBar = new BarChart()
             .WithMaxValue(15)
-            .AddItem($"{UiText.FightingSkill(_language)} ({player.MaxFightingSkill})", player.FightingSkill, Color.LightCyan3);
-        FigletText headerText = new(UiText.FightTitle(_language));
+            .AddItem($"{UserText.FightingSkill(_language)} ({player.MaxFightingSkill})", player.FightingSkill, Color.LightCyan3);
+        FigletText headerText = new(UserText.FightTitle(_language));
         headerText.Color(Color.Purple);
         headerText.Justification = Justify.Center;
         
@@ -194,9 +194,9 @@ internal sealed class BattleUserInterface : ITextUserInterface
         // debugLayout.Update(new Panel(new Markup($"Lines: {storyMarkup.Lines} | Length: {storyMarkup.Length} | S_height: {storyHeight} | S_width: {storyWidth}  | allLines: {allLines.Count()}  | visLines: {visibleLines.Count()}  | currL: {currentLine}"))
         //     .Expand()
         //     .BorderColor(Color.Green).Header("[bold] DEBUG [/]"));
-        Text enemyStats = new Text($"{UiText.Enemy(_language)}: {opponent.Name}\n{UiText.FightingSkill(_language)}: {opponent.FightingSkill}\n{UiText.Health(_language)}: {enemyHealth}");    
-        enemyLayout.Update(new Panel(enemyStats).BorderColor(Color.Red).Header(UiText.Enemy(_language)).Expand());
-        Text playerStats = new Text($"{UiText.Player(_language)}: {player.Name}\n{UiText.FightingSkill(_language)}: {player.FightingSkill}\n{UiText.Health(_language)}: {player.Health}");    
-        playerLayout.Update(new Panel(playerStats).BorderColor(Color.Green).Header(UiText.Player(_language)).Expand());
+        Text enemyStats = new Text($"{UserText.Enemy(_language)}: {opponent.Name}\n{UserText.FightingSkill(_language)}: {opponent.FightingSkill}\n{UserText.Health(_language)}: {enemyHealth}");    
+        enemyLayout.Update(new Panel(enemyStats).BorderColor(Color.Red).Header(UserText.Enemy(_language)).Expand());
+        Text playerStats = new Text($"{UserText.Player(_language)}: {player.Name}\n{UserText.FightingSkill(_language)}: {player.FightingSkill}\n{UserText.Health(_language)}: {player.Health}");    
+        playerLayout.Update(new Panel(playerStats).BorderColor(Color.Green).Header(UserText.Player(_language)).Expand());
     }
 }

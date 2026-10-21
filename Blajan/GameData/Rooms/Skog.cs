@@ -6,7 +6,7 @@ using Nai.TextAdventure.Language.Swedish;
 
 namespace Blajan.GameData.Rooms;
 
-public class Skog : SwedishAbstractRoom
+public class Skog : Room
 {
     public override INoun Name => new SweNoun("Skog", Genus.Utrum);
 

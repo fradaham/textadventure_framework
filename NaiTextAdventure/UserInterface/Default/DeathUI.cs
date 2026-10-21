@@ -1,8 +1,8 @@
 using Spectre.Console;
 using Nai.TextAdventure.Concepts;
 using Nai.TextAdventure.Language.Concepts;
-using System.Reflection.Metadata.Ecma335;
 using Nai.TextAdventure.Sound;
+using Nai.TextAdventure.Language.General;
 
 namespace Nai.TextAdventure.UserInterface.Default;
 
@@ -27,11 +27,11 @@ public class DeathUI: ITextUserInterface
             soundPlayer.Play();
         }
         AnsiConsole.Clear();
-        FigletText deathText = new(UiText.YouDied(_language));
+        FigletText deathText = new(UserText.YouDied(_language));
         deathText.Color(Color.Red1);
         deathText.Justification = Justify.Left;
         
-        Text instructions = new Text($"1 - {UiText.RestartGame(_language)}\n2 - {UiText.QuitOption(_language)}", new Style(Color.RosyBrown));
+        Text instructions = new Text($"1 - {UserText.RestartGame(_language)}\n2 - {UserText.QuitOption(_language)}", new Style(Color.RosyBrown));
         
         Align deathTextAligned = Align.Center(deathText, VerticalAlignment.Bottom).Height(AnsiConsole.Profile.Height/3).Width(AnsiConsole.Profile.Width);
         AnsiConsole.Write(deathTextAligned);

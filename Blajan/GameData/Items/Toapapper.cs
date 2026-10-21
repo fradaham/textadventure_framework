@@ -6,7 +6,7 @@ using Nai.TextAdventure.Language.Swedish;
 
 namespace Blajan.GameData.Items;
 
-public class Toapapper : SwedishAbstractItem
+public class Toapapper : Item
 {
     public override INoun Name => new SweNoun("toalettpappersrulle", Genus.Utrum);
 

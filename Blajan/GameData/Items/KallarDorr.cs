@@ -5,7 +5,7 @@ using Nai.TextAdventure.Language.Swedish;
 
 namespace Blajan.GameData.Items;
 
-public class KallarDorr : SwedishAbstractItem
+public class KallarDorr : Item
 {
     public override INoun Name => new SweNoun("källardörr", Genus.Utrum);
 

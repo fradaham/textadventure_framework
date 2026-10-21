@@ -12,8 +12,6 @@ public class TextGameEngine
 {   
     private IInterpreter _interpreter;
 
-    private World _world;
-
     private UserInterfaceHub _uiHub;
 
     private string? _quitPhrase;
@@ -26,7 +24,6 @@ public class TextGameEngine
             GameLanguage.English => new GeneralInterpreter(new EnglishInterpreterSettings()),
             _ => throw new NotSupportedException("The language setting is not supported")
         };
-        _world = setup.World;
         _quitPhrase = setup.QuitPhrase;
         _uiHub = new UserInterfaceHub(setup, this);
     }
@@ -44,7 +41,7 @@ public class TextGameEngine
         Environment.Exit(0);
     }
     
-    internal TuiResult? ProcessUserCommand(string command, Player player, IPrintToUser userUI)
+    internal TuiResult? ProcessUserCommand(string command, Context context, IPrintToUser userUI)
     {
         ParsingResult parsingResult = _interpreter.Parse(command);
         if (parsingResult.ErrorMessage is not null)
@@ -62,9 +59,9 @@ public class TextGameEngine
             {
                 if (!HelpRequestProcessing(userUI, parsingResult))
                 {
-                    action = CreatePlayerAction(parsingResult, player, _world);
-                    ActionResult? result = player.Room.InterAct(new Context(_world, player), action);
-                    return ProcessActionResult(result, player, userUI);
+                    action = CreatePlayerAction(parsingResult, context.Player, context.World);
+                    ActionResult? result = context.Player.Room.InterAct(context, action);
+                    return ProcessActionResult(result, context, userUI);
                 }
             }
             catch(TextInputException e)
@@ -106,7 +103,7 @@ public class TextGameEngine
         return false;
     }
 
-    internal TuiResult? ProcessActionResult(ActionResult? result, Player player, IPrintToUser userUI)
+    internal TuiResult? ProcessActionResult(ActionResult? result, Context context, IPrintToUser userUI)
     {
         try
         {
@@ -116,13 +113,13 @@ public class TextGameEngine
             }
             if (result?.Custom != null)
             {
-                result.Custom.Invoke(new Context(_world, player));
+                result.Custom.Invoke(context);
             }
             if (result?.MoveToRoomId != null)
             {
-                IRoom? newRoom = _world.GetRoom(result.MoveToRoomId);
-                player.Room = newRoom ?? throw new Exception($"Cannot find room with name '{result.MoveToRoomId}' in world. Check game setup.");
-                return ProcessActionResult(player.Room.Enter(new Context(_world, player)), player, userUI);
+                IRoom? newRoom = context.World.GetRoom(result.MoveToRoomId);
+                context.Player.Room = newRoom ?? throw new Exception($"Cannot find room with name '{result.MoveToRoomId}' in world. Check game setup.");
+                return ProcessActionResult(context.Player.Room.Enter(context), context, userUI);
             }
             else if(result?.Fight != null)
             {
@@ -194,7 +191,7 @@ public class TextGameEngine
         if (placeAdverbialStr != null)
         {
             placeAdverbial = entities.FirstOrDefault(d => d.IsMatch(placeAdverbialStr));
-            if (placeAdverbial == null && predicate.IsMovement) //Special case for movement commands (like go/gå, then you should be able to go the adjacent rooms, even if they are not here in this room)
+            if (placeAdverbial == null && predicate.Category == PredicateType.Movement) //Special case for movement commands (like go/gå, then you should be able to go the adjacent rooms, even if they are not here in this room)
             {
                 IEnumerable<IRoom> adjacentRooms = player.Room.Exits.Where(e => e.IsActivated).Select(e => e.GetTargetRoom(world));
                 IRoom? matchingRoom = adjacentRooms.FirstOrDefault(r => r.IsMatch(placeAdverbialStr));

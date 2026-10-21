@@ -1,12 +1,15 @@
 using Nai.TextAdventure.Language.Concepts;
+using Nai.TextAdventure.Language.General;
 using Nai.TextAdventure.Language.Swedish;
 
 namespace Nai.TextAdventure.Concepts.Implementations;
 
 /// <summary>
-/// Can be used if the item doesn't need to hold any additional state 
+/// A default implementation for items with support for basic interaction in both swedish and english.
+/// Can be used if the item doesn't need to hold any additional state (simple in that manner). If the item needs to hold state, use the abstract Item class instead.
+/// The HandleAction property can be used to implement custom interaction for the item.
 /// </summary>
-public sealed class SwedishItem: IEntity
+public sealed class SimpleItem: IEntity
 {
     public Guid Id { get; } = Guid.NewGuid();
     public required INoun Name { get; init; }
@@ -35,20 +38,20 @@ public sealed class SwedishItem: IEntity
         {}
         //If not implemented, or HandleAction returns null, do general handling:
 
-        if (action.Predicate == Predicates.Ta && action.DirectObject == this)
+                if (action.Predicate.Category == PredicateType.Retrieval && action.DirectObject == this && action.MannerAdverbial == null)
         {
             if (context.Player.Inventory.Contains(this))
             {
                 return new ActionResult()
                 {
-                    Message = $"Du har redan tagit upp {Name.DefiniteForm}"
+                    Message = UserText.ItemAlreadyInInventory(context.Language, Name)
                 };
             }
             else if (IsFixed)
             {
                 return new ActionResult()
                 {
-                    Message = $"Det går inte att ta upp {Name.DefiniteForm}."
+                    Message = UserText.CannotPickUpItem(context.Language, Name)
                 };
             }
             else
@@ -57,11 +60,11 @@ public sealed class SwedishItem: IEntity
                 context.Player.Room.Items.Remove(this);
                 return new ActionResult()
                 {
-                    Message = $"Du tog upp {Name.DefiniteForm}."
+                    Message = UserText.ItemPickedUp(context.Language, Name)
                 };
             }
         }
-        else if (action.Predicate == Predicates.Släpp && action.DirectObject == this)
+        else if (action.Predicate.Category == PredicateType.Discard && action.DirectObject == this)
         {
             if (context.Player.Inventory.Contains(this))
             {
@@ -69,18 +72,18 @@ public sealed class SwedishItem: IEntity
                 context.Player.Room.Items.Add(this);
                 return new ActionResult()
                 {
-                    Message = $"Du släppte {Name.DefiniteForm}."
+                    Message = UserText.ItemDiscarded(context.Language, Name)
                 };
             }
             else
             {
                 return new ActionResult()
                 {
-                    Message = $"Du kan inte släppa {Name.DefiniteForm},  eftersom du inte har {Name.Pronomen} på dig."
+                    Message = UserText.CantDiscardItemNotInInventory(context.Language, Name)
                 };
             }
         }
-        else if(action.Predicate == Predicates.Titta)
+        else if ((action.Predicate.Category == PredicateType.Examination && action.DirectObject == this && action.MannerAdverbial == null) || (action.Predicate.Category == PredicateType.Examination && action.PlaceAdverbial == this && (action.PlaceAdverbialInit == null || action.PlaceAdverbialInit == "på")))
         {
             return new ActionResult()
             {

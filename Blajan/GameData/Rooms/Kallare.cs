@@ -6,7 +6,7 @@ using Nai.TextAdventure.Language.Swedish;
 
 namespace Blajan.GameData.Rooms;
 
-public class Kallare : SwedishAbstractRoom
+public class Kallare : Room
 {
     public override INoun Name => new SweNoun("källare", Genus.Utrum);
 
@@ -15,7 +15,7 @@ public class Kallare : SwedishAbstractRoom
         new KallarDorr(),
         new Blaja(),
         new Falukorv(),
-        new SwedishItem() //just trying out the non-abstract class. Actually a little wrong as this item should hold state (if it has been examined or not)
+        new SimpleItem() //just trying out the non-abstract class. Actually a little wrong as this item should hold state (if it has been examined or not)
         {
             Name = new SweNoun("skräp", Genus.Neutrum),
             Synonyms = [new SweNoun("skräphög", Genus.Utrum)],
@@ -49,7 +49,7 @@ public class Kallare : SwedishAbstractRoom
 
     public override List<IExit> Exits { get; } =
     [
-        new SwedishExit()
+        new Exit()
         {
             Name = new SweNoun("dörröppning", Genus.Utrum),
             Synonyms =
@@ -59,7 +59,8 @@ public class Kallare : SwedishAbstractRoom
             Description = "Genom dörröppningen kan du se att det verkar vara natt, men ett blekt månsken gör att du kan ana skuggor av träd därute, och du hör en svag vind som susar genom trädkronor.",
             TargetRoomName = "Trädgård",
             ExitMessage = "Du kliver ut genom dörröppningen och föser några långa grässtrån åt sidan som växer på utsidan av dörrkarmens tröskel. Frisk utomhusluft ersätter den unkna doft som du nödgats inandas i källaren.",
-            IsActivated = false
+            IsActivated = false,
+            AllowedPrepositions = ["genom", "ut genom"],    
         }
     ];
 

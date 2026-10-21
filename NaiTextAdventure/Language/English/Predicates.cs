@@ -7,7 +7,7 @@ namespace Nai.TextAdventure.Language.English;
     public static readonly EngPredicate Go = new()
     {
         Imperativ = "go",
-        IsMovement = true
+        Category = PredicateType.Movement
     };
 
     public static readonly EngPredicate Put = new()
@@ -19,6 +19,7 @@ namespace Nai.TextAdventure.Language.English;
     {
         Synonyms = ["take", "grab", "get"],
         Imperativ = "pick up",
+        Category = PredicateType.Retrieval
     };
 
     public static readonly EngPredicate Open = new()
@@ -34,7 +35,9 @@ namespace Nai.TextAdventure.Language.English;
 
     public static readonly EngPredicate Discard = new()
     {
-        Imperativ = "discard"
+        Imperativ = "discard",
+        Synonyms = ["drop"],
+        Category = PredicateType.Discard
     };
 
     public static readonly EngPredicate Unlock = new()
@@ -49,12 +52,14 @@ namespace Nai.TextAdventure.Language.English;
 
     public static readonly EngPredicate Look = new()
     {
-        Imperativ = "look"
+        Imperativ = "look",
+        Category = PredicateType.Examination
     };
 
     public static readonly EngPredicate Examine = new()
     {
-        Imperativ = "examine"
+        Imperativ = "examine",
+        Category = PredicateType.Examination
     };
 
     public static readonly EngPredicate Throw = new()

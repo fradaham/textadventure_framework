@@ -23,7 +23,7 @@ public class UserInterfaceHub
         _battleUI = new BattleUserInterface(setup.BattleMusic, setup.Language);
         _aboutUI = new AboutUI(setup.About, setup.Language);
         Player player = new Player("DUMMY", 25, 25, 15, 15, 3, setup.World.GetRoom(setup.StartingRoomName)!); //TODO: Think through messy context making this unnecessary
-        _context = new Context(setup.World, player);
+        _context = new Context(setup.World, player, setup.Language);
     }
 
     public void Run(GameState initState)    
@@ -41,7 +41,7 @@ public class UserInterfaceHub
                     IRoom startingRoom = world.GetRoom(_setup.StartingRoomName)!;
                     Player player = new Player("Torleif", 25, 25, 15, 15, 3, startingRoom); //TODO: An input UI for this
                     //TODO: Think through messy context making this ugly thing unnecessary
-                    _context = new Context(_setup.World, player);
+                    _context = new Context(world, player, _setup.Language);
                     tuiResult = new TuiResult(GameState.Main, startingRoom.Enter(_context));
                     _mainUI.Reset();
                 }

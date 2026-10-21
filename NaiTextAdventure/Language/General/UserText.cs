@@ -1,8 +1,9 @@
+using Nai.TextAdventure.Concepts;
 using Nai.TextAdventure.Language.Concepts;
 
-namespace Nai.TextAdventure.UserInterface.Default;
+namespace Nai.TextAdventure.Language.General;
 
-public static class UiText
+public static class UserText
 {
     private static string LanguageSelector(GameLanguage language, string swedish, string english) =>
         language == GameLanguage.English ? english : swedish;
@@ -93,4 +94,31 @@ public static class UiText
     
     public static string ScrollDown(GameLanguage language) =>
         LanguageSelector(language, "text nedåt", "scroll down");
+
+    public static string PrepositionNotAllowed(GameLanguage language, IDenominational denom,  string preposition, IEnumerable<string> allowedPrepositions, IPredicate predicate) =>
+        LanguageSelector(language, $"Du kan inte {predicate.Infinitiv} _{preposition}_ {denom.Name.DefiniteForm}. Godkända prepositioner är {string.Join(", ", allowedPrepositions)}.", $"You can't {predicate.Infinitiv} _{preposition}_ {denom.Name.DefiniteForm}. Allowed prepositions are {string.Join(", ", allowedPrepositions)}.");
+    
+    public static string ItemAlreadyInInventory(GameLanguage language, INoun item) =>
+        LanguageSelector(language, $"Du har redan tagit upp {item.DefiniteForm}", $"You have already picked up {item.DefiniteForm}");
+
+    public static string CannotPickUpItem(GameLanguage language, INoun item) =>
+        LanguageSelector(language, $"Det går inte att ta upp {item.DefiniteForm}", $"You can't pick up {item.DefiniteForm}");
+    
+    public static string ItemPickedUp(GameLanguage language, INoun item) =>
+        LanguageSelector(language, $"Du tog upp {item.DefiniteForm}", $"You picked up {item.DefiniteForm}");
+
+    public static string ItemDiscarded(GameLanguage language, INoun item) =>
+        LanguageSelector(language, $"Du släppte {item.DefiniteForm}", $"You discarded {item.DefiniteForm}");
+
+    public static string CantDiscardItemNotInInventory(GameLanguage language, INoun item) =>
+        LanguageSelector(language, $"Du kan inte släppa {item.DefiniteForm}, eftersom du inte har {item.Pronomen} på dig.", $"You can't discard {item.DefiniteForm}, as you don't have it in your inventory.");
+
+    public static string CantDoThat(GameLanguage language) =>
+        LanguageSelector(language, "Det går inte.", "You can't do that.");
+
+    public static string Items(GameLanguage language) =>
+        LanguageSelector(language, "Föremål", "Items");
+
+    public static string Exits(GameLanguage language) =>
+        LanguageSelector(language, "Utgångar", "Exits");
 }

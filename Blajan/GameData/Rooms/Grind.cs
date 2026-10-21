@@ -6,7 +6,7 @@ using Nai.TextAdventure.Language.Swedish;
 
 namespace Blajan.GameData.Rooms;
 
-public class Grind : SwedishAbstractRoom
+public class Grind : Room
 {
     public override INoun Name => new SweNoun("Grind", Genus.Utrum);
 
@@ -17,7 +17,7 @@ public class Grind : SwedishAbstractRoom
 
     public override List<IExit> Exits { get; } =
     [
-        new SwedishExit()
+        new Exit()
         {
             Name = new SweNoun("portal", Genus.Utrum),
             Synonyms = [
@@ -26,7 +26,8 @@ public class Grind : SwedishAbstractRoom
             ],
             Description = "Det är en stenportal som är en del av den stenmur som kringgärdar trädgården.",
             ExitMessage = "Du öppnar grinden, den gnisslar till, och kliver in i porten ut från trädgården.",
-            TargetRoomName = "Skog"
+            TargetRoomName = "Skog",
+            AllowedPrepositions = ["genom"],
         }
     ];
 
