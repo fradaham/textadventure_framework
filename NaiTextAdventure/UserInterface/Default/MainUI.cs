@@ -167,7 +167,7 @@ internal sealed class MainUI : ITextUserInterface, IPrintToUser
         grid.AddColumn(new GridColumn() { Width = (consoleWidth - 4)/3, Alignment = Justify.Right, NoWrap = true });
         // grid.AddRow(healthBar, new Markup($"[yellow]Guldmynt:[/] {player.Gold}"), new Markup($"[blue]Plats:[/] Källare"));
         // grid.AddRow(spBar);
-        grid.AddRow(new Markup($"{UserText.Health(_language)}: {context.Player.Health}"), new Markup($"{UserText.FightingSkill(_language)}: {context.Player.FightingSkill}"), new Markup($"[blue]{UserText.Location(_language)}:[/] Källare"));
+        grid.AddRow(new Markup($"{UserText.Health(_language)}: {context.Player.Health}"), new Markup($"{UserText.FightingSkill(_language)}: {context.Player.FightingSkill}"), new Markup($"[blue]{UserText.Location(_language)}:[/] {context.Player.Room.Name.Name}"));
 
         // Columns headerContent = new(healthBar, spBar, new Markup($"[red]Kroppspoäng:[/] {player.Health}/100   |   [yellow]Guldmynt:[/] {player.Gold}   |   [blue]Plats:[/] {player.Location.Name}}}"));
         // headerContent.Expand();
@@ -221,7 +221,7 @@ internal sealed class MainUI : ITextUserInterface, IPrintToUser
                 promptInput = promptInput[0..cursorPos] + promptInput[(cursorPos + 1)..];//promptInput[0..(promptInput.Length - 1)];
             }
         }
-        else if ("abcdefghijklmnopqrstuvxyzåäöABCDEFGHIJKLMNOPQRSTUVXYZÅÄÖ ".Contains(input.KeyChar))
+        else if ("abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVXYZÅÄÖ ".Contains(input.KeyChar))
         {
             promptInput = promptInput[0..cursorPos] + input.KeyChar + (cursorPos < promptInput.Length? promptInput[cursorPos..]: "");
             cursorPos++;

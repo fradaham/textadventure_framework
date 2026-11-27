@@ -2,4 +2,5 @@
   <Project Path="Blajan/Blajan.csproj" />
   <Project Path="NaiTextAdventure.Tests/NaiTextAdventure.Tests.csproj" />
   <Project Path="NaiTextAdventure/NaiTextAdventure.csproj" />
+  <Project Path="OldMine/OldMine.csproj" />
 </Solution>

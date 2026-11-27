@@ -8,6 +8,8 @@ public class SwedishInterpreterSettings : IGeneralInterpreterSettings
 {
     public IEnumerable<Command> Commands => CommandDefinitions.Commands;
 
+    public GameLanguage Language => GameLanguage.Swedish;
+
     public string CommandListHelp()
     {
         string helpText = "Tolken stödjer följande kommandon: \n";

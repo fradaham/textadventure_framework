@@ -8,6 +8,8 @@ public class EnglishInterpreterSettings : IGeneralInterpreterSettings
 {
     public IEnumerable<Command> Commands => CommandDefinitions.Commands;
 
+    public GameLanguage Language => GameLanguage.English;
+
     public string CommandListHelp()
     {
         string helpText = "The interpreter supports the following commands: \n";

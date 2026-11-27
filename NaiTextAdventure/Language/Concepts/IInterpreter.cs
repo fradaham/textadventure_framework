@@ -9,6 +9,8 @@ namespace Nai.TextAdventure.Language.Concepts
         string Help();
 
         string? Help(string predicate);
+
+        GameLanguage Language { get; }
     }
 }
 

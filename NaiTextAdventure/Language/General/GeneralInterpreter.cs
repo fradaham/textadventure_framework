@@ -6,6 +6,9 @@ namespace Nai.TextAdventure.Language.General;
 public class GeneralInterpreter: IInterpreter
 {
     private readonly IGeneralInterpreterSettings _settings;
+
+    public GameLanguage Language => _settings.Language;
+
     public GeneralInterpreter(IGeneralInterpreterSettings settings)
     {
         _settings = settings;

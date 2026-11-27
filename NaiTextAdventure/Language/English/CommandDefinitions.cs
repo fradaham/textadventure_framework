@@ -13,7 +13,7 @@ public static class CommandDefinitions
             Predicate = Predicates.Go,
             Patterns =
             [
-                new Regex(@$"^(?<{SentenceParts.PlaceAdverbialInit}>in|on|to|towards|through|along) (?<{SentenceParts.PlaceAdverbial}>[a-z ]+)"),
+                new Regex(@$"^(?<{SentenceParts.PlaceAdverbialInit}>in|on|to|towards|through|along|into) (?<{SentenceParts.PlaceAdverbial}>[a-z ]+)"),
                 new Regex(@$"^(?<{SentenceParts.PlaceAdverbial}>[a-z ]+)")
             ],
         },
@@ -35,128 +35,115 @@ public static class CommandDefinitions
                 new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-z ]+)")
             ]
         },
-        // new Command()
-        // {
-        //     Predicate = Predicates.Öppna,
-        //     Patterns =
-        //     [
-        //         new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+) (?<{SentenceParts.MannerAdverbialInit}>med) (?<{SentenceParts.MannerAdverbial}>[a-zåäö ]+)"),
-        //         new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+)")
-        //     ]
-        // },
-        // new Command()
-        // {
-        //     Predicate = Predicates.Stäng,
-        //     Patterns =
-        //     [
-        //         new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+) (?<{SentenceParts.MannerAdverbialInit}>med) (?<{SentenceParts.MannerAdverbial}>[a-zåäö ]+)"),
-        //         new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+)")
-        //     ]
-        // },
-        // new Command()
-        // {
-        //     Predicate = Predicates.Sätt,
-        //     Patterns =
-        //     [
-        //         new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+) (?<{SentenceParts.PlaceAdverbialInit}>i|på|under) (?<{SentenceParts.PlaceAdverbial}>[a-zåäö ]+)")
-        //     ]
-        // },
-        // new Command()
-        // {
-        //     Predicate = Predicates.Släpp,
-        //     Patterns =
-        //     [
-        //         new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+) (?<{SentenceParts.PlaceAdverbialInit}>i|på|under) (?<{SentenceParts.PlaceAdverbial}>[a-zåäö ]+)"),
-        //         new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+)")
-        //     ]
-        // },
-        // new Command()
-        // {
-        //     Predicate = Predicates.Lås_upp,
-        //     Patterns =
-        //     [
-        //         new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+) (?<{SentenceParts.MannerAdverbialInit}>med) (?<{SentenceParts.MannerAdverbial}>[a-zåäö ]+)"),
-        //         new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+)")
-        //     ]
-        // },
-        // new Command()
-        // {
-        //     Predicate = Predicates.Lås,
-        //     Patterns =
-        //     [
-        //         new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+) (?<{SentenceParts.MannerAdverbialInit}>med) (?<{SentenceParts.MannerAdverbial}>[a-zåäö ]+)"),
-        //         new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+)")
-        //     ]
-        // },
-        // new Command()
-        // {
-        //     Predicate = Predicates.Titta,
-        //     Patterns =
-        //     [
-        //         new Regex(@$"^(?<{SentenceParts.PlaceAdverbialInit}>i|på|under|till|mot) (?<{SentenceParts.PlaceAdverbial}>[a-zåäö ]+)"),
-        //         new Regex(@$"^(?<{SentenceParts.PlaceAdverbial}>[a-zåäö ]+)"),
-        //         new Regex(@$"^")
-        //     ]
-        // },
-        // new Command()
-        // {
-        //     Predicate = Predicates.Undersök,
-        //     Patterns =
-        //     [
-        //         new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+) (?<{SentenceParts.MannerAdverbialInit}>med) (?<{SentenceParts.MannerAdverbial}>[a-zåäö ]+)"),
-        //         new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+)"),
-        //     ]
-        // },
-        // new Command()
-        // {
-        //     Predicate = Predicates.Torka,
-        //     Patterns =
-        //     [
-        //         new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+) (?<{SentenceParts.MannerAdverbialInit}>med) (?<{SentenceParts.MannerAdverbial}>[a-zåäö ]+)"),
-        //     ]
-        // },
-        // new Command()
-        // {
-        //     Predicate = Predicates.Torka_av,
-        //     Patterns =
-        //     [
-        //         new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+) (?<{SentenceParts.MannerAdverbialInit}>med) (?<{SentenceParts.MannerAdverbial}>[a-zåäö ]+)"),
-        //     ]
-        // },
-        // new Command()
-        // {
-        //     Predicate = Predicates.Släng,
-        //     Patterns =
-        //     [
-        //         new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+) (?<{SentenceParts.PlaceAdverbialInit}>i|på|under) (?<{SentenceParts.PlaceAdverbial}>[a-zåäö ]+)")
-        //     ]
-        // },
-        // new Command()
-        // {
-        //     Predicate = Predicates.Stick,
-        //     Patterns =
-        //     [
-        //         new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+) (?<{SentenceParts.PlaceAdverbialInit}>i|på|under) (?<{SentenceParts.PlaceAdverbial}>[a-zåäö ]+)")
-        //     ]
-        // },
-        // new Command()
-        // {
-        //     Predicate = Predicates.Hjälp,
-        //     Patterns =
-        //     [
-        //         new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+)"),
-        //         new Regex(@$"^")
-        //     ]
-        // },
-        // new Command()
-        // {
-        //     Predicate = Predicates.Ät,
-        //     Patterns =
-        //     [
-        //         new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-zåäö ]+)"),
-        //     ]
-        // }
-        
+        new Command()
+        {
+            Predicate = Predicates.Open,
+            Patterns =
+            [
+                new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-z ]+) (?<{SentenceParts.MannerAdverbialInit}>with|using) (?<{SentenceParts.MannerAdverbial}>[a-z ]+)"),
+                new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-z ]+)")
+            ]
+        },
+        new Command()
+        {
+            Predicate = Predicates.Close,
+            Patterns =
+            [
+                new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-z ]+) (?<{SentenceParts.MannerAdverbialInit}>with|using) (?<{SentenceParts.MannerAdverbial}>[a-z ]+)"),
+                new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-z ]+)")
+            ]
+        },
+        new Command()
+        {
+            Predicate = Predicates.Discard,
+            Patterns =
+            [
+                new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-z ]+) (?<{SentenceParts.PlaceAdverbialInit}>in|on|under|into|onto) (?<{SentenceParts.PlaceAdverbial}>[a-z ]+)"),
+                new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-z ]+)")
+            ]
+        },
+        new Command()
+        {
+            Predicate = Predicates.Unlock,
+            Patterns =
+            [
+                new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-z ]+) (?<{SentenceParts.MannerAdverbialInit}>with|using) (?<{SentenceParts.MannerAdverbial}>[a-z ]+)"),
+                new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-z ]+)")
+            ]
+        },
+        new Command()
+        {
+            Predicate = Predicates.Lock,
+            Patterns =
+            [
+                new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-z ]+) (?<{SentenceParts.MannerAdverbialInit}>with|using) (?<{SentenceParts.MannerAdverbial}>[a-z ]+)"),
+                new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-z ]+)")
+            ]
+        },
+        new Command()
+        {
+            Predicate = Predicates.Light,
+            Patterns =
+            [
+                new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-z ]+) (?<{SentenceParts.MannerAdverbialInit}>with|using) (?<{SentenceParts.MannerAdverbial}>[a-z ]+)"),
+                new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-z ]+)")
+            ]
+        },
+        new Command()
+        {
+            Predicate = Predicates.Look,
+            Patterns =
+            [
+                new Regex(@$"^(?<{SentenceParts.PlaceAdverbialInit}>in|on|under|at|around|through|behind|beside) (?<{SentenceParts.PlaceAdverbial}>[a-z ]+)"),
+                new Regex(@$"^(?<{SentenceParts.PlaceAdverbial}>[a-z ]+)"),
+                new Regex(@$"^")
+            ]
+        },
+        new Command()
+        {
+            Predicate = Predicates.Examine,
+            Patterns =
+            [
+                new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-z ]+) (?<{SentenceParts.MannerAdverbialInit}>with|using) (?<{SentenceParts.MannerAdverbial}>[a-z ]+)"),
+                new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-z ]+)")
+            ]
+        },
+        new Command()
+        {
+            Predicate = Predicates.Throw,
+            Patterns =
+            [
+                new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-z ]+) (?<{SentenceParts.PlaceAdverbialInit}>at|in|on|under|towards|through) (?<{SentenceParts.PlaceAdverbial}>[a-z ]+)"),
+                new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-z ]+) (?<{SentenceParts.MannerAdverbialInit}>with|using) (?<{SentenceParts.MannerAdverbial}>[a-z ]+)"),
+                new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-z ]+)")
+            ]
+        },
+        new Command()
+        {
+            Predicate = Predicates.Stab,
+            Patterns =
+            [
+                new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-z ]+) (?<{SentenceParts.MannerAdverbialInit}>with|using) (?<{SentenceParts.MannerAdverbial}>[a-z ]+)"),
+                new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-z ]+)")
+            ]
+        },
+        new Command()
+        {
+            Predicate = Predicates.Help,
+            Patterns =
+            [
+                new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-z ]+)"),
+                new Regex(@$"^")
+            ]
+        },
+        new Command()
+        {
+            Predicate = Predicates.Eat,
+            Patterns =
+            [
+                new Regex(@$"^(?<{SentenceParts.DirectObject}>[a-z ]+)")
+            ]
+        },
     ];
 }
 

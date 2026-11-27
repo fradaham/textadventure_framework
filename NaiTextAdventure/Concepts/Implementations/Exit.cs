@@ -43,6 +43,14 @@ public sealed class Exit: IExit
         {}
         //If not implemented, or HandleAction returns null, do general handling:
 
+        if (!IsActivated)
+        {
+            return new ActionResult()
+            {
+                Message = "The route is blocked. Something has collapsed and the way is no longer passable."
+            };
+        }
+
         if (action.Predicate.Category == PredicateType.Movement && (action.MannerAdverbial == this || action.PlaceAdverbial == this))
         {
             string? preposition = action.PlaceAdverbial == this? action.PlaceAdverbialInit: action.MannerAdverbialInit;

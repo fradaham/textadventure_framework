@@ -204,7 +204,7 @@ public class TextGameEngine
         }
         if (notFound.Count() > 0)
         {
-            throw new TextInputException($"{String.Join(", ", notFound)} finns inte här.");
+            throw new TextInputException($"{String.Join(", ", notFound)} {UserText.NotFound(_interpreter.Language)}");
         }
         return new PlayerAction()
         {

@@ -6,7 +6,7 @@ public class EngNoun(string name): INoun
 {
     public string Name {get;} = name;
 
-    public string DefiniteForm { get { return "the" + Name;} } 
+    public string DefiniteForm { get { return "the " + Name;} } 
 
     public string Pronomen => "it";
 

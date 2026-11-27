@@ -116,6 +116,9 @@ public static class UserText
     public static string CantDoThat(GameLanguage language) =>
         LanguageSelector(language, "Det går inte.", "You can't do that.");
 
+    public static string NotFound(GameLanguage language) =>
+        LanguageSelector(language, "finns inte här", "can't be found here");
+
     public static string Items(GameLanguage language) =>
         LanguageSelector(language, "Föremål", "Items");
 

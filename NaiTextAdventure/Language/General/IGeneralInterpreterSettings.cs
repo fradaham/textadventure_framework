@@ -6,6 +6,8 @@ public interface IGeneralInterpreterSettings
 {   
     IEnumerable<Command> Commands { get; }
 
+    GameLanguage Language { get; }
+
     string CommandListHelp();
 
     string CommandHelp(Command command);

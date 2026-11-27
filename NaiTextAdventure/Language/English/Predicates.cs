@@ -50,6 +50,12 @@ namespace Nai.TextAdventure.Language.English;
         Imperativ = "lock",
     };
 
+    public static readonly EngPredicate Light = new()
+    {
+        Imperativ = "light",
+        Synonyms = ["ignite"],
+    };
+
     public static readonly EngPredicate Look = new()
     {
         Imperativ = "look",
